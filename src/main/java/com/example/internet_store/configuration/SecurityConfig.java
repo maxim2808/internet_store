@@ -24,11 +24,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
        // System.out.println("start!!!!!!!!!!!!!!!");
-        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable()).authorizeRequests().requestMatchers("/auth/login", "/error", "/auth/registration").permitAll().
-                anyRequest().authenticated().and().formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.loginPage("/auth/login").
-                        loginProcessingUrl("/process_login").defaultSuccessUrl("/main", true).
-                        failureUrl("/auth/login?error"));
-
+        http.authorizeRequests()
+                .requestMatchers("/admin").hasRole("ADMIN").requestMatchers("/main").hasAnyRole("USER", "ADMIN").requestMatchers("/auth/login", "/error", "/auth/registration").permitAll().
+            and().formLogin(httpSecurityFormLoginConfigurer -> {
+                        httpSecurityFormLoginConfigurer.loginPage("/auth/login").
+                                loginProcessingUrl("/process_login").defaultSuccessUrl("/main", true).
+                                failureUrl("/auth/login?error");}).logout
+                        (httpSecurityLogoutConfigurer -> {httpSecurityLogoutConfigurer.logoutUrl("/logout").
+                        logoutSuccessUrl("/auth/login");});
         return http.build();
     }
 

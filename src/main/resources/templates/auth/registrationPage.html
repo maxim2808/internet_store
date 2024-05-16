@@ -6,6 +6,7 @@
 </head>
 <body>
 <form th:method="POST" th:action="@{/auth/registration}" th:object="${modelPersone}">
+    <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}" >
 <label for="emailId">email</label>
 <input type="text" th:field="*{email}" id="emailId">
     <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{email}"></div>

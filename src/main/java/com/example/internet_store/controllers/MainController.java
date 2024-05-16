@@ -9,4 +9,9 @@ public class MainController {
     public String mainMethod(){
         return "mainPage";
     }
+
+    @GetMapping("/admin")
+    public String adminMethod(){
+        return "adminPage";
+    }
 }
