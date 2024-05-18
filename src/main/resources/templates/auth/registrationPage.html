@@ -11,9 +11,14 @@
 <input type="text" th:field="*{email}" id="emailId">
     <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{email}"></div>
     <br>
+    <label for="usernameId">Имя пользователя</label>
+    <input type="text" th:field="*{username}" id="usernameId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{username}"></div>
+    <br>
     <label for="passwordId">пароль</label>
-   <input type="password" th:field="*{password}" id="passwordId">
-    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{password}"></div>
+<!--   <input type="password" th:field="*{password}" id="passwordId">-->
+    <input type="password" th:field="*{fakePassword}" id="passwordId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{fakePassword}"></div>
     <br>
     <label for="repeatPasswordId">повторите пароль</label>
     <input type="password" th:field="*{repeatPassword}" id="repeatPasswordId">

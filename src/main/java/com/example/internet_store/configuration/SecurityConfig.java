@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,7 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
        // System.out.println("start!!!!!!!!!!!!!!!");
         http.authorizeRequests()
-                .requestMatchers("/admin").hasRole("ADMIN").requestMatchers("/main").hasAnyRole("USER", "ADMIN").requestMatchers("/auth/login", "/error", "/auth/registration").permitAll().
+                .requestMatchers("/admin").hasRole("ADMIN").requestMatchers( "/user/profile").hasAnyRole("USER", "ADMIN").anyRequest().permitAll().
             and().formLogin(httpSecurityFormLoginConfigurer -> {
                         httpSecurityFormLoginConfigurer.loginPage("/auth/login").
                                 loginProcessingUrl("/process_login").defaultSuccessUrl("/main", true).
@@ -36,11 +37,12 @@ public class SecurityConfig {
     }
 
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(personeDetailService);
+        auth.userDetailsService(personeDetailService).passwordEncoder(getPasswordEncoder());
     }
     @Bean
     protected PasswordEncoder getPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+   //     return NoOpPasswordEncoder.getInstance();
+        return  new BCryptPasswordEncoder();
     }
 
 }

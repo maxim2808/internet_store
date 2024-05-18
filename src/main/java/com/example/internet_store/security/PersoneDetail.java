@@ -58,4 +58,11 @@ public class PersoneDetail implements UserDetails {
     public Persone getPersone() {
         return persone;
     }
+
+    @Override
+    public String toString() {
+        return "PersoneDetail{" +
+                "persone=" + persone +
+                '}';
+    }
 }

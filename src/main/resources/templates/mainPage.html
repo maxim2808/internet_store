@@ -8,8 +8,18 @@
 <h2>Main page text!1234</h2>
 <br>
 <hr>
-<form th:method="POST" th:action="@{/logout}">
-    <input type="submit" value="Выйти с аккаунта">
-</form>
+<div th:if="${!authModel}">
+    <form th:action="@{/auth/login}">
+        <input type="submit" value="Войти в аккаунт" >
+    </form>
+</div>
+
+
+<div th:if="${authModel}">
+    <form th:method="POST" th:action="@{/logout}">
+        <input type="submit" value="Выйти с аккаунта">
+    </form>
+</div>
+
 </body>
 </html>
