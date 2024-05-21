@@ -5,8 +5,10 @@
     <title>Все товары</title>
 </head>
 <body>
-<div th:each="product:${productsModel}" th:text="${product.getItemName()} + ' цена ' + ${product.getFinalPrice()}">
 
+<!--<p><img src="pic.png" alt="Тест1"></p>-->
+<div th:each="product:${productsModel}">
+    <p  th:text="${product.getProductName()} + ' цена ' + ${product.getFinalPrice()}"  ></p>
 </div>
 </body>
 </html>

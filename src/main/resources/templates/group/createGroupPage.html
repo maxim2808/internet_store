@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать группу товаров</title>
+</head>
+<body>
+
+
+<form th:method="POST" th:action="@{/group/create}" th:object="${groupModel}">
+    <label for="nameId"></label>
+    <input type="text" th:field="*{groupName}" id="nameId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{groupName}"></div>
+    <br>
+    <input type="submit" value="Создать группу">
+</form>
+</body>
+</html>

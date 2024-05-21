@@ -1,6 +1,9 @@
 package com.example.internet_store.models;
 
 import jakarta.persistence.*;
+
+import java.util.Date;
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -9,7 +12,7 @@ public class Product {
     @Column(name = "product_id")
     int id;
     @Column(name = "product_name")
-    String itemName;
+    String productName;
 
     @Column(name = "price")
     double price;
@@ -21,7 +24,7 @@ public class Product {
 
     @ManyToOne()
     @JoinColumn(name = "group_name",referencedColumnName = "group_name")
-    ProductGroup productGroup;
+    Group group;
 
     @Column(name = "manufacturer")
     String manufacturer;
@@ -36,6 +39,19 @@ public class Product {
     double rating;
 @Column(name = "popular")
 boolean popular;
+@Column(name = "image")
+byte [] image;
+@Column(name = "registration_date")
+@Temporal(TemporalType.TIMESTAMP)
+Date registrationDate;
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     public int getId() {
         return id;
@@ -45,12 +61,12 @@ boolean popular;
         this.id = id;
     }
 
-    public String getItemName() {
-        return itemName;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setProductName(String itemName) {
+        this.productName = itemName;
     }
 
     public double getPrice() {
@@ -77,12 +93,12 @@ boolean popular;
         this.description = description;
     }
 
-    public ProductGroup getProductGroup() {
-        return productGroup;
+    public Group getProductGroup() {
+        return group;
     }
 
-    public void setProductGroup(ProductGroup productGroup) {
-        this.productGroup = productGroup;
+    public void setProductGroup(Group group) {
+        this.group = group;
     }
 
     public String getManufacturer() {
@@ -123,5 +139,13 @@ boolean popular;
 
     public void setPopular(boolean popular) {
         this.popular = popular;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
     }
 }

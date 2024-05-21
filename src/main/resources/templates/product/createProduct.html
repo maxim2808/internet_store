@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/product/create}" th:object="${createProductModel}">
+    <label for="nameId">Название товара</label>
+<input th:type="text" th:field="*{productName}" id="nameId">
+    <br>
+
+    <label for="priceId">Цена товара</label>
+    <input th:type="text" th:field="*{price}" id="priceId">
+    <br>
+
+    <label for="descriptionId">Описание товара</label>
+    <input th:type="text" th:field="*{description}" id="descriptionId">
+    <br>
+
+    <label for="quantityId">Количество товара</label>
+    <input th:type="text" th:field="*{quantity}" id="quantityId">
+    <br>
+
+    <label for="manufacturerId">Производитель товара</label>
+    <input th:type="text" th:field="*{manufacturer}" id="manufacturerId">
+    <br>
+    <br>
+
+    <input type="submit" value="Создать товар">
+
+
+
+</form>
+</body>
+</html>
