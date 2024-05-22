@@ -26,8 +26,10 @@ public class Product {
     @JoinColumn(name = "group_name",referencedColumnName = "group_name")
     Group group;
 
-    @Column(name = "manufacturer")
-    String manufacturer;
+
+    @ManyToOne()
+    @JoinColumn(name = "manufacturer_id", referencedColumnName = "manufacturer_id")
+     Manufacturer manufacturer;
     @Column(name = "discount")
     double discount;
 
@@ -44,6 +46,7 @@ byte [] image;
 @Column(name = "registration_date")
 @Temporal(TemporalType.TIMESTAMP)
 Date registrationDate;
+
 
     public byte[] getImage() {
         return image;
@@ -101,13 +104,7 @@ Date registrationDate;
         this.group = group;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
-    }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
 
     public double getDiscount() {
         return discount;
@@ -147,5 +144,21 @@ Date registrationDate;
 
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
     }
 }

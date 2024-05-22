@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить производителя</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/manufacturer/create}" th:object="${createManufacturerModel}">
+    <label for="nameId">Название производителя</label>
+    <input type="text" th:field="*{name}" id="nameId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{name}"></div>
+    <br>
+    <input type="submit" value="Добавить">
+</form>
+</body>
+</html>
