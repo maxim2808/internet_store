@@ -42,13 +42,7 @@ public class Persone {
     @Transient
     String repeatPassword;
 
-    public String getRepeatPassword() {
-        return repeatPassword;
-    }
 
-    public void setRepeatPassword(String repeatPassword) {
-        this.repeatPassword = repeatPassword;
-    }
 
     @Column(name = "phone_number")
             @Size(min = 10, max = 15, message = "Номер телефона должен быть от 10 до 15 символов")
@@ -63,6 +57,13 @@ public class Persone {
     @Size(min = 3, max = 20, message = "Длина имени пользователя должна быть от 3 до 20 символов")
     String username;
 
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
+    }
 
     public int getId() {
         return id;

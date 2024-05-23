@@ -1,5 +1,6 @@
 package com.example.internet_store.controllers;
 
+import com.example.internet_store.dto.PersoneDTO;
 import com.example.internet_store.models.Persone;
 import com.example.internet_store.services.PersoneService;
 import com.example.internet_store.utils.PersoneValidator;
@@ -32,17 +33,18 @@ public class AuthenticationController {
 
 
     @GetMapping("/registration")
-    public String getRegistration(@ModelAttribute ("modelPersone")  Persone persone) {
+    public String getRegistration(@ModelAttribute ("modelPersone") PersoneDTO personeDTO) {
         return "/auth/registrationPage";
     }
 
     @PostMapping("/registration")
-    public String postRegistration(@ModelAttribute ("modelPersone") @Valid Persone persone, BindingResult bindingResult) {
+    public String postRegistration(@ModelAttribute ("modelPersone") @Valid PersoneDTO personeDTO, BindingResult bindingResult) {
 
-        personeValidator.validate(persone, bindingResult);
+        personeValidator.validate(personeDTO, bindingResult);
         if (bindingResult.hasErrors()) {
             return "/auth/registrationPage";
         }
+      Persone persone =  personeService.convertToPersone(personeDTO);
         personeService.createPersone(persone);
         return "redirect:/auth/login";
 

@@ -19,17 +19,17 @@ import java.nio.file.Path;
 @SpringBootApplication
 @Component
 public class InternetStoreApplication {
-	 PersoneService personeService;
+	// PersoneService personeService;
 
      @Bean
      ModelMapper modelMapper() {
          return new ModelMapper();
      }
 
-	@Autowired
-    public InternetStoreApplication(PersoneService personeService) {
-        this.personeService = personeService;
-    }
+//	@Autowired
+//    public InternetStoreApplication(PersoneService personeService) {
+//        this.personeService = personeService;
+//    }
 
     public static void main(String[] args) throws IOException {
 //		ApplicationContext context = SpringApplication.run(InternetStoreApplication.class, args);

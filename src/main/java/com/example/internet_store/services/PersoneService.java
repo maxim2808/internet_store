@@ -1,7 +1,9 @@
 package com.example.internet_store.services;
 
+import com.example.internet_store.dto.PersoneDTO;
 import com.example.internet_store.models.Persone;
 import com.example.internet_store.repositories.PersonRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,16 +17,17 @@ import java.util.Optional;
 public class PersoneService {
     final PersonRepository personRepository;
     final PasswordEncoder passwordEncoder;
+    final ModelMapper modelMapper;
     @Autowired
-    public PersoneService(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+    public PersoneService(PersonRepository personRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional()
     public void createPersone(Persone receivedPersone){
         receivedPersone.setPassword( passwordEncoder.encode(receivedPersone.getFakePassword()));
-
         receivedPersone.setRegistrationDate(new Date());
         receivedPersone.setRole("ROLE_USER");
         personRepository.save(receivedPersone);
@@ -40,6 +43,10 @@ public class PersoneService {
 
     public  Optional<Persone> findPersoneByPhoneNumber(String phoneNumber){
         return personRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    public Persone convertToPersone(PersoneDTO personeDTO){
+        return modelMapper.map(personeDTO, Persone.class);
     }
 
 
