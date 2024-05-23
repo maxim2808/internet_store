@@ -2,7 +2,6 @@ package com.example.internet_store.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jdk.jfr.Name;
 
 import java.util.Date;
 import java.util.List;
@@ -13,7 +12,7 @@ public class Manufacturer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "manufacturer_id")
-    int id;
+    int manufacurerId;
     @Column(name = "manufacturer_name")
     @NotEmpty(message = "Поле не должно быть пустым")
     String name;
@@ -23,12 +22,12 @@ public class Manufacturer {
     @OneToMany(mappedBy = "manufacturer")
     List<Product> listProduct;
 
-    public int getId() {
-        return id;
+    public int getManufacurerId() {
+        return manufacurerId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setManufacurerId(int id) {
+        this.manufacurerId = id;
     }
 
     public String getName() {

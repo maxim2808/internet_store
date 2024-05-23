@@ -1,5 +1,6 @@
 package com.example.internet_store.controllers;
 
+import com.example.internet_store.dto.GroupDTO;
 import com.example.internet_store.models.Group;
 import com.example.internet_store.services.GroupService;
 import com.example.internet_store.utils.GroupValidator;
@@ -33,16 +34,17 @@ public GroupController(GroupService groupService, GroupValidator groupValidator)
 }
 
 @GetMapping("/create")
-    public String getCreateGroup(@ModelAttribute ("groupModel") Group group) {
+    public String getCreateGroup(@ModelAttribute ("groupModel") GroupDTO groupDTO) {
     return "/group/createGroupPage";
 }
 
 @PostMapping("/create")
-    public String createGroup(@ModelAttribute ("groupModel") @Valid Group group, BindingResult bindingResult) {
-    groupValidator.validate(group, bindingResult);
+    public String createGroup(@ModelAttribute ("groupModel") @Valid GroupDTO groupDTO, BindingResult bindingResult) {
+    groupValidator.validate(groupDTO, bindingResult);
     if (bindingResult.hasErrors()) {
         return "/group/createGroupPage";
     }
+    Group group = groupService.convertToGroup(groupDTO);
     groupService.save(group);
     return "redirect:/group";
 }

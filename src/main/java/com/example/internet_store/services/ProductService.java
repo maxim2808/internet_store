@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,14 +29,28 @@ public class ProductService {
     public List<Product> getAllProducts() {
        return productRepositories.findAll();
     }
+
+
+    public Optional<Product> getProductById(int id) {
+        return productRepositories.findById(id);
+    }
+
     @Transactional
     public void saveProduct(Product product, Group group, Manufacturer manufacturer) {
-
+        System.out.println(manufacturer.getManufacurerId()  + " man id ");
+        System.out.println("start save");
         product.setRegistrationDate(new Date());
+        System.out.println("test 1");
         product.setDiscount(0);
+        System.out.println("test 2");
         product.setPopular(false);
-     product.setProductGroup(groupService.findByGroupName(group.getGroupName()).get());
-        product.setManufacturer(manufacturerService.getManufacturerById(manufacturer.getId()).get());
+        System.out.println("test 3");
+        System.out.println("group id " + group.getGroupId() );
+    // product.setProductGroup(groupService.findByGroupName(group.getGroupName()).get());
+        product.setProductGroup(groupService.findById(group.getGroupId()).get());
+
+        //product.setManufacturer(manufacturerService.getManufacturerById(6).get());
+        product.setManufacturer(manufacturerService.getManufacturerById(manufacturer.getManufacurerId()).get());
 //        Manufacturer manufacturer1 = manufacturerService.getManufacturerByName("Xiaomi").get();
 //        product.setManufacturer(manufacturer1);
 

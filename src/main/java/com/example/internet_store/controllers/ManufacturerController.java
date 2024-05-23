@@ -1,5 +1,6 @@
 package com.example.internet_store.controllers;
 
+import com.example.internet_store.dto.ManufacturerDTO;
 import com.example.internet_store.models.Manufacturer;
 import com.example.internet_store.services.ManufacturerService;
 import com.example.internet_store.utils.ManufactureValidator;
@@ -30,16 +31,17 @@ public class ManufacturerController {
     }
 
     @GetMapping("/create")
-    public String getCreateManufacturer(@ModelAttribute ("createManufacturerModel") Manufacturer manufacturer) {
+    public String getCreateManufacturer(@ModelAttribute ("createManufacturerModel") ManufacturerDTO manufacturerDTO) {
         return "/manufacturer/createManufacturerPage";
     }
 
     @PostMapping("/create")
-    public String postCreateManufacturer(@ModelAttribute ("createManufacturerModel")  @Valid Manufacturer manufacturer, BindingResult bindingResult){
-        manufactureValidator.validate(manufacturer, bindingResult);
+    public String postCreateManufacturer(@ModelAttribute ("createManufacturerModel")  @Valid ManufacturerDTO manufacturerDTO, BindingResult bindingResult){
+        manufactureValidator.validate(manufacturerDTO, bindingResult);
         if(bindingResult.hasErrors()){
             return "/manufacturer/createManufacturerPage";
         }
+        Manufacturer manufacturer = manufacturerService.convertToManufacturer(manufacturerDTO);
         manufacturerService.saveManufacturer(manufacturer);
         return "redirect:/manufacturer";
 

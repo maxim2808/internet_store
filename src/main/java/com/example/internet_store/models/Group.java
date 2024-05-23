@@ -13,7 +13,7 @@ public class Group {
     @Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)
             @Column(name = "group_id")
-    int id;
+    int groupId;
     @Column(name = "group_name")
     @NotEmpty(message = "Группа не должна быть пустой")
     String groupName;
@@ -25,12 +25,12 @@ public class Group {
     @Column(name="registration_date")
     Date registrationDate;
 
-    public int getId() {
-        return id;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setGroupId(int id) {
+        this.groupId = id;
     }
 
     public String getGroupName() {

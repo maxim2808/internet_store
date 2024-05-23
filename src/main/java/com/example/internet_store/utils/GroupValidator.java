@@ -1,5 +1,6 @@
 package com.example.internet_store.utils;
 
+import com.example.internet_store.dto.GroupDTO;
 import com.example.internet_store.models.Group;
 import com.example.internet_store.services.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,13 @@ public class GroupValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(Group.class);
+        return clazz.equals(GroupDTO.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        Group group = (Group) target;
-        if(groupService.findByGroupName(group.getGroupName()).isPresent()) {
+        GroupDTO groupDTO = (GroupDTO) target;
+        if(groupService.findByGroupName(groupDTO.getGroupName()).isPresent()) {
             errors.rejectValue("groupName", "", "Группа товаров с таким названеим уже существует");
         }
 

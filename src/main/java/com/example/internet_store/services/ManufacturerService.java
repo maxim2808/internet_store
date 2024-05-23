@@ -1,7 +1,9 @@
 package com.example.internet_store.services;
 
+import com.example.internet_store.dto.ManufacturerDTO;
 import com.example.internet_store.models.Manufacturer;
 import com.example.internet_store.repositories.ManufacturerRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +16,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ManufacturerService  {
     final ManufacturerRepository manufacturerRepository;
+    final ModelMapper modelMapper;
 
     @Autowired
-    public ManufacturerService(ManufacturerRepository manufacturerRepository) {
+    public ManufacturerService(ManufacturerRepository manufacturerRepository, ModelMapper modelMapper) {
         this.manufacturerRepository = manufacturerRepository;
+        this.modelMapper = modelMapper;
     }
 
     public List<Manufacturer> getAllManufacturers() {
@@ -38,6 +42,10 @@ public class ManufacturerService  {
         manufacturerRepository.save(manufacturer);
     }
 
+
+    public Manufacturer convertToManufacturer(ManufacturerDTO manufacturerDTO) {
+       return modelMapper.map(manufacturerDTO, Manufacturer.class);
+    }
 
 
 }

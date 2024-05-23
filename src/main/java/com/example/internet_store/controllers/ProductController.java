@@ -9,12 +9,7 @@ import com.example.internet_store.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/product")
@@ -54,9 +49,17 @@ public class ProductController {
     @PostMapping("/create")
     public String postCreateProduct(@ModelAttribute ("createProductModel") Product product, @ModelAttribute ("oneGroupModel") Group group,
                                     @ModelAttribute("oneManufacturer") Manufacturer manufacturer) {
-        System.out.println("!!!!!" + manufacturer.getName());
+        System.out.println("!!!!!" + manufacturer.getName() + manufacturer.getManufacurerId());
+        System.out.println("Present" + manufacturerService.getManufacturerById(manufacturer.getManufacurerId()).isPresent() + " id " +  manufacturer.getManufacurerId());
         productService.saveProduct(product, group, manufacturer);
         return "redirect:/product";
+    }
+
+    @GetMapping("/{id}")
+    public String oneProductPage (@PathVariable("id") int id, Model model) {
+        model.addAttribute("oneProductModel", productService.getProductById(id));
+        return "/product/oneProductPage";
+
     }
 
 

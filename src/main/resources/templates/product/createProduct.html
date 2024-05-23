@@ -22,14 +22,14 @@
     <input th:type="text" th:field="*{quantity}" id="quantityId">
     <br>
     <label for="groupId">Название группы</label>
-    <select th:object="${oneGroupModel}" th:field="*{groupName}" id="groupId">
-        <option th:each="group:${groupListModel}" th:value="${group.getGroupName()}" th:text="${group.getGroupName()}"></option>
+    <select th:object="${oneGroupModel}" th:field="*{groupId}" id="groupId">
+        <option th:each="group:${groupListModel}" th:value="${group.getGroupId()}" th:text="${group.getGroupName()}"></option>
     </select>
     <br>
 
     <label for="manufacturerId">Производитель товара</label>
- <select th:object="${oneManufacturer}" th:field="*{id}" id="manufacturerId">
-     <option th:each="manufacturer:${manufacturerListModel}" th:value="${manufacturer.getId()}" th:text="${manufacturer.getName()}"></option>
+ <select th:object="${oneManufacturer}" th:field="*{manufacurerId}" id="manufacturerId">
+     <option th:each="manufacturer:${manufacturerListModel}" th:value="${manufacturer.getManufacurerId()}" th:text="${manufacturer.getName()}"></option>
  </select>
     <br>
 

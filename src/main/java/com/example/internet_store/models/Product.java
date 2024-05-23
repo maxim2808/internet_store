@@ -23,7 +23,7 @@ public class Product {
     String description;
 
     @ManyToOne()
-    @JoinColumn(name = "group_name",referencedColumnName = "group_name")
+    @JoinColumn(name = "group_id",referencedColumnName = "group_id")
     Group group;
 
 

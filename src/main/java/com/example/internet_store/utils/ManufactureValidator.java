@@ -1,5 +1,6 @@
 package com.example.internet_store.utils;
 
+import com.example.internet_store.dto.ManufacturerDTO;
 import com.example.internet_store.models.Manufacturer;
 import com.example.internet_store.services.ManufacturerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,13 @@ public class ManufactureValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(Manufacturer.class);
+        return clazz.equals(ManufacturerDTO.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-    Manufacturer manufacturer = (Manufacturer) target;
-    if(manufacturerService.getManufacturerByName(manufacturer.getName()).isPresent()) {
+    ManufacturerDTO manufacturerDTO = (ManufacturerDTO) target;
+    if(manufacturerService.getManufacturerByName(manufacturerDTO.getName()).isPresent()) {
         errors.rejectValue("name", "", "Производитель с таким именем уже существует");
     }
 
