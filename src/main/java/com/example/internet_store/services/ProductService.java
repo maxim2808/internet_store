@@ -1,9 +1,12 @@
 package com.example.internet_store.services;
 
+import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.models.Group;
 import com.example.internet_store.models.Manufacturer;
 import com.example.internet_store.models.Product;
 import com.example.internet_store.repositories.ProductRepositories;
+import com.ibm.icu.text.Transliterator;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,17 +21,28 @@ public class ProductService {
     final ProductRepositories productRepositories;
     final GroupService groupService;
     final ManufacturerService manufacturerService;
+    final ModelMapper modelMapper;
 
     @Autowired
-    public ProductService(ProductRepositories productRepositories, GroupService groupService, ManufacturerService manufacturerService) {
+    public ProductService(ProductRepositories productRepositories, GroupService groupService, ManufacturerService manufacturerService, ModelMapper modelMapper) {
         this.productRepositories = productRepositories;
         this.groupService = groupService;
         this.manufacturerService = manufacturerService;
+        this.modelMapper = modelMapper;
     }
 
     public List<Product> getAllProducts() {
        return productRepositories.findAll();
     }
+
+//    public List<ProductDTO> getAllProductsDTO() {
+//        List<Product> products = productRepositories.findAll();
+//        List<ProductDTO> productsDTO = new ArrayList<>();
+//        for (Product product : products) {
+//            productsDTO.add(convertToProductDTO(product));
+//        }
+//        return productsDTO;
+//    }
 
 
     public Optional<Product> getProductById(int id) {
@@ -37,30 +51,41 @@ public class ProductService {
 
     @Transactional
     public void saveProduct(Product product, Group group, Manufacturer manufacturer) {
-        System.out.println(manufacturer.getManufacurerId()  + " man id ");
-        System.out.println("start save");
         product.setRegistrationDate(new Date());
-        System.out.println("test 1");
         product.setDiscount(0);
-        System.out.println("test 2");
         product.setPopular(false);
-        System.out.println("test 3");
-        System.out.println("group id " + group.getGroupId() );
-    // product.setProductGroup(groupService.findByGroupName(group.getGroupName()).get());
         product.setProductGroup(groupService.findById(group.getGroupId()).get());
-
-        //product.setManufacturer(manufacturerService.getManufacturerById(6).get());
-        product.setManufacturer(manufacturerService.getManufacturerById(manufacturer.getManufacurerId()).get());
-//        Manufacturer manufacturer1 = manufacturerService.getManufacturerByName("Xiaomi").get();
-//        product.setManufacturer(manufacturer1);
-
-
-      // product.setProductGroup(groupService.findByGroupName("mobile phones").get());
-
-
+        product.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
         productRepositories.save(product);
     }
 
+    @Transactional
+    public void editProduct(Product receivedProduct, Group group, Manufacturer manufacturer, int id) {
+        receivedProduct.setProductGroup(groupService.findById(group.getGroupId()).get());
+        receivedProduct.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
+    receivedProduct.setProductId(id);
+    productRepositories.save(receivedProduct);
+    }
+
+    public Product convertToProduct(ProductDTO productDTO) {
+        return modelMapper.map(productDTO, Product.class);
+    }
+
+    public ProductDTO convertToProductDTO(Product product) {
+        return modelMapper.map(product, ProductDTO.class);
+    }
+
+    public String createProductUrl(String name){
+        Transliterator transliterator = Transliterator.getInstance(("Russian-Latin/BGN"));
+        String englishName = transliterator.transliterate(name);
+        String urlWord = englishName.toLowerCase()
+                .replaceAll("[^a-zA-Z0-9-]", "-") // Замена символов, кроме букв, цифр и дефиса на дефис
+                .replaceAll("-{2,}", "-") // Удаление повторяющихся дефисов
+                .replaceAll("^-|-$", ""); // Удаление дефисов в начале и конце строки
+
+    return urlWord;
+
+    }
 
 
 }

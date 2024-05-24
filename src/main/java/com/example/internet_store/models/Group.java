@@ -24,6 +24,7 @@ public class Group {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="registration_date")
     Date registrationDate;
+    @Column(name = "product_URL")
 
     public int getGroupId() {
         return groupId;
@@ -56,4 +57,6 @@ public class Group {
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
+
+
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование товара</title>
+</head>
+<body>
+
+<form th:method="PATCH" th:action="@{/product/{id}/edit(id=${oneProductModel.getProductId()})}" th:object="${oneProductModel}">
+    <label for="nameId">Название товара</label>
+    <input type="text" th:field="*{productName}" id="nameId">
+    <br>
+    <label for="priceId">Цена товара</label>
+    <input type="text" th:field="*{price}" id="priceId">
+    <br>
+    <label for="descriptionId">Описание</label>
+    <input type="text" th:field="*{description}" id="descriptionId">
+    <br>
+    <label for="quantityId">Количество</label>
+    <input type="text" th:field="*{quantity}" id="quantityId">
+    <br>
+    <label for="discountId">Скидка на товар</label>
+    <input type="text" th:field="*{discount}" id="discountId">
+    <br>
+    <label for="labelGroupId">Группа товаров</label>
+    <select th:object="${oneGroupModel}" th:field="*{groupId}" id="labelGroupId">
+        <option th:each="group:${groupListModel}" th:value="${oneGroupModel.getGroupId()}" th:text="${group.getGroupName()}"></option>
+    </select>
+    <br>
+    <label for="labelManufacturerId">Производитель</label>
+    <select th:object="${oneManufacturerModel}" th:field="*{manufacurerId}" id="labelManufacturerId">
+        <option th:each="manufacturer:${manufacturerListModel}" th:value="${manufacturer.getManufacurerId()}" th:text="${manufacturer.getName()}" ></option>
+    </select>
+    <hr>
+    <input type="submit" value="Обновить">
+
+
+
+
+
+</form>
+
+</body>
+</html>

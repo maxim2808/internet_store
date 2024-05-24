@@ -35,4 +35,20 @@ public class MainController {
     public String adminMethod(){
         return "adminPage";
     }
+
+    @GetMapping("/test")
+    public String testMethod(){
+        return "testPage";
+    }
+
+    @GetMapping("/test/test2")
+    public String testMethod2(){
+        return "/testFolder/secondTestPage";
+    }
+
+
+    @GetMapping("/test/test3")
+    public String testMethod3(){
+        return "/testFolder/thirdTestPage";
+    }
 }

@@ -32,7 +32,7 @@ public class ManufacturerService  {
        return manufacturerRepository.findByName(name);
     }
 
-    public Optional<Manufacturer> getManufacturerById(int id) {
+    public Optional<Manufacturer> findById(int id) {
         return manufacturerRepository.findById(id);
     }
 

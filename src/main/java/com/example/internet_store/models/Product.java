@@ -10,7 +10,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    int id;
+    int productId;
     @Column(name = "product_name")
     String productName;
 
@@ -41,27 +41,18 @@ public class Product {
     double rating;
 @Column(name = "popular")
 boolean popular;
-@Column(name = "image")
-byte [] image;
+//@Column(name = "image")
+//byte [] image;
 @Column(name = "registration_date")
 @Temporal(TemporalType.TIMESTAMP)
 Date registrationDate;
 
-
-    public byte[] getImage() {
-        return image;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setProductId(int id) {
+        this.productId = id;
     }
 
     public String getProductName() {

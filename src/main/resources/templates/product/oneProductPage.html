@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-
+<p th:text="'Группа:' + ${oneProductModel.group.getGroupName()}"></p>
+<p th:text="'Название: ' + ${oneProductModel.productName}"></p>
+<p th:text="'Производитель: ' + ${oneProductModel.manufacturer.getName()}"></p>
+<p th:text="'Цена: ' + ${oneProductModel.price}"></p>
+<p th:text="'Описание товара:' + ${oneProductModel.description}"></p>
 </body>
 </html>

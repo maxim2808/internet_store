@@ -1,10 +1,7 @@
 package com.example.internet_store.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -24,23 +21,17 @@ public class Persone {
     @Column(name = "email")
     String email;
 
-    public String getFakePassword() {
-        return fakePassword;
-    }
 
-    public void setFakePassword(String fakePassword) {
-        this.fakePassword = fakePassword;
-    }
-
-    @Transient
-    @Size(min = 6, max = 20, message ="Пароль должен быть от 6 до 20 знаков")
-    String fakePassword;
+//
+//    @Transient
+//    @Size(min = 6, max = 20, message ="Пароль должен быть от 6 до 20 знаков")
+//    String fakePassword;
 
     @Column(name = "password")
 
     String password;
-    @Transient
-    String repeatPassword;
+//    @Transient
+//    String repeatPassword;
 
 
 
@@ -56,14 +47,16 @@ public class Persone {
     @Column(name = "username")
     @Size(min = 3, max = 20, message = "Длина имени пользователя должна быть от 3 до 20 символов")
     String username;
+    // @NotEmpty
+    String productURL;
 
-    public String getRepeatPassword() {
-        return repeatPassword;
-    }
-
-    public void setRepeatPassword(String repeatPassword) {
-        this.repeatPassword = repeatPassword;
-    }
+//    public String getRepeatPassword() {
+//        return repeatPassword;
+//    }
+//
+//    public void setRepeatPassword(String repeatPassword) {
+//        this.repeatPassword = repeatPassword;
+//    }
 
     public int getId() {
         return id;
@@ -119,5 +112,13 @@ public class Persone {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getProductURL() {
+        return productURL;
+    }
+
+    public void setProductURL(String productURL) {
+        this.productURL = productURL;
     }
 }

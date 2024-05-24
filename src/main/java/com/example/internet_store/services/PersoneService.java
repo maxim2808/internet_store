@@ -27,7 +27,7 @@ public class PersoneService {
 
     @Transactional()
     public void createPersone(Persone receivedPersone){
-        receivedPersone.setPassword( passwordEncoder.encode(receivedPersone.getFakePassword()));
+      //  receivedPersone.setPassword( passwordEncoder.encode(receivedPersone.getFakePassword()));
         receivedPersone.setRegistrationDate(new Date());
         receivedPersone.setRole("ROLE_USER");
         personRepository.save(receivedPersone);
@@ -46,7 +46,9 @@ public class PersoneService {
     }
 
     public Persone convertToPersone(PersoneDTO personeDTO){
-        return modelMapper.map(personeDTO, Persone.class);
+        Persone persone = modelMapper.map(personeDTO, Persone.class);
+        persone.setPassword( passwordEncoder.encode(personeDTO.getFakePassword()));
+        return persone;
     }
 
 
