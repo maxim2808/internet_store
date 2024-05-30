@@ -8,21 +8,26 @@
 <form th:method="POST" th:action="@{/product/create}" th:object="${createProductModel}">
     <label for="nameId">Название товара</label>
 <input th:type="text" th:field="*{productName}" id="nameId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{productName}"></div>
     <br>
     <label for="URLId">URL товара</label>
     <input th:type="text" th:field="*{productURL}" id="URLId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{productURL}"></div>
     <br>
 
     <label for="priceId">Цена товара</label>
     <input th:type="text" th:field="*{price}" id="priceId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{price}"></div>
     <br>
 
     <label for="descriptionId">Описание товара</label>
     <input th:type="text" th:field="*{description}" id="descriptionId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{description}"></div>
     <br>
 
     <label for="quantityId">Количество товара</label>
     <input th:type="text" th:field="*{quantity}" id="quantityId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{quantity}"></div>
     <br>
     <label for="groupId">Название группы</label>
     <select th:object="${oneGroupModel}" th:field="*{groupId}" id="groupId">

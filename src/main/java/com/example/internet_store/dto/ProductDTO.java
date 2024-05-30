@@ -6,18 +6,21 @@ import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
+import org.springframework.beans.factory.annotation.Value;
 
 public class ProductDTO {
     int productId;
-
+    @NotEmpty(message = "Поле не должно быть пустым")
+            @Size(min = 2, max = 300, message = "Минимальный размер имени 2, максимальный 300")
     String productName;
-
+    @NotNull(message = "Поле не должно быть пустым")
+    @DecimalMin(value = "0.01", message = "Минимальное значение должно быть минимум 0,01")
     double price;
-
+    @Min(value = 0, message = "Минимальное количество 0")
     int quantity;
 
-
+    @Size(max = 1000, message = "Описание должно быть не больше 1000 символов")
     String description;
 
 //    @ManyToOne()
@@ -27,14 +30,17 @@ public class ProductDTO {
 
 //    @ManyToOne()
 //    @JoinColumn(name = "manufacturer_id", referencedColumnName = "manufacturer_id")
+  //  @NotEmpty(message = "Поле не должно быть пустым")
     Manufacturer manufacturer;
-
+    @Max(value = 1, message = "Максимум 1")
     double discount;
     // double finalPrice = price-(price*(quantity/100));
-    double finalPrice = price-(price*(quantity/100));
+    double finalPrice = price-(price*(discount/100));
+    @Min(value = 0, message = "Рейтигш не может быть меньше 0")
+            @Max(value = 5, message = "Рейтинг не может быть больше 5,0")
     double rating;
     boolean popular;
-    //@NotEmpty
+   // @NotBlank(message = "Поле не должно быть пустым")
     String productURL;
 
     public int getProductId() {
@@ -102,7 +108,8 @@ public class ProductDTO {
     }
 
     public double getFinalPrice() {
-        return finalPrice;
+        return price-(price*(discount/100));
+     //   return finalPrice;
     }
 
     public void setFinalPrice(double finalPrice) {

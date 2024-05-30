@@ -48,7 +48,7 @@ public class Persone {
     @Size(min = 3, max = 20, message = "Длина имени пользователя должна быть от 3 до 20 символов")
     String username;
     // @NotEmpty
-    String productURL;
+
 
 //    public String getRepeatPassword() {
 //        return repeatPassword;
@@ -114,11 +114,5 @@ public class Persone {
         this.username = username;
     }
 
-    public String getProductURL() {
-        return productURL;
-    }
 
-    public void setProductURL(String productURL) {
-        this.productURL = productURL;
-    }
 }

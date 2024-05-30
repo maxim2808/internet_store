@@ -58,6 +58,9 @@ public class ProductService {
         product.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
         productRepositories.save(product);
     }
+    public Optional<Product> getProductByName(String name) {
+      return   productRepositories.findByProductName(name);
+    }
 
     @Transactional
     public void editProduct(Product receivedProduct, Group group, Manufacturer manufacturer, int id) {
@@ -65,6 +68,10 @@ public class ProductService {
         receivedProduct.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
     receivedProduct.setProductId(id);
     productRepositories.save(receivedProduct);
+    }
+
+    public Optional<Product> getProductByProductUrl(String productUrl) {
+       return productRepositories.findByProductURL(productUrl);
     }
 
     public Product convertToProduct(ProductDTO productDTO) {
@@ -78,13 +85,17 @@ public class ProductService {
     public String createProductUrl(String name){
         Transliterator transliterator = Transliterator.getInstance(("Russian-Latin/BGN"));
         String englishName = transliterator.transliterate(name);
+       String urlWord= characterReplacementForUrl(englishName);
+    return urlWord;
+
+    }
+
+    public String characterReplacementForUrl(String englishName) {
         String urlWord = englishName.toLowerCase()
                 .replaceAll("[^a-zA-Z0-9-]", "-") // Замена символов, кроме букв, цифр и дефиса на дефис
                 .replaceAll("-{2,}", "-") // Удаление повторяющихся дефисов
                 .replaceAll("^-|-$", ""); // Удаление дефисов в начале и конце строки
-
-    return urlWord;
-
+        return urlWord;
     }
 
 

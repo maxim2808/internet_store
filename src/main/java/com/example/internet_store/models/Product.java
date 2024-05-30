@@ -33,9 +33,8 @@ public class Product {
     @Column(name = "discount")
     double discount;
 
-    @Transient
-   // double finalPrice = price-(price*(quantity/100));
-    double finalPrice = price-(price*(quantity/100));
+    //@Transient
+    //double finalPrice = price-(price*(discount/100));
 
 @Column(name = "rating")
     double rating;
@@ -46,7 +45,8 @@ boolean popular;
 @Column(name = "registration_date")
 @Temporal(TemporalType.TIMESTAMP)
 Date registrationDate;
-
+    @Column(name = "product_url")
+    String productURL;
     public int getProductId() {
         return productId;
     }
@@ -105,14 +105,6 @@ Date registrationDate;
         this.discount = discount;
     }
 
-    public double getFinalPrice() {
-        return getPrice();
-    }
-
-    public void setFinalPrice(double finalPricre) {
-        this.finalPrice = finalPrice;
-    }
-
     public double getRating() {
         return rating;
     }
@@ -151,5 +143,13 @@ Date registrationDate;
 
     public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public String getProductURL() {
+        return productURL;
+    }
+
+    public void setProductURL(String productURL) {
+        this.productURL = productURL;
     }
 }
