@@ -6,21 +6,30 @@
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/product/{id}/edit(id=${oneProductModel.getProductId()})}" th:object="${oneProductModel}">
+<form th:method="PATCH" th:action="@{/product/{URL}/edit(URL=${oneProductModel.getProductURL()})}" th:object="${oneProductModel}">
     <label for="nameId">Название товара</label>
     <input type="text" th:field="*{productName}" id="nameId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{productName}"></div>
+    <br>
+    <label for="urlId">Url товара</label>
+    <input type="text" th:field="*{productURL}" id="urlId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{productURL}"></div>
     <br>
     <label for="priceId">Цена товара</label>
     <input type="text" th:field="*{price}" id="priceId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{price}"></div>
     <br>
     <label for="descriptionId">Описание</label>
     <input type="text" th:field="*{description}" id="descriptionId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{description}"></div>
     <br>
     <label for="quantityId">Количество</label>
     <input type="text" th:field="*{quantity}" id="quantityId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{quantity}"></div>
     <br>
     <label for="discountId">Скидка на товар</label>
     <input type="text" th:field="*{discount}" id="discountId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{discount}"></div>
     <br>
     <label for="labelGroupId">Группа товаров</label>
     <select th:object="${oneGroupModel}" th:field="*{groupId}" id="labelGroupId">

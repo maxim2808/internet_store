@@ -75,15 +75,15 @@ public class ProductController {
         return "redirect:/product";
     }
 
-    @GetMapping("/{id}")
-    public String oneProductPage (@PathVariable("id") int id, Model model) {
-        model.addAttribute("oneProductModel", productService.convertToProductDTO(productService.getProductById(id).get()));
+    @GetMapping("/{productURL}")
+    public String oneProductPage (@PathVariable("productURL") String productUrl, Model model) {
+        model.addAttribute("oneProductModel", productService.convertToProductDTO(productService.getProductByProductUrl(productUrl).get()));
         return "/product/oneProductPage";
     }
 
-    @GetMapping("{id}/edit")
-    public String getEditPage(Model model, @PathVariable("id") int id) {
-        Product product = productService.getProductById(id).get();
+    @GetMapping("{productURL}/edit")
+    public String getEditPage(Model model, @PathVariable("productURL") String productUrl) {
+        Product product = productService.getProductByProductUrl(productUrl).get();
 
         model.addAttribute("oneProductModel", productService.convertToProductDTO(product));
         model.addAttribute("oneGroupModel", product.getGroup());
@@ -95,9 +95,24 @@ public class ProductController {
     }
 
 
-    @PatchMapping("{id}/edit")
-    public String editProductPage(@ModelAttribute ("oneProductModel") ProductDTO productDTO, @PathVariable("id") int id,
-                                  @ModelAttribute("oneGroupModel") Group group, @ModelAttribute("oneManufacturerModel") Manufacturer manufacturer) {
+    @PatchMapping("{productURL}/edit")
+    public String editProductPage(@ModelAttribute ("oneProductModel") @Valid ProductDTO productDTO,
+                                  BindingResult bindingResult, @PathVariable("productURL") String productUrl, @ModelAttribute("oneGroupModel") Group group,
+                                  @ModelAttribute("oneManufacturerModel") Manufacturer manufacturer, Model model) {
+        int id = productService.getProductByProductUrl(productUrl).get().getProductId();
+        productDTO.setProductId(id);
+        if (productDTO.getProductURL().isBlank()){
+            productDTO.setProductURL(productService.createProductUrl(productDTO.getProductName()));}
+        else{
+            productDTO.setProductURL(productService.characterReplacementForUrl(productDTO.getProductURL()));
+        };
+        productValidator.validate(productDTO, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("groupListModel", groupService.findAll());
+            model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
+            return "/product/editProductPage";
+        }
+
         Product product = productService.convertToProduct(productDTO);
         productService.editProduct(product, group, manufacturer, id);
         return "redirect:/product";

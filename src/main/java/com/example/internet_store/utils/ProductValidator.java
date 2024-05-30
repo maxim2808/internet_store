@@ -1,6 +1,7 @@
 package com.example.internet_store.utils;
 
 import com.example.internet_store.dto.ProductDTO;
+import com.example.internet_store.models.Product;
 import com.example.internet_store.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,15 +25,29 @@ public class ProductValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
     ProductDTO productDTO = (ProductDTO) target;
-    if(productService.getProductByProductUrl(productDTO.getProductURL()).isPresent()){
-        errors.rejectValue("productURL",  "","Товар с таким URL уще существует");
-    };
-    if(productService.getProductByName(productDTO.getProductName()).isPresent()){
-        errors.rejectValue("productName", "", "Товар с таким именем уже существует");
-    }
-    if (productDTO.getProductURL().isBlank()){
-        errors.rejectValue("productURL", "", "Поле не должно быть пустым");
-    }
+        System.out.println("name " + productDTO.getProductName());
+        System.out.println("url " + productDTO.getProductURL());
+
+
+
+        if (productService.getProductByProductUrl(productDTO.getProductURL()).isPresent()) {
+           Product product =productService.getProductByProductUrl(productDTO.getProductURL()).get();
+           if (product.getProductId()!=productDTO.getProductId()) {
+            errors.rejectValue("productURL", "", "Товар с таким URL уще существует");
+           }
+        }
+        ;
+        if (productService.getProductByName(productDTO.getProductName()).isPresent()) {
+            Product product = productService.getProductByName(productDTO.getProductName()).get();
+            System.out.println("product name " + product.getProductName() + product.getProductId());
+            System.out.println("productDTO name " + productDTO.getProductName() + productDTO.getProductId());
+            if (product.getProductId()!=productDTO.getProductId()) {
+            errors.rejectValue("productName", "", "Товар с таким именем уже существует");
+            }
+        }
+        if (productDTO.getProductURL().isBlank()) {
+            errors.rejectValue("productURL", "", "Поле не должно быть пустым");
+        }
 
 
     }

@@ -10,5 +10,9 @@
 <p th:text="'Производитель: ' + ${oneProductModel.manufacturer.getName()}"></p>
 <p th:text="'Цена: ' + ${oneProductModel.price}"></p>
 <p th:text="'Описание товара:' + ${oneProductModel.description}"></p>
+<hr>
+<form th:method="GET" th:action="@{/product/{URL}/edit(URL=${oneProductModel.getProductURL()})}">
+    <input type="submit" value="Редактировать товар">
+</form>
 </body>
 </html>
