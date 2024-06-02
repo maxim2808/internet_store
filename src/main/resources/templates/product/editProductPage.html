@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/product/{URL}/edit(URL=${oneProductModel.getProductURL()})}" th:object="${oneProductModel}">
+<form th:method="PATCH" th:action="@{/product/edit/{URL}(URL=${oneProductModel.getProductURL()})}" th:object="${oneProductModel}">
     <label for="nameId">Название товара</label>
     <input type="text" th:field="*{productName}" id="nameId">
     <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{productName}"></div>

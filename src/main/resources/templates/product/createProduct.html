@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/product/create}" th:object="${createProductModel}">
+<form th:method="POST" th:action="@{/product/create}" enctype="multipart/form-data" th:object="${createProductModel}"  >
     <label for="nameId">Название товара</label>
 <input th:type="text" th:field="*{productName}" id="nameId">
     <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{productName}"></div>
@@ -40,18 +40,24 @@
      <option th:each="manufacturer:${manufacturerListModel}" th:value="${manufacturer.getManufacurerId()}" th:text="${manufacturer.getName()}"></option>
  </select>
     <br>
-
-
-<!--    <label for="manufacturerId">Производитель товара</label>&ndash;&gt;-->
-<!--    <input th:type="text" th:field="*{stringManufacturer}" id="manufacturerId">&ndash;&gt;-->
-
-<!--    <br>-->
+        <label for="photo">Выберите фотографию:</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+<!--    <input type="file" id="photo" name="photo" accept="image/*" required>-->
     <br>
 
     <input type="submit" value="Создать товар">
 
 
 
+
 </form>
+
+<br>
+<!--<form th:method="POST" th:action="@{/product/uploadPhoto}" enctype="multipart/form-data">-->
+<!--    <label for="photo">Выберите фотографию:</label>-->
+<!--    <input type="file" id="photo" name="photo" accept="image/*" required>-->
+<!--    <br>-->
+<!--    <button type="submit">Загрузить</button>-->
+<!--</form>-->
 </body>
 </html>

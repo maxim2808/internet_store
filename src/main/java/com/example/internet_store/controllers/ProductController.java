@@ -5,16 +5,23 @@ import com.example.internet_store.models.Group;
 import com.example.internet_store.models.Manufacturer;
 import com.example.internet_store.models.Product;
 import com.example.internet_store.services.GroupService;
+import com.example.internet_store.services.ImageService;
 import com.example.internet_store.services.ManufacturerService;
 import com.example.internet_store.services.ProductService;
 import com.example.internet_store.utils.ProductValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -24,15 +31,21 @@ public class ProductController {
     final GroupService groupService;
     final ManufacturerService manufacturerService;
    final ProductValidator productValidator;
+  //  private final DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
+    final ImageService imageService;
 
 
     @Autowired
     public ProductController(ProductService productService, GroupService groupService, ManufacturerService manufacturerService,
-                             ProductValidator productValidator) {
+                             ProductValidator productValidator,
+                           //  DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration,
+                             ImageService imageService) {
         this.productService = productService;
         this.groupService = groupService;
         this.manufacturerService = manufacturerService;
       this.productValidator = productValidator;
+      //  this.dataSourceTransactionManagerAutoConfiguration = dataSourceTransactionManagerAutoConfiguration;
+        this.imageService = imageService;
     }
 
     @GetMapping("")
@@ -56,7 +69,29 @@ public class ProductController {
     @PostMapping("/create")
     public String postCreateProduct(@ModelAttribute ("createProductModel")
                                       @Valid ProductDTO productDTO, BindingResult bindingResult,
-                                    @ModelAttribute ("oneGroupModel") Group group, @ModelAttribute("oneManufacturer") Manufacturer manufacturer, Model model) {
+                                    @ModelAttribute ("oneGroupModel") Group group, @ModelAttribute("oneManufacturer") Manufacturer manufacturer, Model model
+            , @RequestParam("photo") MultipartFile photo) throws IOException
+    {
+
+
+//        if (!photo.isEmpty()) {
+//            try {
+//                // Сохранение загруженного файла на компьютере
+//                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\download"; // Замените на путь к папке, куда вы хотите сохранить файл
+//                String fileName = photo.getOriginalFilename();
+//                File uploadFile = new File(uploadDir, fileName);
+//                FileCopyUtils.copy(photo.getBytes(), uploadFile);
+//
+//            } catch (IOException e) {
+//                // Обработка ошибки сохранения файла
+//                e.printStackTrace();
+//                return "redirect:/product/error/upload";
+//            }
+//        }
+//        else {
+//            System.out.println("Нет фото");
+//        }
+
 
         if (productDTO.getProductURL().isBlank()){
         productDTO.setProductURL(productService.createProductUrl(productDTO.getProductName()));}
@@ -65,6 +100,7 @@ public class ProductController {
         };
         productValidator.validate(productDTO, bindingResult);
         if (bindingResult.hasErrors()) {
+            System.out.println("Binding Error");
             model.addAttribute("groupListModel", groupService.findAll());
             model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
             return "/product/createProduct";
@@ -72,16 +108,18 @@ public class ProductController {
 
         Product product = productService.convertToProduct(productDTO);
         productService.saveProduct(product, group, manufacturer);
+        System.out.println("Id!!! " + product.getProductId());
+        imageService.receiveImage(photo, product.getProductId());
         return "redirect:/product";
     }
 
-    @GetMapping("/{productURL}")
+    @GetMapping("/view/{productURL}")
     public String oneProductPage (@PathVariable("productURL") String productUrl, Model model) {
         model.addAttribute("oneProductModel", productService.convertToProductDTO(productService.getProductByProductUrl(productUrl).get()));
         return "/product/oneProductPage";
     }
 
-    @GetMapping("{productURL}/edit")
+    @GetMapping("/edit/{productURL}")
     public String getEditPage(Model model, @PathVariable("productURL") String productUrl) {
         Product product = productService.getProductByProductUrl(productUrl).get();
 
@@ -95,7 +133,7 @@ public class ProductController {
     }
 
 
-    @PatchMapping("{productURL}/edit")
+    @PatchMapping("/edit/{productURL}")
     public String editProductPage(@ModelAttribute ("oneProductModel") @Valid ProductDTO productDTO,
                                   BindingResult bindingResult, @PathVariable("productURL") String productUrl, @ModelAttribute("oneGroupModel") Group group,
                                   @ModelAttribute("oneManufacturerModel") Manufacturer manufacturer, Model model) {
@@ -118,7 +156,49 @@ public class ProductController {
         return "redirect:/product";
     }
 
+//    @GetMapping("/uploadPhoto")
+//    public String getUploadPhoto() {
+//        return "/product/uploadPhotoPage";
+//    }
+//
+//
+//    @PostMapping("/uploadPhoto")
+//    public String uploadPhoto(@RequestParam("photo") MultipartFile photo) {
+//        System.out.println("post start!!!!!!!!");
+//        if (!photo.isEmpty()) {
+//            try {
+//                // Сохранение загруженного файла на компьютере
+//                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\download"; // Замените на путь к папке, куда вы хотите сохранить файл
+//                String fileName = photo.getOriginalFilename();
+//                File uploadFile = new File(uploadDir, fileName);
+//                FileCopyUtils.copy(photo.getBytes(), uploadFile);
+//
+//                return "/product/createProduct";
+//            } catch (IOException e) {
+//                // Обработка ошибки сохранения файла
+//                e.printStackTrace();
+//                return "redirect:/product/error/upload";
+//            }
+//        } else {
+//            return "redirect:/product/error/upload";
+//        }
+//    }
+
+    @GetMapping("/error/upload")
+    public String getErrorUpload() {
+        return "/product/uploadPhotoPage";
     }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex, Model model) {
+        String errorMessage = "Превышен максимальный размер загружаемого файла.";
+        model.addAttribute("errorMessage", errorMessage);
+        // Вернуть представление, которое отображает сообщение об ошибке
+        return "errorPage";
+    }
+
+
+}
 
 
 
