@@ -5,11 +5,26 @@
     <title>Title</title>
 </head>
 <body>
+
+
+<!--<p><img src="/download/100-main.jpg" alt="Мое изображение" width="200" height="250"></p>-->
+
 <p th:text="'Группа:' + ${oneProductModel.group.getGroupName()}"></p>
 <p th:text="'Название: ' + ${oneProductModel.productName}"></p>
 <p th:text="'Производитель: ' + ${oneProductModel.manufacturer.getName()}"></p>
 <p th:text="'Цена: ' + ${oneProductModel.price}"></p>
 <p th:text="'Описание товара:' + ${oneProductModel.description}"></p>
+<p th:text="${addressPicModel}"></p>
+<br>
+<p th:if="${addressPicModel!=null}">
+    <img th:src="${addressPicModel}"  alt="Фото товара" width="200" height="250"></p>
+</p>
+<p th:if="${addressPicModel==null}">
+    <img src="/download/no_photo.png"  alt="Фото товара" width="200" height="250"></p>
+</p>
+
+
+
 <hr>
 <form th:method="GET" th:action="@{/product/edit/{URL}(URL=${oneProductModel.getProductURL()})}">
     <input type="submit" value="Редактировать товар">

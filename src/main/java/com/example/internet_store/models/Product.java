@@ -3,6 +3,7 @@ package com.example.internet_store.models;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -47,6 +48,15 @@ boolean popular;
 Date registrationDate;
     @Column(name = "product_url")
     String productURL;
+    @ManyToMany
+            @JoinTable(name = "product_picture", joinColumns = @JoinColumn(name ="product_id"),
+            inverseJoinColumns = @JoinColumn(name = "picture_id"))
+    List<Picture> pictureList;
+    @ManyToOne
+    @JoinColumn(name = "main_picture", referencedColumnName = "picture_id")
+    Picture mainPicture;
+
+
     public int getProductId() {
         return productId;
     }
@@ -151,5 +161,21 @@ Date registrationDate;
 
     public void setProductURL(String productURL) {
         this.productURL = productURL;
+    }
+
+    public List<Picture> getPictureList() {
+        return pictureList;
+    }
+
+    public void setPictureList(List<Picture> pictureList) {
+        this.pictureList = pictureList;
+    }
+
+    public Picture getMainPicture() {
+        return mainPicture;
+    }
+
+    public void setMainPicture(Picture mainPicture) {
+        this.mainPicture = mainPicture;
     }
 }

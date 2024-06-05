@@ -5,7 +5,7 @@ import com.example.internet_store.models.Group;
 import com.example.internet_store.models.Manufacturer;
 import com.example.internet_store.models.Product;
 import com.example.internet_store.services.GroupService;
-import com.example.internet_store.services.ImageService;
+import com.example.internet_store.services.PictureService;
 import com.example.internet_store.services.ManufacturerService;
 import com.example.internet_store.services.ProductService;
 import com.example.internet_store.utils.ProductValidator;
@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -32,20 +32,22 @@ public class ProductController {
     final ManufacturerService manufacturerService;
    final ProductValidator productValidator;
   //  private final DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
-    final ImageService imageService;
+    final PictureService pictureService;
+    private final DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
 
 
     @Autowired
     public ProductController(ProductService productService, GroupService groupService, ManufacturerService manufacturerService,
                              ProductValidator productValidator,
-                           //  DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration,
-                             ImageService imageService) {
+                             //  DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration,
+                             PictureService pictureService, DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration) {
         this.productService = productService;
         this.groupService = groupService;
         this.manufacturerService = manufacturerService;
       this.productValidator = productValidator;
       //  this.dataSourceTransactionManagerAutoConfiguration = dataSourceTransactionManagerAutoConfiguration;
-        this.imageService = imageService;
+        this.pictureService = pictureService;
+        this.dataSourceTransactionManagerAutoConfiguration = dataSourceTransactionManagerAutoConfiguration;
     }
 
     @GetMapping("")
@@ -107,15 +109,44 @@ public class ProductController {
         }
 
         Product product = productService.convertToProduct(productDTO);
+        System.out.println("before id " + product.getProductId());
         productService.saveProduct(product, group, manufacturer);
         System.out.println("Id!!! " + product.getProductId());
-        imageService.receiveImage(photo, product.getProductId());
+        pictureService.receiveImage(photo, product.getProductId());
         return "redirect:/product";
     }
 
     @GetMapping("/view/{productURL}")
     public String oneProductPage (@PathVariable("productURL") String productUrl, Model model) {
-        model.addAttribute("oneProductModel", productService.convertToProductDTO(productService.getProductByProductUrl(productUrl).get()));
+        Product product = productService.getProductByProductUrl(productUrl).get();
+        if(product.getMainPicture()!=null){
+        StringBuilder address = new StringBuilder("/download/");
+        address.append(product.getMainPicture().getFileName());
+            System.out.println(address);
+            model.addAttribute("addressPicModel", address.toString());
+        }
+        else {
+            model.addAttribute("addressPicModel");
+        }
+//        try {
+//            System.out.println("Try block is starting");
+//            StringBuilder fileAddres = new StringBuilder("/static");
+//            fileAddres = fileAddres.append(address);
+//            System.out.println(fileAddres);
+//            String address2 = "C:\\Users\\max\\IdeaProjects\\internet_store\\static\\download\\100-main.jpg";
+//            String shortAddress = "/static/download/100-main.jpg";
+//            File image = new File(shortAddress);
+//            if (image.exists()){
+//                System.out.println("файл с данным изображением сущесвует");
+//            }
+//        }
+//        catch (Exception e) {
+//            System.out.println("При получегт файла произошла ошибка " + e.getMessage());
+//        }
+
+
+
+        model.addAttribute("oneProductModel", productService.convertToProductDTO(product));
         return "/product/oneProductPage";
     }
 
