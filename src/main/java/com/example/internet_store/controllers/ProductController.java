@@ -1,13 +1,12 @@
 package com.example.internet_store.controllers;
 
+import com.example.internet_store.dto.GroupDTO;
 import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.models.Group;
 import com.example.internet_store.models.Manufacturer;
+import com.example.internet_store.models.Picture;
 import com.example.internet_store.models.Product;
-import com.example.internet_store.services.GroupService;
-import com.example.internet_store.services.PictureService;
-import com.example.internet_store.services.ManufacturerService;
-import com.example.internet_store.services.ProductService;
+import com.example.internet_store.services.*;
 import com.example.internet_store.utils.ProductValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -32,22 +32,27 @@ public class ProductController {
     final ManufacturerService manufacturerService;
    final ProductValidator productValidator;
   //  private final DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
-    final PictureService pictureService;
+   // final PictureService pictureService;
+    final ReceivePictureService receivePictureService;
     private final DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
+    private final PictureService pictureService;
 
 
     @Autowired
     public ProductController(ProductService productService, GroupService groupService, ManufacturerService manufacturerService,
                              ProductValidator productValidator,
                              //  DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration,
-                             PictureService pictureService, DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration) {
+                             //  PictureService pictureService,
+                             ReceivePictureService receivePictureService, DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration, PictureService pictureService) {
         this.productService = productService;
         this.groupService = groupService;
         this.manufacturerService = manufacturerService;
       this.productValidator = productValidator;
       //  this.dataSourceTransactionManagerAutoConfiguration = dataSourceTransactionManagerAutoConfiguration;
-        this.pictureService = pictureService;
+     //   this.pictureService = pictureService;
+        this.receivePictureService = receivePictureService;
         this.dataSourceTransactionManagerAutoConfiguration = dataSourceTransactionManagerAutoConfiguration;
+        this.pictureService = pictureService;
     }
 
     @GetMapping("")
@@ -76,24 +81,6 @@ public class ProductController {
     {
 
 
-//        if (!photo.isEmpty()) {
-//            try {
-//                // Сохранение загруженного файла на компьютере
-//                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\download"; // Замените на путь к папке, куда вы хотите сохранить файл
-//                String fileName = photo.getOriginalFilename();
-//                File uploadFile = new File(uploadDir, fileName);
-//                FileCopyUtils.copy(photo.getBytes(), uploadFile);
-//
-//            } catch (IOException e) {
-//                // Обработка ошибки сохранения файла
-//                e.printStackTrace();
-//                return "redirect:/product/error/upload";
-//            }
-//        }
-//        else {
-//            System.out.println("Нет фото");
-//        }
-
 
         if (productDTO.getProductURL().isBlank()){
         productDTO.setProductURL(productService.createProductUrl(productDTO.getProductName()));}
@@ -112,7 +99,7 @@ public class ProductController {
         System.out.println("before id " + product.getProductId());
         productService.saveProduct(product, group, manufacturer);
         System.out.println("Id!!! " + product.getProductId());
-        pictureService.receiveImage(photo, product.getProductId());
+        receivePictureService.receiveImage(photo, product.getProductId());
         return "redirect:/product";
     }
 
@@ -128,24 +115,6 @@ public class ProductController {
         else {
             model.addAttribute("addressPicModel");
         }
-//        try {
-//            System.out.println("Try block is starting");
-//            StringBuilder fileAddres = new StringBuilder("/static");
-//            fileAddres = fileAddres.append(address);
-//            System.out.println(fileAddres);
-//            String address2 = "C:\\Users\\max\\IdeaProjects\\internet_store\\static\\download\\100-main.jpg";
-//            String shortAddress = "/static/download/100-main.jpg";
-//            File image = new File(shortAddress);
-//            if (image.exists()){
-//                System.out.println("файл с данным изображением сущесвует");
-//            }
-//        }
-//        catch (Exception e) {
-//            System.out.println("При получегт файла произошла ошибка " + e.getMessage());
-//        }
-
-
-
         model.addAttribute("oneProductModel", productService.convertToProductDTO(product));
         return "/product/oneProductPage";
     }
@@ -160,60 +129,37 @@ public class ProductController {
         model.addAttribute("oneManufacturerModel", product.getManufacturer());
         model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
 
+
+        //model.addAttribute("mainPictureModel", pictureService.getPictureById(product.getMainPicture().getPictureId()));
+
         return "/product/editProductPage";
     }
 
 
     @PatchMapping("/edit/{productURL}")
     public String editProductPage(@ModelAttribute ("oneProductModel") @Valid ProductDTO productDTO,
-                                  BindingResult bindingResult, @PathVariable("productURL") String productUrl, @ModelAttribute("oneGroupModel") Group group,
-                                  @ModelAttribute("oneManufacturerModel") Manufacturer manufacturer, Model model) {
-        int id = productService.getProductByProductUrl(productUrl).get().getProductId();
+                                  BindingResult bindingResult, @PathVariable("productURL") String productUrl,
+                                  @ModelAttribute("oneGroupModel") Group group,
+                                  @ModelAttribute("oneManufacturerModel") Manufacturer manufacturer,
+                                  Model model) {
+
+        Product oldProduct = productService.getProductByProductUrl(productUrl).get();
+        int id = oldProduct.getProductId();
         productDTO.setProductId(id);
-        if (productDTO.getProductURL().isBlank()){
-            productDTO.setProductURL(productService.createProductUrl(productDTO.getProductName()));}
-        else{
-            productDTO.setProductURL(productService.characterReplacementForUrl(productDTO.getProductURL()));
-        };
+        productService.setUrlForProduct(productDTO);
         productValidator.validate(productDTO, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("groupListModel", groupService.findAll());
             model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
             return "/product/editProductPage";
         }
-
         Product product = productService.convertToProduct(productDTO);
-        productService.editProduct(product, group, manufacturer, id);
+        productService.enrichProductAfterEdit(product, oldProduct);
+        productService.editProduct(product, group, manufacturer, id );
+        System.out.println("save are finish");
         return "redirect:/product";
     }
 
-//    @GetMapping("/uploadPhoto")
-//    public String getUploadPhoto() {
-//        return "/product/uploadPhotoPage";
-//    }
-//
-//
-//    @PostMapping("/uploadPhoto")
-//    public String uploadPhoto(@RequestParam("photo") MultipartFile photo) {
-//        System.out.println("post start!!!!!!!!");
-//        if (!photo.isEmpty()) {
-//            try {
-//                // Сохранение загруженного файла на компьютере
-//                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\download"; // Замените на путь к папке, куда вы хотите сохранить файл
-//                String fileName = photo.getOriginalFilename();
-//                File uploadFile = new File(uploadDir, fileName);
-//                FileCopyUtils.copy(photo.getBytes(), uploadFile);
-//
-//                return "/product/createProduct";
-//            } catch (IOException e) {
-//                // Обработка ошибки сохранения файла
-//                e.printStackTrace();
-//                return "redirect:/product/error/upload";
-//            }
-//        } else {
-//            return "redirect:/product/error/upload";
-//        }
-//    }
 
     @GetMapping("/error/upload")
     public String getErrorUpload() {
@@ -227,6 +173,7 @@ public class ProductController {
         // Вернуть представление, которое отображает сообщение об ошибке
         return "errorPage";
     }
+
 
 
 }

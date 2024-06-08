@@ -31,6 +31,20 @@
     <input type="text" th:field="*{discount}" id="discountId">
     <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{discount}"></div>
     <br>
+
+
+    <label for="popularId">Товар популярен</label>
+    <input type="checkbox" th:field="*{popular}" id="popularId" >
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{popular}"></div>
+    <br>
+
+
+
+
+    <input type="hidden" th:field="*{mainPicture.pictureId}">
+<!--    <input type="hidden" th:field="*{registrationDate}">-->
+
+
     <label for="labelGroupId">Группа товаров</label>
     <select th:object="${oneGroupModel}" th:field="*{groupId}" id="labelGroupId">
         <option th:each="group:${groupListModel}" th:value="${oneGroupModel.getGroupId()}" th:text="${group.getGroupName()}"></option>

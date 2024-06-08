@@ -17,6 +17,8 @@ public class Picture {
     @ManyToMany(mappedBy = "pictureList")
     List<Product> productList;
 
+    @OneToMany(mappedBy = "mainPicture")
+    List<Product> mainPictureList;
 
     public int getPictureId() {
         return pictureId;
@@ -40,5 +42,13 @@ public class Picture {
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
+    }
+
+    public List<Product> getMainPictureList() {
+        return mainPictureList;
+    }
+
+    public void setMainPictureList(List<Product> mainPictureList) {
+        this.mainPictureList = mainPictureList;
     }
 }

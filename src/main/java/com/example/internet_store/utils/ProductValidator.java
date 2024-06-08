@@ -30,12 +30,27 @@ public class ProductValidator implements Validator {
 
 
 
+//        if (productService.getProductByProductUrl(productDTO.getProductURL()).isPresent()) {
+//           Product product =productService.getProductByProductUrl(productDTO.getProductURL()).get();
+//           if (product.getProductId()!=productDTO.getProductId()) {
+//            errors.rejectValue("productURL", "", "Товар с таким URL уще существует");
+//           }
+//        }
+
+
         if (productService.getProductByProductUrl(productDTO.getProductURL()).isPresent()) {
-           Product product =productService.getProductByProductUrl(productDTO.getProductURL()).get();
-           if (product.getProductId()!=productDTO.getProductId()) {
-            errors.rejectValue("productURL", "", "Товар с таким URL уще существует");
-           }
+            System.out.println("validation is editing of product");
+            Product product =productService.getProductByProductUrl(productDTO.getProductURL()).get();
+            System.out.println("validation product id :" + product.getProductId());
+            System.out.println("validation productDTO id :" + productDTO.getProductId());
+            if (product.getProductId()!=productDTO.getProductId()) {
+                System.out.println("error!!!!!!!!!!!!!!!");
+                errors.rejectValue("productURL", "", "Товар с таким URL уще существует");
+            }
         }
+
+
+
         ;
         if (productService.getProductByName(productDTO.getProductName()).isPresent()) {
             Product product = productService.getProductByName(productDTO.getProductName()).get();

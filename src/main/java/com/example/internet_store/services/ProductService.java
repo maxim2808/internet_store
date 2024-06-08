@@ -3,6 +3,7 @@ package com.example.internet_store.services;
 import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.models.Group;
 import com.example.internet_store.models.Manufacturer;
+import com.example.internet_store.models.Picture;
 import com.example.internet_store.models.Product;
 import com.example.internet_store.repositories.ProductRepositories;
 import com.ibm.icu.text.Transliterator;
@@ -22,13 +23,21 @@ public class ProductService {
     final GroupService groupService;
     final ManufacturerService manufacturerService;
     final ModelMapper modelMapper;
+    final PictureService pictureService;
+  //  final ReceivePictureService receivePictureService;
+
 
     @Autowired
-    public ProductService(ProductRepositories productRepositories, GroupService groupService, ManufacturerService manufacturerService, ModelMapper modelMapper) {
+    public ProductService(ProductRepositories productRepositories, GroupService groupService, ManufacturerService manufacturerService, ModelMapper modelMapper, PictureService pictureService
+                          ) {
         this.productRepositories = productRepositories;
         this.groupService = groupService;
         this.manufacturerService = manufacturerService;
         this.modelMapper = modelMapper;
+        this.pictureService = pictureService;
+      //  this.receivePictureService = receivePictureService;
+
+        ;
     }
 
     public List<Product> getAllProducts() {
@@ -62,12 +71,17 @@ public class ProductService {
       return   productRepositories.findByProductName(name);
     }
 
+
     @Transactional
-    public void editProduct(Product receivedProduct, Group group, Manufacturer manufacturer, int id) {
+    public void editProduct(Product receivedProduct, Group group, Manufacturer manufacturer,
+                           int id) {
+        System.out.println("Edit product started");
         receivedProduct.setProductGroup(groupService.findById(group.getGroupId()).get());
         receivedProduct.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
-    receivedProduct.setProductId(id);
-    productRepositories.save(receivedProduct);
+        receivedProduct.setProductId(id);
+        System.out.println("before save");
+        productRepositories.save(receivedProduct);
+        System.out.println("after save");
     }
 
     public Optional<Product> getProductByProductUrl(String productUrl) {
@@ -96,6 +110,24 @@ public class ProductService {
                 .replaceAll("-{2,}", "-") // Удаление повторяющихся дефисов
                 .replaceAll("^-|-$", ""); // Удаление дефисов в начале и конце строки
         return urlWord;
+    }
+
+    public void enrichProductAfterEdit(Product newProduct, Product oldProduct) {
+        newProduct.setRegistrationDate(oldProduct.getRegistrationDate());
+        if(oldProduct.getMainPicture()!=null){
+            newProduct.setMainPicture(oldProduct.getMainPicture());
+        }
+        else {newProduct.setMainPicture(null);};
+    }
+
+    public void setUrlForProduct(ProductDTO productDTO) {
+
+        if (productDTO.getProductURL().isBlank()){
+            productDTO.setProductURL(createProductUrl(productDTO.getProductName()));}
+        else{
+            productDTO.setProductURL(characterReplacementForUrl(productDTO.getProductURL()));
+        };
+
     }
 
 

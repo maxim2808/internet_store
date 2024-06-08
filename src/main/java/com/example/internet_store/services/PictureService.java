@@ -19,62 +19,60 @@ import java.util.Collections;
 @Transactional(readOnly = true)
 public class PictureService {
     final PictureRepository pictureRepository;
-    final ProductService productService;
+   // final ProductService productService;
     private final ProductRepositories productRepositories;
 
     @Autowired
-    public PictureService(PictureRepository pictureRepository, ProductService productService, ProductRepositories productRepositories) {
+    public PictureService(PictureRepository pictureRepository, ProductRepositories productRepositories) {
         this.pictureRepository = pictureRepository;
-        this.productService = productService;
+      //  this.productService = productService;
         this.productRepositories = productRepositories;
     }
 
-    public void savePicture(Picture picture) {
-        pictureRepository.save(picture);
-    }
+//    public void savePicture(Picture picture) {
+//        pictureRepository.save(picture);
+//    }
 
 
 
-@Transactional
-    public void receiveImage(MultipartFile image, int id) {
-        if (!image.isEmpty()) {
-            try {
-                // Сохранение загруженного файла на компьютере
-                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\static\\download"; // Замените на путь к папке, куда вы хотите сохранить файл
-                //String fileName = image.getOriginalFilename();
-                String fileName = Integer.toString(id) + "-main.jpg";
-                System.out.println(fileName);
-                File uploadFile = new File(uploadDir, fileName);
-                if (uploadFile.exists()){
-                    System.out.println("Такой файл уже существует");
-                }
-                else
-                FileCopyUtils.copy(image.getBytes(), uploadFile);
-                Picture picture = new Picture();
-                Product product = productService.getProductById(id).get();
-                picture.setFileName(fileName);
-                savePicture(picture);
-
-                picture.setProductList(new ArrayList<Product>(Collections.singletonList(product)));
-                product.setPictureList(new ArrayList<Picture>(Collections.singletonList(picture)));
-                product.setMainPicture(picture);
-                productService.editProduct(product, product.getGroup(), product.getManufacturer(), id); //not effective
-              //  product.setPictureList(new);
-
-
-            } catch (IOException e) {
-                // Обработка ошибки сохранения файла
-                e.printStackTrace();
-               // return "redirect:/product/error/upload";
-            }
-
-
-
-        }
-        else {
-            System.out.println("Нет фото");
-        }
-    }
+//@Transactional
+//    public void receiveImage(MultipartFile image, int id) {
+//        if (!image.isEmpty()) {
+//            try {
+//                // Сохранение загруженного файла на компьютере
+//                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\static\\download"; // Замените на путь к папке, куда вы хотите сохранить файл
+//                String fileName = Integer.toString(id) + "-main.jpg";
+//                System.out.println(fileName);
+//                File uploadFile = new File(uploadDir, fileName);
+//                if (uploadFile.exists()){
+//                    System.out.println("Такой файл уже существует");
+//                }
+//                else
+//                FileCopyUtils.copy(image.getBytes(), uploadFile);
+//                Picture picture = new Picture();
+//                Product product = productService.getProductById(id).get();
+//                picture.setFileName(fileName);
+//                savePicture(picture);
+//
+//                picture.setProductList(new ArrayList<Product>(Collections.singletonList(product)));
+//                product.setPictureList(new ArrayList<Picture>(Collections.singletonList(picture)));
+//                product.setMainPicture(picture);
+//                productService.editProduct(product, product.getGroup(), product.getManufacturer(), id); //not effective
+//              //  product.setPictureList(new);
+//
+//
+//            } catch (IOException e) {
+//                // Обработка ошибки сохранения файла
+//                e.printStackTrace();
+//            }
+//
+//
+//
+//        }
+//        else {
+//            System.out.println("Нет фото");
+//        }
+//    }
 
     public String getFileName(int id) {
         return pictureRepository.findById(id).get().getFileName();
@@ -83,6 +81,11 @@ public class PictureService {
 
     public Picture getMainPicture(Product product) {
         return product.getMainPicture();
+    }
+
+    public Picture getPictureById(int id) {
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   "  + id);
+        return pictureRepository.findById(id).get();
     }
 
 

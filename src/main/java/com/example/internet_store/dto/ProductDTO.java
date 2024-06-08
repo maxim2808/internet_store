@@ -2,12 +2,12 @@ package com.example.internet_store.dto;
 
 import com.example.internet_store.models.Group;
 import com.example.internet_store.models.Manufacturer;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
+import com.example.internet_store.models.Picture;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.Date;
 
 public class ProductDTO {
     int productId;
@@ -42,6 +42,11 @@ public class ProductDTO {
     boolean popular;
    // @NotBlank(message = "Поле не должно быть пустым")
     String productURL;
+
+    Picture mainPicture;
+
+//    @Temporal(TemporalType.TIMESTAMP)
+//    Date registrationDate;
 
     public int getProductId() {
         return productId;
@@ -139,4 +144,22 @@ public class ProductDTO {
     public void setProductURL(String productURL) {
         this.productURL = productURL;
     }
+
+    public Picture getMainPicture() {
+        return mainPicture;
+    }
+
+    public void setMainPicture(Picture mainPicture) {
+        this.mainPicture = mainPicture;
+    }
+
+
+
+//    public Date getRegistrationDate() {
+//        return registrationDate;
+//    }
+//
+//    public void setRegistrationDate(Date registrationDate) {
+//        this.registrationDate = registrationDate;
+//    }
 }

@@ -45,5 +45,10 @@ public class GroupService {
         return modelMapper.map(groupDTO, Group.class);
     }
 
+    public GroupDTO convertToDTO(Group group) {
+        return modelMapper.map(group, GroupDTO.class);
+    }
+
+
 
 }
