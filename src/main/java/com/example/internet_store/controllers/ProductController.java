@@ -10,6 +10,7 @@ import com.example.internet_store.services.*;
 import com.example.internet_store.utils.ProductValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,36 +32,53 @@ public class ProductController {
     final ProductService productService;
     final GroupService groupService;
     final ManufacturerService manufacturerService;
-   final ProductValidator productValidator;
-  //  private final DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
-   // final PictureService pictureService;
+    final ProductValidator productValidator;
     final ReceivePictureService receivePictureService;
     private final DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
     private final PictureService pictureService;
+    @Value("${productPerPage}")
+    private String productPerPageString;
 
 
     @Autowired
     public ProductController(ProductService productService, GroupService groupService, ManufacturerService manufacturerService,
                              ProductValidator productValidator,
-                             //  DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration,
-                             //  PictureService pictureService,
                              ReceivePictureService receivePictureService, DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration, PictureService pictureService) {
         this.productService = productService;
         this.groupService = groupService;
         this.manufacturerService = manufacturerService;
-      this.productValidator = productValidator;
-      //  this.dataSourceTransactionManagerAutoConfiguration = dataSourceTransactionManagerAutoConfiguration;
-     //   this.pictureService = pictureService;
+        this.productValidator = productValidator;
         this.receivePictureService = receivePictureService;
         this.dataSourceTransactionManagerAutoConfiguration = dataSourceTransactionManagerAutoConfiguration;
         this.pictureService = pictureService;
     }
 
     @GetMapping("")
-    public String index(Model model) {
+    public String index(Model model, @RequestParam(value = "page", defaultValue = "0", required = false) int page
+//            ,@RequestParam(value = "productPerPage", defaultValue = "0", required = false) int productPerPage
+    ) {
+        int productPerPage = Integer.parseInt(productPerPageString);
+        List<ProductDTO> productDTOList = productService.getAllProducts(page, productPerPage).stream().map(product ->
+                productService.convertToProductDTO(product)).toList();
+       for (ProductDTO product : productDTOList) {
+           if(product.getMainPicture()!=null){
+               StringBuilder address = new StringBuilder("/download/");
+               address.append(product.getMainPicture().getFileName());
+               product.setAddressPicture(address.toString());
+           }
+           else {
+               product.setAddressPicture("");
+           }
+       }
+ //       System.out.println("list page size " + productService.listPage(productPerPage).size());
+       model.addAttribute("numberOfPageModel", productService.listPage(productPerPage));
+       model.addAttribute("productPerPageModel", productPerPage);
+       model.addAttribute("productsModel", productDTOList);
 
-       List<ProductDTO> productDTOList = productService.getAllProducts().stream().map(product -> productService.convertToProductDTO(product)).toList();
-     model.addAttribute("productsModel", productDTOList);
+
+
+
+
 
         return "product/productPage";
     }

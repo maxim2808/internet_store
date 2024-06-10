@@ -9,9 +9,11 @@ import com.example.internet_store.repositories.ProductRepositories;
 import com.ibm.icu.text.Transliterator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +44,15 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
        return productRepositories.findAll();
+    }
+
+
+    public List<Product> getAllProducts(int page, int productPerPage) {
+
+        if (productPerPage>=1){
+            int pageMinusOne = page - 1;
+        return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
+        else return productRepositories.findAll();
     }
 
 //    public List<ProductDTO> getAllProductsDTO() {
@@ -128,6 +139,19 @@ public class ProductService {
             productDTO.setProductURL(characterReplacementForUrl(productDTO.getProductURL()));
         };
 
+    }
+
+    public List<Integer> listPage(int productsPerPage) {
+        if (productsPerPage> 0) {
+            int sizeList = (int) Math.ceil((double)productRepositories.findAll().size() / productsPerPage);
+            List<Integer> numberList = new ArrayList<>();
+            System.out.println("sizeList " + sizeList);
+            for (int i = 0; i < sizeList; i++) {
+                numberList.add(i+1);
+            }
+            System.out.println(numberList);
+            return numberList;
+        } else return null;
     }
 
 

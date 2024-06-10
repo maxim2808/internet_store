@@ -44,9 +44,8 @@ public class ProductDTO {
     String productURL;
 
     Picture mainPicture;
+    String addressPicture;
 
-//    @Temporal(TemporalType.TIMESTAMP)
-//    Date registrationDate;
 
     public int getProductId() {
         return productId;
@@ -153,13 +152,13 @@ public class ProductDTO {
         this.mainPicture = mainPicture;
     }
 
+    public String getAddressPicture() {
+        return addressPicture;
+    }
+
+    public void setAddressPicture(String addressPicture) {
+        this.addressPicture = addressPicture;
+    }
 
 
-//    public Date getRegistrationDate() {
-//        return registrationDate;
-//    }
-//
-//    public void setRegistrationDate(Date registrationDate) {
-//        this.registrationDate = registrationDate;
-//    }
 }

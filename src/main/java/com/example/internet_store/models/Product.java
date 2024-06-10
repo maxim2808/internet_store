@@ -34,15 +34,12 @@ public class Product {
     @Column(name = "discount")
     double discount;
 
-    //@Transient
-    //double finalPrice = price-(price*(discount/100));
+
 
 @Column(name = "rating")
     double rating;
 @Column(name = "popular")
 boolean popular;
-//@Column(name = "image")
-//byte [] image;
 @Column(name = "registration_date")
 @Temporal(TemporalType.TIMESTAMP)
 Date registrationDate;
