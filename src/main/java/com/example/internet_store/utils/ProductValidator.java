@@ -34,11 +34,33 @@ public class ProductValidator implements Validator {
         }
 
         if (productService.getProductByName(productDTO.getProductName()).isPresent()) {
+            System.out.println("Валидация, такое имя уже есть");
             Product product = productService.getProductByName(productDTO.getProductName()).get();
             if (product.getProductId()!=productDTO.getProductId()) {
+                System.out.println("Валидация, такое имя уже есть, вторая проверка");
             errors.rejectValue("productName", "", "Товар с таким именем уже существует");
             }
         }
+
+
+
+        if (!productService.getProductByName(productDTO.getSimilarProductName()).isPresent()&&!productDTO.getSimilarProductName().isBlank()) {
+            System.out.println("check passed");
+            errors.rejectValue("similarProductName", "", "Такого товара не существует");
+
+//            Product product = productService.getProductByName(productDTO.getProductName()).get();
+//            if (product.getProductId()!=productDTO.getProductId()) {
+//                errors.rejectValue("similarProductName", "", "Такого товара не существует");
+//            }
+        }
+
+
+
+
+
+
+
+
         if (productDTO.getProductURL().isBlank()) {
             errors.rejectValue("productURL", "", "Поле не должно быть пустым");
         }

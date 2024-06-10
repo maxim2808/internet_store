@@ -44,9 +44,12 @@
         <input type="file" id="photo" name="photo" accept="image/*">
 <!--    <input type="file" id="photo" name="photo" accept="image/*" required>-->
     <br>
-
+    <label for="similarId">Аналогичный товар</label>
+    <input type="text" th:field="*{similarProductName}" id="similarId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{similarProductName}"></div>
+    <br>
     <input type="submit" value="Создать товар">
-
+    <br>
 
 
 

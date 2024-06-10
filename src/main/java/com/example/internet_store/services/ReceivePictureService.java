@@ -63,12 +63,28 @@ public class ReceivePictureService {
                 e.printStackTrace();
                 // return "redirect:/product/error/upload";
             }
-
-
-
         }
         else {
             System.out.println("Нет фото");
         }
     }
+
+    public int findPictureByProductName(String productName) {
+        if(productService.getProductByName(productName).isPresent()){
+        Product product = productService.getProductByName(productName).get();
+        Picture picture = product.getMainPicture();
+        return picture.getPictureId();
+    }
+        return 0;
+}
+
+    public Picture findPictureByProductNamePicture(String productName) {
+        if(productService.getProductByName(productName).isPresent()){
+            Product product = productService.getProductByName(productName).get();
+            Picture picture = product.getMainPicture();
+            return picture;
+        }
+        return null;
+    }
+
 }

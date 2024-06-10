@@ -37,7 +37,7 @@ public class Product {
 
 
 @Column(name = "rating")
-    double rating;
+double rating;
 @Column(name = "popular")
 boolean popular;
 @Column(name = "registration_date")

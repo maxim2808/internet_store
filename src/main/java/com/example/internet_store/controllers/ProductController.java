@@ -54,7 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public String index(Model model, @RequestParam(value = "page", defaultValue = "0", required = false) int page
+    public String index(Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page
 //            ,@RequestParam(value = "productPerPage", defaultValue = "0", required = false) int productPerPage
     ) {
         int productPerPage = Integer.parseInt(productPerPageString);
@@ -100,25 +100,45 @@ public class ProductController {
     {
 
 
-
         if (productDTO.getProductURL().isBlank()){
         productDTO.setProductURL(productService.createProductUrl(productDTO.getProductName()));}
         else{
             productDTO.setProductURL(productService.characterReplacementForUrl(productDTO.getProductURL()));
         };
+
+
         productValidator.validate(productDTO, bindingResult);
         if (bindingResult.hasErrors()) {
-            System.out.println("Binding Error");
+            System.out.println("binding result has error!!!!!!!!!!!!!!!!!!!");
             model.addAttribute("groupListModel", groupService.findAll());
             model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
             return "/product/createProduct";
         }
-
+       // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + "photo is null " + (photo.isEmpty()));
         Product product = productService.convertToProduct(productDTO);
+       // System.out.println("photo is null " + photo==null);
+
+
+
+        if(photo.isEmpty()&&productDTO.getSimilarProductName()!=null){
+
+                Picture picture = receivePictureService.findPictureByProductNamePicture(productDTO.getSimilarProductName());
+                if(picture!=null){
+                    product.setMainPicture(picture);
+                }
+        }
+
+
+
         System.out.println("before id " + product.getProductId());
+
+
+
+
         productService.saveProduct(product, group, manufacturer);
         System.out.println("Id!!! " + product.getProductId());
         receivePictureService.receiveImage(photo, product.getProductId());
+
         return "redirect:/product";
     }
 
@@ -160,8 +180,9 @@ public class ProductController {
                                   BindingResult bindingResult, @PathVariable("productURL") String productUrl,
                                   @ModelAttribute("oneGroupModel") Group group,
                                   @ModelAttribute("oneManufacturerModel") Manufacturer manufacturer,
-                                  Model model) {
-
+                                  @RequestParam("photo") MultipartFile photo,
+                                  Model model) throws IOException {
+        System.out.println("edit started");
         Product oldProduct = productService.getProductByProductUrl(productUrl).get();
         int id = oldProduct.getProductId();
         productDTO.setProductId(id);
@@ -174,6 +195,7 @@ public class ProductController {
         }
         Product product = productService.convertToProduct(productDTO);
         productService.enrichProductAfterEdit(product, oldProduct);
+      //  receivePictureService.receiveImage(photo, product.getProductId());
         productService.editProduct(product, group, manufacturer, id );
         System.out.println("save are finish");
         return "redirect:/product";
@@ -193,6 +215,12 @@ public class ProductController {
         return "errorPage";
     }
 
+    @DeleteMapping("/delete/{productURL}")
+    public String deleteProduct(@PathVariable("productURL") String productURL) {
+        Product product = productService.getProductByProductUrl(productURL).get();
+        productService.deleteProductById(product.getProductId());
+        return "redirect:/product";
+    }
 
 
 }

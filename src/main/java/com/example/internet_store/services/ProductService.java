@@ -48,8 +48,8 @@ public class ProductService {
 
 
     public List<Product> getAllProducts(int page, int productPerPage) {
-
-        if (productPerPage>=1){
+//        System.out.println("page " + page + " productPerPage " + productPerPage);
+        if (productPerPage>=1&&page>=1){
             int pageMinusOne = page - 1;
         return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
         else return productRepositories.findAll();
@@ -152,6 +152,11 @@ public class ProductService {
             System.out.println(numberList);
             return numberList;
         } else return null;
+    }
+
+    @Transactional
+    public void deleteProductById(int id) {
+        productRepositories.deleteById(id);
     }
 
 

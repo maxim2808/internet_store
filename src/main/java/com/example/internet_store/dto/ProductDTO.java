@@ -45,6 +45,7 @@ public class ProductDTO {
 
     Picture mainPicture;
     String addressPicture;
+    String similarProductName;
 
 
     public int getProductId() {
@@ -160,5 +161,11 @@ public class ProductDTO {
         this.addressPicture = addressPicture;
     }
 
+    public String getSimilarProductName() {
+        return similarProductName;
+    }
 
+    public void setSimilarProductName(String similarProductName) {
+        this.similarProductName = similarProductName;
+    }
 }
