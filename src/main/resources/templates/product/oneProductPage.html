@@ -12,8 +12,10 @@
 <p th:text="'Группа:' + ${oneProductModel.group.getGroupName()}"></p>
 <p th:text="'Название: ' + ${oneProductModel.productName}"></p>
 <p th:text="'Производитель: ' + ${oneProductModel.manufacturer.getName()}"></p>
-<p th:text="'Цена: ' + ${oneProductModel.price}"></p>
 <p th:text="'Описание товара:' + ${oneProductModel.description}"></p>
+<p th:text="'Цена: ' + ${oneProductModel.price}"></p>
+<div style="color: green" th:if="${oneProductModel.getQuantity()}>0" th:text="'Есть на складе'"></div>
+<div style="color: darkorange" th:if="${oneProductModel.getQuantity()}<1" th:text="'Нет на складе(под заказ)'"></div>
 <p th:text="${addressPicModel}"></p>
 <br>
 <p th:if="${addressPicModel!=null}">
@@ -22,6 +24,17 @@
 <p th:if="${addressPicModel==null}">
     <img src="/download/no_photo.png"  alt="Фото товара" width="200" height="250"></p>
 </p>
+
+<br>
+
+
+
+
+  <form th:method="POST" th:action="@{/cart/view/{URL}(URL=${oneProductModel.getProductURL()})}" th:object="${oneProductModel}" >
+      <label for="idQuantity">Количество</label>
+      <input type="text" th:field="*{quantity}" id="idQuantity">
+    <input type="submit" value="Добавить в корзину">
+</form>
 
 
 

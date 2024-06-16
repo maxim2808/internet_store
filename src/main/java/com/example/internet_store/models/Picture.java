@@ -2,6 +2,7 @@ package com.example.internet_store.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class Picture {
     List<Product> productList;
 
     @OneToMany(mappedBy = "mainPicture")
-    List<Product> mainPictureList;
+    List<Product> mainPictureList = new ArrayList<>();
 
     public int getPictureId() {
         return pictureId;

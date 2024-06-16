@@ -1,5 +1,6 @@
 package com.example.internet_store.services;
 
+import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.models.Picture;
 import com.example.internet_store.models.Product;
 import com.example.internet_store.repositories.PictureRepository;
@@ -84,9 +85,14 @@ public class PictureService {
     }
 
     public Picture getPictureById(int id) {
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   "  + id);
         return pictureRepository.findById(id).get();
     }
+
+public void picSerSave(Picture picture) {
+        pictureRepository.save(picture);
+}
+
+
 
 
 }

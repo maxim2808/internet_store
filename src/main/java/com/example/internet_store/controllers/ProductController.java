@@ -1,13 +1,10 @@
 package com.example.internet_store.controllers;
 
-import com.example.internet_store.dto.GroupDTO;
 import com.example.internet_store.dto.ProductDTO;
-import com.example.internet_store.models.Group;
-import com.example.internet_store.models.Manufacturer;
-import com.example.internet_store.models.Picture;
-import com.example.internet_store.models.Product;
+import com.example.internet_store.models.*;
 import com.example.internet_store.services.*;
 import com.example.internet_store.utils.ProductValidator;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -54,31 +47,17 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public String index(Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page
+    public String index(
+            Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page
 //            ,@RequestParam(value = "productPerPage", defaultValue = "0", required = false) int productPerPage
     ) {
         int productPerPage = Integer.parseInt(productPerPageString);
         List<ProductDTO> productDTOList = productService.getAllProducts(page, productPerPage).stream().map(product ->
                 productService.convertToProductDTO(product)).toList();
-       for (ProductDTO product : productDTOList) {
-           if(product.getMainPicture()!=null){
-               StringBuilder address = new StringBuilder("/download/");
-               address.append(product.getMainPicture().getFileName());
-               product.setAddressPicture(address.toString());
-           }
-           else {
-               product.setAddressPicture("");
-           }
-       }
- //       System.out.println("list page size " + productService.listPage(productPerPage).size());
+        productService.addFolderName(productDTOList);
        model.addAttribute("numberOfPageModel", productService.listPage(productPerPage));
        model.addAttribute("productPerPageModel", productPerPage);
        model.addAttribute("productsModel", productDTOList);
-
-
-
-
-
 
         return "product/productPage";
     }
@@ -114,37 +93,20 @@ public class ProductController {
             model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
             return "/product/createProduct";
         }
-       // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + "photo is null " + (photo.isEmpty()));
+
+
         Product product = productService.convertToProduct(productDTO);
-       // System.out.println("photo is null " + photo==null);
-
-
-
-        if(photo.isEmpty()&&productDTO.getSimilarProductName()!=null){
-
-                Picture picture = receivePictureService.findPictureByProductNamePicture(productDTO.getSimilarProductName());
-                if(picture!=null){
-                    product.setMainPicture(picture);
-                }
-        }
-
-
-
-        System.out.println("before id " + product.getProductId());
-
-
-
-
+        receivePictureService.setSimilarPicture(photo, productDTO, product);
         productService.saveProduct(product, group, manufacturer);
-        System.out.println("Id!!! " + product.getProductId());
         receivePictureService.receiveImage(photo, product.getProductId());
 
         return "redirect:/product";
     }
 
     @GetMapping("/view/{productURL}")
-    public String oneProductPage (@PathVariable("productURL") String productUrl, Model model) {
+    public String oneProductPage (HttpSession session, @PathVariable("productURL") String productUrl, Model model) {
         Product product = productService.getProductByProductUrl(productUrl).get();
+
         if(product.getMainPicture()!=null){
         StringBuilder address = new StringBuilder("/download/");
         address.append(product.getMainPicture().getFileName());
@@ -157,6 +119,17 @@ public class ProductController {
         model.addAttribute("oneProductModel", productService.convertToProductDTO(product));
         return "/product/oneProductPage";
     }
+//
+//    @PostMapping("/view/{productURL}")
+//
+//    public String postViewProduct(HttpSession session, @PathVariable("productURL") String productUrl, Model model, ProductDTO productDTO) {
+//        productService.addProductToCart(session, productUrl, productDTO.getQuantity());
+//       // return "redirect:/product/view/" + productUrl;
+//        return "/cart/successfullyPage";
+//
+//    }
+
+
 
     @GetMapping("/edit/{productURL}")
     public String getEditPage(Model model, @PathVariable("productURL") String productUrl) {
@@ -182,7 +155,6 @@ public class ProductController {
                                   @ModelAttribute("oneManufacturerModel") Manufacturer manufacturer,
                                   @RequestParam("photo") MultipartFile photo,
                                   Model model) throws IOException {
-        System.out.println("edit started");
         Product oldProduct = productService.getProductByProductUrl(productUrl).get();
         int id = oldProduct.getProductId();
         productDTO.setProductId(id);
@@ -195,8 +167,11 @@ public class ProductController {
         }
         Product product = productService.convertToProduct(productDTO);
         productService.enrichProductAfterEdit(product, oldProduct);
-      //  receivePictureService.receiveImage(photo, product.getProductId());
-        productService.editProduct(product, group, manufacturer, id );
+        if (photo.isEmpty()){
+            receivePictureService.setSimilarPicture(photo, productDTO, product);
+            productService.editProduct(product, group, manufacturer, id );
+        }
+       else {receivePictureService.receiveImage(photo, product.getProductId());}
         System.out.println("save are finish");
         return "redirect:/product";
     }
@@ -217,12 +192,30 @@ public class ProductController {
 
     @DeleteMapping("/delete/{productURL}")
     public String deleteProduct(@PathVariable("productURL") String productURL) {
-        Product product = productService.getProductByProductUrl(productURL).get();
-        productService.deleteProductById(product.getProductId());
-        return "redirect:/product";
+      Product product = productService.getProductByProductUrl(productURL).get();
+      productService.deleteProductById(product.getProductId());
+      return "redirect:/product";
     }
 
-
+//    @GetMapping("/cart")
+//    public String getCourt(HttpSession session, Model model){
+//
+//        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
+//        if (cart!=null){
+//        List<ProductDTO> productList = cart.getProducts();
+//        productService.addFolderName(productList);
+//        model.addAttribute("listModel", productList);
+//        model.addAttribute("totalPrice", productService.totalPrice(productList));
+//        }
+//        return "/product/cartPage";
+//    }
+//
+//    @PostMapping("/cart")
+//    public String addCourt(@ModelAttribute("listModel") ProductDTO productDTO) {
+//                    System.out.println("Name " + productDTO.getProductName());
+//            System.out.println("Quantity "+ productDTO.getQuantity());
+//        return "redirect:/product";
+//    }
 }
 
 

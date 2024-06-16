@@ -1,12 +1,10 @@
 package com.example.internet_store.services;
 
 import com.example.internet_store.dto.ProductDTO;
-import com.example.internet_store.models.Group;
-import com.example.internet_store.models.Manufacturer;
-import com.example.internet_store.models.Picture;
-import com.example.internet_store.models.Product;
+import com.example.internet_store.models.*;
 import com.example.internet_store.repositories.ProductRepositories;
 import com.ibm.icu.text.Transliterator;
+import jakarta.servlet.http.HttpSession;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -86,15 +84,12 @@ public class ProductService {
     @Transactional
     public void editProduct(Product receivedProduct, Group group, Manufacturer manufacturer,
                            int id) {
-        System.out.println("Edit product started");
         receivedProduct.setProductGroup(groupService.findById(group.getGroupId()).get());
         receivedProduct.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
         receivedProduct.setProductId(id);
-        System.out.println("before save");
         productRepositories.save(receivedProduct);
-        System.out.println("after save");
     }
-
+    
     public Optional<Product> getProductByProductUrl(String productUrl) {
        return productRepositories.findByProductURL(productUrl);
     }
@@ -145,7 +140,6 @@ public class ProductService {
         if (productsPerPage> 0) {
             int sizeList = (int) Math.ceil((double)productRepositories.findAll().size() / productsPerPage);
             List<Integer> numberList = new ArrayList<>();
-            System.out.println("sizeList " + sizeList);
             for (int i = 0; i < sizeList; i++) {
                 numberList.add(i+1);
             }
@@ -158,6 +152,64 @@ public class ProductService {
     public void deleteProductById(int id) {
         productRepositories.deleteById(id);
     }
+
+    public void productCount(HttpSession session){
+        ShoppingCart shoppingCart = (ShoppingCart) session.getAttribute("shoppingCart");
+        if (shoppingCart == null) {
+            shoppingCart= new ShoppingCart();
+            shoppingCart.setCount(0);
+            session.setAttribute("shoppingCart", shoppingCart);
+
+        }
+        int count = shoppingCart.getCount();
+        count++;
+        shoppingCart.setCount(count);
+        System.out.println("!!!!!!!!!!!!!count: " + count);
+    }
+
+    public void addProductToCart(HttpSession session, String productUrl, int count) {
+        ShoppingCart shoppingCart = (ShoppingCart) session.getAttribute("shoppingCart");
+        if (shoppingCart == null) {
+            shoppingCart= new ShoppingCart();
+            //shoppingCart.setCount(0);
+            session.setAttribute("shoppingCart", shoppingCart);
+
+        }
+//        for(int i=0; i<count; i++){
+//        shoppingCart.getProducts().add(getProductByProductUrl(productUrl).get());}
+            Product product = getProductByProductUrl(productUrl).get();
+            ProductDTO productDTO = convertToProductDTO(product);
+            productDTO.setQuantity(count);
+            shoppingCart.getProducts().add(productDTO);
+
+        System.out.println("Shopping carts:");
+        for (ProductDTO pr : shoppingCart.getProducts()) {
+            System.out.println(pr.getProductName() + " count: " + pr.getQuantity());
+        }
+    }
+
+
+    public void addFolderName(List<ProductDTO> productDTOList){
+        for (ProductDTO product :productDTOList) {
+            if(product.getMainPicture()!=null){
+                StringBuilder address = new StringBuilder("/download/");
+                address.append(product.getMainPicture().getFileName());
+                product.setAddressPicture(address.toString());
+            }
+            else {
+                product.setAddressPicture("");
+            }
+        }
+    }
+
+    public double totalPrice(List<ProductDTO> productDTOList){
+        int totalPrice = 0;
+        for (ProductDTO product : productDTOList) {
+            totalPrice += product.getPrice()*product.getQuantity();
+        }
+        return totalPrice;
+    }
+
 
 
 }
