@@ -14,9 +14,9 @@ public class Picture {
     int pictureId;
     @Column(name = "file_name")
     String fileName;
-
-    @ManyToMany(mappedBy = "pictureList")
-    List<Product> productList;
+//
+//    @ManyToMany(mappedBy = "pictureList")
+//    List<Product> productList;
 
     @OneToMany(mappedBy = "mainPicture")
     List<Product> mainPictureList = new ArrayList<>();
@@ -37,13 +37,13 @@ public class Picture {
         this.fileName = fileName;
     }
 
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-    }
+//    public List<Product> getProductList() {
+//        return productList;
+//    }
+//
+//    public void setProductList(List<Product> productList) {
+//        this.productList = productList;
+//    }
 
     public List<Product> getMainPictureList() {
         return mainPictureList;

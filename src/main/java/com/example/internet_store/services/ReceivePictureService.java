@@ -78,8 +78,9 @@ public class ReceivePictureService {
                 Product product = productService.getProductById(id).get();
                 picture.setFileName(fileName);
                 savePicture(picture);
-                picture.setProductList(new ArrayList<Product>(Collections.singletonList(product)));
-                product.setPictureList(new ArrayList<Picture>(Collections.singletonList(picture)));
+                picture.setMainPictureList(new ArrayList<Product>(Collections.singletonList(product)));
+               // picture.setProductList(new ArrayList<Product>(Collections.singletonList(product)));
+             //   product.setPictureList(new ArrayList<Picture>(Collections.singletonList(picture)));
                 product.setMainPicture(picture);
                 productService.editProduct(product, product.getGroup(), product.getManufacturer(),  id); //not effective
 

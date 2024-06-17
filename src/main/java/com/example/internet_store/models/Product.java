@@ -2,6 +2,7 @@ package com.example.internet_store.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,10 +46,14 @@ boolean popular;
 Date registrationDate;
     @Column(name = "product_url")
     String productURL;
+//    @ManyToMany
+//            @JoinTable(name = "product_picture", joinColumns = @JoinColumn(name ="product_id"),
+//            inverseJoinColumns = @JoinColumn(name = "picture_id"))
+//    List<Picture> pictureList;
     @ManyToMany
-            @JoinTable(name = "product_picture", joinColumns = @JoinColumn(name ="product_id"),
-            inverseJoinColumns = @JoinColumn(name = "picture_id"))
-    List<Picture> pictureList;
+    @JoinTable(name = "product_order", joinColumns = @JoinColumn(name ="product_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id"))
+    List<Order> orderList;
     @ManyToOne
     @JoinColumn(name = "main_picture", referencedColumnName = "picture_id")
     Picture mainPicture;
@@ -160,13 +165,13 @@ Date registrationDate;
         this.productURL = productURL;
     }
 
-    public List<Picture> getPictureList() {
-        return pictureList;
-    }
-
-    public void setPictureList(List<Picture> pictureList) {
-        this.pictureList = pictureList;
-    }
+//    public List<Picture> getPictureList() {
+//        return pictureList;
+//    }
+//
+//    public void setPictureList(List<Picture> pictureList) {
+//        this.pictureList = pictureList;
+//    }
 
     public Picture getMainPicture() {
         return mainPicture;
@@ -174,5 +179,13 @@ Date registrationDate;
 
     public void setMainPicture(Picture mainPicture) {
         this.mainPicture = mainPicture;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 }
