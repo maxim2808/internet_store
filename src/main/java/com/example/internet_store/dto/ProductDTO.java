@@ -1,13 +1,11 @@
 package com.example.internet_store.dto;
 
-import com.example.internet_store.models.Group;
-import com.example.internet_store.models.Manufacturer;
-import com.example.internet_store.models.Order;
-import com.example.internet_store.models.Picture;
+import com.example.internet_store.models.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,13 +42,18 @@ public class ProductDTO {
     boolean popular;
    // @NotBlank(message = "Поле не должно быть пустым")
     String productURL;
-    List<Order> orderList;
-
-
     Picture mainPicture;
     String addressPicture;
     String similarProductName;
+    List<ProductOrder> orderList = new ArrayList<>();
 
+    public List<ProductOrder> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<ProductOrder> orderList) {
+        this.orderList = orderList;
+    }
 
     public int getProductId() {
         return productId;
@@ -173,12 +176,5 @@ public class ProductDTO {
         this.similarProductName = similarProductName;
     }
 
-    public List<Order> getOrderList() {
-        return orderList;
-    }
-
-    public void setOrderList(List<Order> orderList) {
-        this.orderList = orderList;
-    }
 
 }

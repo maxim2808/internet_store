@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -51,9 +52,20 @@ public class ProductController {
             Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page
 //            ,@RequestParam(value = "productPerPage", defaultValue = "0", required = false) int productPerPage
     ) {
+
+//        List<Product> list = productService.getAllProducts();
+//        for(Product product : list) {
+//            Product test = productService.getProductById(156).get();
+//            System.out.println(product.getProductId());
+//            productService.convertToProductDTO(test);
+//            if (product.getOrderList()!=null||product.getOrderList().isEmpty()){
+//         productService.convertToProductDTO(product);}
+//        }
+
         int productPerPage = Integer.parseInt(productPerPageString);
         List<ProductDTO> productDTOList = productService.getAllProducts(page, productPerPage).stream().map(product ->
                 productService.convertToProductDTO(product)).toList();
+
         productService.addFolderName(productDTOList);
        model.addAttribute("numberOfPageModel", productService.listPage(productPerPage));
        model.addAttribute("productPerPageModel", productPerPage);

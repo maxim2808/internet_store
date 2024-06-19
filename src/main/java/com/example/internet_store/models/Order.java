@@ -24,8 +24,8 @@ public class Order {
     String telephoneNumber;
     @Column(name = "order_status")
     String orderStatus;
-    @ManyToMany(mappedBy = "orderList")
-    List<Product> productsInOrder;
+    @OneToMany(mappedBy = "order")
+    List<ProductOrder> productsInOrder;
 
     public int getOrderId() {
         return orderId;
@@ -75,11 +75,11 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public List<Product> getProductsInOrder() {
+    public List<ProductOrder> getProductsInOrder() {
         return productsInOrder;
     }
 
-    public void setProductsInOrder(List<Product> productsInOrder) {
+    public void setProductsInOrder(List<ProductOrder> productsInOrder) {
         this.productsInOrder = productsInOrder;
     }
 }

@@ -90,15 +90,15 @@ public class ProductService {
         productRepositories.save(receivedProduct);
     }
 
-    @Transactional
-    public void editProduct(Product receivedProduct, Group group, Manufacturer manufacturer, List<Order> listOfOrders,
-                            int id) {
-        receivedProduct.setProductGroup(groupService.findById(group.getGroupId()).get());
-        receivedProduct.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
-        receivedProduct.setProductId(id);
-        receivedProduct.setOrderList(listOfOrders);
-        productRepositories.save(receivedProduct);
-    }
+//    @Transactional
+//    public void editProduct(Product receivedProduct, Group group, Manufacturer manufacturer, List<Order> listOfOrders,
+//                            int id) {
+//        receivedProduct.setProductGroup(groupService.findById(group.getGroupId()).get());
+//        receivedProduct.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
+//        receivedProduct.setProductId(id);
+//        receivedProduct.setOrderList(listOfOrders);
+//        productRepositories.save(receivedProduct);
+//    }
 
 
 

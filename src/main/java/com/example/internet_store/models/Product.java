@@ -50,10 +50,12 @@ Date registrationDate;
 //            @JoinTable(name = "product_picture", joinColumns = @JoinColumn(name ="product_id"),
 //            inverseJoinColumns = @JoinColumn(name = "picture_id"))
 //    List<Picture> pictureList;
-    @ManyToMany
-    @JoinTable(name = "product_order", joinColumns = @JoinColumn(name ="product_id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id"))
-    List<Order> orderList;
+
+
+    @OneToMany(mappedBy = "product")
+    List<ProductOrder> orderList = new ArrayList<>();
+
+
     @ManyToOne
     @JoinColumn(name = "main_picture", referencedColumnName = "picture_id")
     Picture mainPicture;
@@ -181,11 +183,11 @@ Date registrationDate;
         this.mainPicture = mainPicture;
     }
 
-    public List<Order> getOrderList() {
+    public List<ProductOrder> getOrderList() {
         return orderList;
     }
 
-    public void setOrderList(List<Order> orderList) {
+    public void setOrderList(List<ProductOrder> orderList) {
         this.orderList = orderList;
     }
 }
