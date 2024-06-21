@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Create order</title>
 </head>
 <body>
-
+<div th:if="${orderModel!=null}">
+<form th:method="POST" th:action="@{/order/createOrder}" th:object="${orderModel}">
+    <label for="addressId">Введи ваш адрес</label>
+    <input type="text" th:field="*{address}" id="addressId">
+    <br>
+    <input type="submit" value="Заказать">
+</form>
+</div>
+<div th:if="${orderModel==null}">
+    <p>Ваша корзина пуста</p>
+</div>
 </body>
 </html>

@@ -26,6 +26,8 @@ public class Order {
     String orderStatus;
     @OneToMany(mappedBy = "order")
     List<ProductOrder> productsInOrder;
+    @Transient
+    String stringDate;
 
     public int getOrderId() {
         return orderId;
@@ -81,5 +83,16 @@ public class Order {
 
     public void setProductsInOrder(List<ProductOrder> productsInOrder) {
         this.productsInOrder = productsInOrder;
+    }
+
+    public String getStringDate() {
+        if (this.registrationDate!=null){
+            return this.registrationDate.toString();
+        }
+        return stringDate;
+    }
+
+    public void setStringDate(String stringDate) {
+        this.stringDate = stringDate;
     }
 }

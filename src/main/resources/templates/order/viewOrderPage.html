@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр заказа</title>
+</head>
+<body>
+<div th:each="PO:${listProductOrderModel}">
+    <p th:text="${PO.getProduct().productName} + ' количетсво ' + ${PO.getProduct().getQuantity()} + ' шт.'" ></p>
+</div>
+
+<p style="font-weight: bold" th:text="'Цена заказа: '+${orderModel.getOrderPrice()} + ' белорусских рублей '"></p>
+<form th:method="PATCH" th:action="@{/order/view/{id}(id=${orderModel.getOrderId()})}" th:object="${orderModel}">
+    <select th:object="${orderModel}" th:field="*{orderStatus}">
+        <option th:each="status:${listStatusModel}" th:value="${status}" th:text="${status}"></option>
+    </select>
+    <input type="hidden" th:field="*{orderPrice}">
+<input type="text" th:field="*{stringDate}">
+    <input type="hidden" th:field="*{address}">
+    <input type="submit" value="Изменить статус">
+</form>
+</body>
+</html>

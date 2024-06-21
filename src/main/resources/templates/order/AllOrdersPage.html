@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Все заказы</title>
+</head>
+<body>
+<form>
+    <select th:object="${statusModel}" th:field="${statusModel}">
+        <option th:each="status:${listStatusModel}" th:value="${status}" th:text="${status}"></option>
+    </select>
+</form>
+<div th:each="order:${orderModel}">
+<a th:href="@{/order/view/{id}(id=${order.getOrderId()})}"  th:text="${order.getOrderId()}"></a>
+
+    <span th:text="${order.stringDate} + ' '"> </span>
+    <span  style="color: red" th:text="${order.getOrderStatus()}"></span>
+    <span th:text=" ' итоговая цена ' "></span>
+    <span style="font-weight: bold" th:text="${order.getOrderPrice()}  + ' рублей '"> ></span>
+    <span th:text="${order.getAddress()}"></span>
+</div>
+</body>
+</html>

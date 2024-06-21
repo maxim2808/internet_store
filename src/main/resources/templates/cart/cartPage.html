@@ -98,7 +98,7 @@
 
 <div th:each="product:${listModel}">
     <p th:text="${product.getProductName()} + ' количество ' +${product.getQuantity()} + ' шт  ' +  'цена за шт. ' +
-    ${product.getPrice()} + 'р. итого ' + ${product.getPrice()}*${product.getQuantity()}" ></p>
+    ${product.getPrice()} + 'р. итого ' + ${product.getPrice()}*${product.getQuantity()} + ' белорусских рублей '" ></p>
     <p th:if="${!product.addressPicture.isBlank()}"><img th:src="${product.addressPicture}" alt="Фото товара" width="100" height="125"></p>
     <p th:if="${product.addressPicture.isBlank()}"><img src="/download/no_photo.png" alt="Фото товара" width="100" height="125"></p>
 </div>
@@ -106,8 +106,12 @@
 
 
 
-<br>
     <br>
+    <hr>
+    <form method="get" action="order/createOrder">
+        <input type="submit" value="Оформить заказ">
+    </form>
+    <hr>
     <form method="get" action="cart/clear">
         <input type="submit" value="Очистить корзину">
     </form>
