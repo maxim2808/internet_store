@@ -45,12 +45,18 @@ public class ProductService {
     }
 
 
-    public List<Product> getAllProducts(int page, int productPerPage) {
-//        System.out.println("page " + page + " productPerPage " + productPerPage);
+    public List<Product> getAllProducts(int page, int productPerPage, String groupName) {
+        if (groupName==null||groupName.equals("Все группы")){
         if (productPerPage>=1&&page>=1){
             int pageMinusOne = page - 1;
         return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
-        else return productRepositories.findAll();
+        else return productRepositories.findAll();}
+        else {
+            if (productPerPage>=1&&page>=1){
+                int pageMinusOne = page - 1;
+                return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
+            else return productRepositories.findAll();
+        }
     }
 
 //    public List<ProductDTO> getAllProductsDTO() {

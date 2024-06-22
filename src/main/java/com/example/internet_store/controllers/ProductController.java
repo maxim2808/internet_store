@@ -50,8 +50,9 @@ public class ProductController {
     @GetMapping("")
     public String index(
             Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page
-//            ,@RequestParam(value = "productPerPage", defaultValue = "0", required = false) int productPerPage
+            ,@RequestParam(value = "group", defaultValue = "Все группы", required = false ) String group
     ) {
+
 
 //        List<Product> list = productService.getAllProducts();
 //        for(Product product : list) {
@@ -63,7 +64,8 @@ public class ProductController {
 //        }
 
         int productPerPage = Integer.parseInt(productPerPageString);
-        List<ProductDTO> productDTOList = productService.getAllProducts(page, productPerPage).stream().map(product ->
+
+        List<ProductDTO> productDTOList = productService.getAllProducts(page, productPerPage, group).stream().map(product ->
                 productService.convertToProductDTO(product)).toList();
 
         productService.addFolderName(productDTOList);

@@ -31,9 +31,23 @@ public class OrderService {
         this.modelMapper = modelMapper;
     }
 
-    public List<Order> findAllOrders() {
-        return orderRepository.findAll();
+//    public List<Order> findAllOrders() {
+//        return orderRepository.findAll();
+//    }
+
+    public List<Order> findAllOrders(String status) {
+        if(status==null||status.equals("Все статусы")){
+            System.out.println("Load all status");
+            return orderRepository.findAll();
+        }
+        else{
+            System.out.println("load this status " + status);
+            return orderRepository.findByOrderStatus(status);
+        }
     }
+
+
+
 
     public Optional<Order> findOrderById(int id) {
         return orderRepository.findById(id);

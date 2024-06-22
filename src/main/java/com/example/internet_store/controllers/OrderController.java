@@ -39,12 +39,15 @@ public class OrderController {
     }
 
     @GetMapping("")
-    public String getOrder(Model model) {
+    public String getOrder(Model model, @RequestParam(value = "orderStatus", defaultValue = "Все статусы", required = false) String status) {
+        System.out.println("controller status " + status);
         List<String> statusList = orderService.getStatusList();
         statusList.add("Все статусы");
-        model.addAttribute("statusModel", "status");
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setOrderStatus(status);
+        model.addAttribute("statusModel",orderDTO);
         model.addAttribute("listStatusModel", statusList);
-        model.addAttribute("orderModel", orderService.findAllOrders().stream().map(order -> orderService.convertToDTO(order)).toList());
+        model.addAttribute("orderModel", orderService.findAllOrders(status).stream().map(order -> orderService.convertToDTO(order)).toList());
         return "/order/AllOrdersPage";
 
     }

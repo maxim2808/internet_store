@@ -5,14 +5,16 @@
     <title>Все заказы</title>
 </head>
 <body>
-<form>
-    <select th:object="${statusModel}" th:field="${statusModel}">
+<h3 th:text="'Статус: ' + ${statusModel.getOrderStatus()}"></h3>
+<form method="get" th:action="@{/order}">
+<!--<form method="get" th:action="@{/order{status}(status=${statusModel.getOrderStatus()})}">-->
+    <select th:object="${statusModel}" th:field="*{orderStatus}">
         <option th:each="status:${listStatusModel}" th:value="${status}" th:text="${status}"></option>
     </select>
+    <input type="submit" value="Выбрать">
 </form>
 <div th:each="order:${orderModel}">
 <a th:href="@{/order/view/{id}(id=${order.getOrderId()})}"  th:text="${order.getOrderId()}"></a>
-
     <span th:text="${order.stringDate} + ' '"> </span>
     <span  style="color: red" th:text="${order.getOrderStatus()}"></span>
     <span th:text=" ' итоговая цена ' "></span>
