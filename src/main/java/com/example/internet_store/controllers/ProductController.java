@@ -50,22 +50,22 @@ public class ProductController {
     @GetMapping("")
     public String index(
             Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page
-            ,@RequestParam(value = "group", defaultValue = "Все группы", required = false ) String group
+            ,@RequestParam(value = "groupName", defaultValue = "Все группы", required = false ) String group,
+            @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName
+
     ) {
 
-
-//        List<Product> list = productService.getAllProducts();
-//        for(Product product : list) {
-//            Product test = productService.getProductById(156).get();
-//            System.out.println(product.getProductId());
-//            productService.convertToProductDTO(test);
-//            if (product.getOrderList()!=null||product.getOrderList().isEmpty()){
-//         productService.convertToProductDTO(product);}
-//        }
-
+       // group = "Мониторы";
         int productPerPage = Integer.parseInt(productPerPageString);
-
-        List<ProductDTO> productDTOList = productService.getAllProducts(page, productPerPage, group).stream().map(product ->
+        List<String> groupNameList = new ArrayList<>(groupService.findAll().stream().map(group1 -> group1.getGroupName()).toList());
+        groupNameList.add("Все группы");
+        model.addAttribute("groupNameListModel", groupNameList);
+        //ProductDTO productForGroup = new ProductDTO();
+Group groupForSelect = new Group();
+       // productForGroup.setGroup(groupService.findByGroupName(group).get());
+        model.addAttribute("groupForSelectModel", groupForSelect);
+        model.addAttribute("searchNameModel", searchName);
+        List<ProductDTO> productDTOList = productService.getAllProducts(page, productPerPage, group, searchName).stream().map(product ->
                 productService.convertToProductDTO(product)).toList();
 
         productService.addFolderName(productDTOList);

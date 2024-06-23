@@ -7,7 +7,9 @@ import com.ibm.icu.text.Transliterator;
 import jakarta.servlet.http.HttpSession;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,17 +47,59 @@ public class ProductService {
     }
 
 
-    public List<Product> getAllProducts(int page, int productPerPage, String groupName) {
+    public List<Product> getAllProducts(int page, int productPerPage, String groupName, String searchName) {
         if (groupName==null||groupName.equals("Все группы")){
+            if (searchName==null||searchName.equals("")){
+
         if (productPerPage>=1&&page>=1){
             int pageMinusOne = page - 1;
         return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
         else return productRepositories.findAll();}
+
         else {
-            if (productPerPage>=1&&page>=1){
+                if (productPerPage>=1&&page>=1) {
+                    int pageMinusOne = page - 1;
+                    //Group group = groupService.findByGroupName(groupName).get();
+                    Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+                    Page<Product> pageList = productRepositories.findProductByProductNameStartingWith(searchName, pageable);
+                System.out.println("Search name " + searchName);
+
+                 return pageList.getContent();}
+        return productRepositories.findAll();}}
+
+
+
+
+
+
+
+        else {
+            Group group = groupService.findByGroupName(groupName).get();
+            if (searchName==null||searchName.equals("")){
+
+            if (productPerPage>=1&&page>=1) {
                 int pageMinusOne = page - 1;
-                return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
-            else return productRepositories.findAll();
+               // Group group = groupService.findByGroupName(groupName).get();
+                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+                Page<Product> pageList = productRepositories.findByGroup(group, pageable);
+                return pageList.getContent();
+
+            }
+            else return productRepositories.findByGroup(group);
+            // else  return productRepositories.findByGroup(group2, PageRequest.of(pageMinusOne, productPerPage).).getContent();}
+           // else return productRepositories.findAll();
+        }
+        else {
+                if (productPerPage>=1&&page>=1) {
+                int pageMinusOne = page - 1;
+             //   Group group = groupService.findByGroupName(groupName).get();
+                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+                Page<Product> pageList = productRepositories.findProductByProductNameStartingWithAndGroup(searchName, group, pageable);
+                System.out.println("Search name " + searchName);
+                return pageList.getContent();
+            }
+else return         productRepositories.findProductByProductNameStartingWithAndGroup(searchName,group );
+        }
         }
     }
 

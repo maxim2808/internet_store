@@ -15,6 +15,21 @@
 <form class="right" method="get" action="product/cart">
     <input type="submit" value="Корзина">
 </form>
+
+<form th:method="GET" th:action="@{/product}">
+    <select th:object="${groupForSelectModel}" th:field="*{groupName}">
+        <option th:each="group:${groupNameListModel}" th:value="${group}" th:text="${group}"></option>
+    </select>
+    <input type="submit" value="Выбрать группу">
+</form>
+
+<form  class="center" th:method="GET" th:action="@{/product}">
+    <label for="searchID">Поиск товара</label>
+    <input type="text" name="searchName"  id="searchID">
+    <input type="submit" value="Найти">
+</form>
+
+
 <!--<p><img src="pic.png" alt="Тест1"></p>-->
 <div th:each="product:${productsModel}">
 <!--    <a th:href="@{/product/{id}(id=${product.getProductId()})}" th:text="${product.getProductName()} + ' цена ' + ${product.getFinalPrice()}"  ></a>-->
