@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать проивзодителя</title>
+</head>
+<body>
+<form th:method="PATCH" th:action="@{/manufacturer/edit/{id}(id=${manufacturerModel.getManufacurerId()})}" th:object="${manufacturerModel}" >
+    <label for="nameId">Название производителя</label>
+    <input type="text" th:field="*{name}" id="nameId">
+    <br>
+    <input type="submit" value="Редактировать">
+</form>
+</body>
+</html>

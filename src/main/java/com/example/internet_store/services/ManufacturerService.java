@@ -47,5 +47,20 @@ public class ManufacturerService  {
        return modelMapper.map(manufacturerDTO, Manufacturer.class);
     }
 
+    public ManufacturerDTO convertToManufacturerDTO(Manufacturer manufacturer) {
+        return modelMapper.map(manufacturer, ManufacturerDTO.class);
+    }
+
+    @Transactional
+    public void editManufacturer(Manufacturer manufacturer, int id) {
+        manufacturer.setManufacurerId(id);
+        manufacturerRepository.save(manufacturer);
+    }
+
+    @Transactional
+    public void deleteManufacturer(int id) {
+        manufacturerRepository.deleteById(id);
+    }
+
 
 }

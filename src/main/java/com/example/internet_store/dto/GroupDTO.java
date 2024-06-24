@@ -10,8 +10,18 @@ import java.util.List;
 public class GroupDTO {
 
    // @Column(name = "group_name")
+    int groupId;
     @NotEmpty(message = "Группа не должна быть пустой")
     String groupName;
+    List<Product> productList;
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
 
     public String getGroupName() {
         return groupName;
@@ -21,6 +31,11 @@ public class GroupDTO {
         this.groupName = groupName;
     }
 
-    //    @OneToMany(mappedBy = "group")
-//    List<Product> productList;
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
 }

@@ -5,7 +5,9 @@
     <title>Производители</title>
 </head>
 <body>
-<div th:each="manufacturer:${listManufacturersModel}" th:text="${manufacturer.getName()}"></div>
+<div th:each="manufacturer:${listManufacturersModel}" >
+    <a th:href="@{manufacturer/view/{id}(id=${manufacturer.getManufacurerId()})}" th:text="${manufacturer.getName()}"></a>
+</div>
 <hr>
 <form method="get" action="/manufacturer/create">
     <input type="submit" value="Добавить нового поставщика">

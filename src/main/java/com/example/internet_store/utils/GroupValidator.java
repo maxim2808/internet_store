@@ -30,5 +30,6 @@ public class GroupValidator implements Validator {
             errors.rejectValue("groupName", "", "Группа товаров с таким названеим уже существует");
         }
 
+
     }
 }

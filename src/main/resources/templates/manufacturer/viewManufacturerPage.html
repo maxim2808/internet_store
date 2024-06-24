@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h4 th:text="'Название производителя: ' + ${manufacturerModel.getName()}"></h4>
+<p th:text="'Количество товаров от производитеоя: ' +${manufacturerModel.getListProduct().size()}" ></p>
+<hr>
+<form th:method="GET" th:action="@{/manufacturer/edit/{id}(id=${manufacturerModel.getManufacurerId()})}" th:object="${manufacturerModel}">
+    <input type="submit" value="Редактировать">
+</form>
+<hr>
+<form th:method="DELETE" th:action="@{/manufacturer/delete/{id}(id=${manufacturerModel.getManufacurerId()})}" th:object="${groupModel}">
+    <input type="submit" value="Удалить группу">
+</form>
+</body>
+</html>

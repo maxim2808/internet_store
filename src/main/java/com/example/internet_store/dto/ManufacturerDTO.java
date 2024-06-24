@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ManufacturerDTO
 {
-
+    int manufacurerId;
     @NotEmpty(message = "Поле не должно быть пустым")
     String name;
 
@@ -20,6 +20,21 @@ public class ManufacturerDTO
     public void setName(String name) {
         this.name = name;
     }
-    //    @OneToMany(mappedBy = "manufacturer")
-//    List<Product> listProduct;
+        List<Product> listProduct;
+
+    public int getManufacurerId() {
+        return manufacurerId;
+    }
+
+    public void setManufacurerId(int manufacurerId) {
+        this.manufacurerId = manufacurerId;
+    }
+
+    public List<Product> getListProduct() {
+        return listProduct;
+    }
+
+    public void setListProduct(List<Product> listProduct) {
+        this.listProduct = listProduct;
+    }
 }

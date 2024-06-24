@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать группу</title>
+</head>
+<body>
+<form th:method="PATCH" th:action="@{/group/edit/{id}(id=${groupModel.getGroupId()})}" th:object="${groupModel}" >
+    <label for="nameId">Название группы</label>
+    <input type="text" th:field="*{groupName}" id="nameId">
+    <br>
+    <input type="submit" value="Редактировать">
+</form>
+</body>
+</html>

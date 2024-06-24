@@ -36,9 +36,19 @@ public class GroupService {
     }
 
     @Transactional
-    public Group save(Group group) {
+    public void save(Group group) {
         group.setRegistrationDate(new Date());
-        return productGroupRepository.save(group);
+      productGroupRepository.save(group);
+    }
+
+    @Transactional
+    public void edit(Group group, int id) {
+        group.setGroupId(id);
+        productGroupRepository.save(group);
+    }
+    @Transactional
+    public void deleteById(int id) {
+        productGroupRepository.deleteById(id);
     }
 
     public Group convertToGroup(GroupDTO groupDTO) {
@@ -48,6 +58,13 @@ public class GroupService {
     public GroupDTO convertToDTO(Group group) {
         return modelMapper.map(group, GroupDTO.class);
     }
+
+//    public int countProductInGroup(GroupDTO groupDTO){
+//       return groupDTO.getProductList().size();
+//    }
+
+
+
 
 
 

@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/manufacturer")
@@ -44,7 +41,44 @@ public class ManufacturerController {
         Manufacturer manufacturer = manufacturerService.convertToManufacturer(manufacturerDTO);
         manufacturerService.saveManufacturer(manufacturer);
         return "redirect:/manufacturer";
+    }
+
+    @GetMapping("/view/{id}")
+    public String getManufacturerView(@PathVariable int id, Model model) {
+        model.addAttribute("manufacturerModel", manufacturerService.convertToManufacturerDTO(manufacturerService.findById(id).get()));
+        return "/manufacturer/viewManufacturerPage";
+    }
+
+    @GetMapping("/view/edit/{id}")
+    public String getManufacturerViewEdit(@PathVariable int id, Model model) {
+        model.addAttribute("manufacturerModel", manufacturerService.convertToManufacturerDTO(manufacturerService.findById(id).get()));
+        return "/manufacturer/editManufacturerPage";
 
     }
+
+    @PatchMapping("/view/edit/{id}")
+    public String getManufacturerViewEdit(@PathVariable int id, @ModelAttribute("manufacturerModel") ManufacturerDTO manufacturerDTO) {
+        manufacturerService.editManufacturer(manufacturerService.convertToManufacturer(manufacturerDTO), id);
+        return "redirect:/manufacturer";}
+
+
+    @GetMapping("/delete/error")
+    public String getManufacturerDeleteError() {
+        return "/manufacturer/errorDeleteManufacturerPage";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteManufacturer(@PathVariable int id) {
+        Manufacturer manufacturer = manufacturerService.findById(id).get();
+        if (manufacturer.getListProduct().isEmpty()||manufacturer.getListProduct()==null) {
+            manufacturerService.deleteManufacturer(id);
+            return "redirect:/manufacturer";
+        }
+        else return "redirect:/manufacturer/delete/error";
+    }
+
+
+
+
 
 }
