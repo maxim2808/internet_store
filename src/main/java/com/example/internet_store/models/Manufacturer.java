@@ -15,7 +15,7 @@ public class Manufacturer {
     int manufacurerId;
     @Column(name = "manufacturer_name")
     @NotEmpty(message = "Поле не должно быть пустым")
-    String name;
+    String manufacturerName;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "registration_date")
     Date registration_date;
@@ -30,12 +30,12 @@ public class Manufacturer {
         this.manufacurerId = id;
     }
 
-    public String getName() {
-        return name;
+    public String getManufacturerName() {
+        return manufacturerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setManufacturerName(String name) {
+        this.manufacturerName = name;
     }
 
     public Date getRegistration_date() {

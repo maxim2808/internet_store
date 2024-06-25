@@ -6,7 +6,7 @@
 </head>
 <body>
 <div th:each="manufacturer:${listManufacturersModel}" >
-    <a th:href="@{manufacturer/view/{id}(id=${manufacturer.getManufacurerId()})}" th:text="${manufacturer.getName()}"></a>
+    <a th:href="@{manufacturer/view/{id}(id=${manufacturer.getManufacurerId()})}" th:text="${manufacturer.getManufacturerName()}"></a>
 </div>
 <hr>
 <form method="get" action="/manufacturer/create">

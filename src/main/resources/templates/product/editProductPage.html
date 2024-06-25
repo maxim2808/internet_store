@@ -62,7 +62,7 @@
     <br>
     <label for="labelManufacturerId">Производитель</label>
     <select th:object="${oneManufacturerModel}" th:field="*{manufacurerId}" id="labelManufacturerId">
-        <option th:each="manufacturer:${manufacturerListModel}" th:value="${manufacturer.getManufacurerId()}" th:text="${manufacturer.getName()}" ></option>
+        <option th:each="manufacturer:${manufacturerListModel}" th:value="${manufacturer.getManufacurerId()}" th:text="${manufacturer.getManufacturerName()}" ></option>
     </select>
     <hr>
     <input type="submit" value="Обновить">

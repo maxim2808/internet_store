@@ -20,7 +20,12 @@
     <select th:object="${groupForSelectModel}" th:field="*{groupName}">
         <option th:each="group:${groupNameListModel}" th:value="${group}" th:text="${group}"></option>
     </select>
-    <input type="submit" value="Выбрать группу">
+
+    <select th:object="${manufacturerForSelectModel}" th:field="*{manufacturerName}">
+        <option th:each="manufacturer:${manufacturerNameListModel}" th:value="${manufacturer}" th:text="${manufacturer}"></option>
+    </select>
+
+    <input type="submit" value="Выбрать ">
 </form>
 
 <form  class="center" th:method="GET" th:action="@{/product}">

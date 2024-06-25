@@ -59,20 +59,13 @@ public class ProductService {
         else {
                 if (productPerPage>=1&&page>=1) {
                     int pageMinusOne = page - 1;
-                    //Group group = groupService.findByGroupName(groupName).get();
+
                     Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
                     Page<Product> pageList = productRepositories.findProductByProductNameStartingWith(searchName, pageable);
                 System.out.println("Search name " + searchName);
 
                  return pageList.getContent();}
         return productRepositories.findAll();}}
-
-
-
-
-
-
-
         else {
             Group group = groupService.findByGroupName(groupName).get();
             if (searchName==null||searchName.equals("")){
@@ -86,13 +79,12 @@ public class ProductService {
 
             }
             else return productRepositories.findByGroup(group);
-            // else  return productRepositories.findByGroup(group2, PageRequest.of(pageMinusOne, productPerPage).).getContent();}
-           // else return productRepositories.findAll();
+
         }
         else {
                 if (productPerPage>=1&&page>=1) {
                 int pageMinusOne = page - 1;
-             //   Group group = groupService.findByGroupName(groupName).get();
+
                 Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
                 Page<Product> pageList = productRepositories.findProductByProductNameStartingWithAndGroup(searchName, group, pageable);
                 System.out.println("Search name " + searchName);
@@ -103,14 +95,73 @@ else return         productRepositories.findProductByProductNameStartingWithAndG
         }
     }
 
-//    public List<ProductDTO> getAllProductsDTO() {
-//        List<Product> products = productRepositories.findAll();
-//        List<ProductDTO> productsDTO = new ArrayList<>();
-//        for (Product product : products) {
-//            productsDTO.add(convertToProductDTO(product));
-//        }
-//        return productsDTO;
-//    }
+
+
+    public List<Product> getAllProducts(int page, int productPerPage, String groupName, String manufacturerName, boolean searchName) {
+        if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители"))){
+            if (productPerPage>=1&&page>=1){
+                int pageMinusOne = page - 1;
+                return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
+            else return productRepositories.findAll();}
+
+
+        else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители"))){
+            Group group = groupService.findByGroupName(groupName).get();
+            if (productPerPage>=1&&page>=1){
+                int pageMinusOne = page - 1;
+                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+                return productRepositories.findByGroup(group, pageable).getContent();}
+            else return productRepositories.findByGroup(group);
+        }
+
+
+        else if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName!=null||!manufacturerName.equals("Все производители"))){
+            Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerName).get();
+            if (productPerPage>=1&&page>=1){
+                int pageMinusOne = page - 1;
+                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+                return productRepositories.findByManufacturer(manufacturer, pageable).getContent();}
+            else return productRepositories.findByManufacturer(manufacturer);
+        }
+
+        else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName!=null||!manufacturerName.equals("Все производители"))){
+            Group group = groupService.findByGroupName(groupName).get();
+            Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerName).get();
+            if (productPerPage>=1&&page>=1){
+                int pageMinusOne = page - 1;
+                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+                return productRepositories.findProductByGroupAndManufacturer(group, manufacturer, pageable).getContent();}
+            else {
+                return productRepositories.findProductByGroupAndManufacturer(group, manufacturer);
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+        else {
+            Group group = groupService.findByGroupName(groupName).get();
+            if (productPerPage>=1&&page>=1){
+                int pageMinusOne = page - 1;
+                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+                return productRepositories.findByGroup(group, pageable).getContent();
+         }
+            else return productRepositories.findByGroup(group);
+        }
+    }
+
+
+
+
+
+
 
 
     public Optional<Product> getProductById(int id) {

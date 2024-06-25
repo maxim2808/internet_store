@@ -29,7 +29,7 @@ public class ManufacturerService  {
     }
 
     public Optional<Manufacturer> getManufacturerByName(String name) {
-       return manufacturerRepository.findByName(name);
+       return manufacturerRepository.findByManufacturerName(name);
     }
 
     public Optional<Manufacturer> findById(int id) {

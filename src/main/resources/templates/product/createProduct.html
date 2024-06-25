@@ -37,7 +37,7 @@
 
     <label for="manufacturerId">Производитель товара</label>
  <select th:object="${oneManufacturer}" th:field="*{manufacurerId}" id="manufacturerId">
-     <option th:each="manufacturer:${manufacturerListModel}" th:value="${manufacturer.getManufacurerId()}" th:text="${manufacturer.getName()}"></option>
+     <option th:each="manufacturer:${manufacturerListModel}" th:value="${manufacturer.getManufacurerId()}" th:text="${manufacturer.getManufacturerName()}"></option>
  </select>
     <br>
         <label for="photo">Выберите фотографию:</label>

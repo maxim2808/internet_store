@@ -51,22 +51,32 @@ public class ProductController {
     public String index(
             Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page
             ,@RequestParam(value = "groupName", defaultValue = "Все группы", required = false ) String group,
-            @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName
+            @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
+            @RequestParam(value = "manufacturerName", defaultValue = "Все производители", required = false) String manufacturerName
 
     ) {
 
        // group = "Мониторы";
         int productPerPage = Integer.parseInt(productPerPageString);
         List<String> groupNameList = new ArrayList<>(groupService.findAll().stream().map(group1 -> group1.getGroupName()).toList());
-        groupNameList.add("Все группы");
+        List<String> manufacturerNameList = new ArrayList<>(manufacturerService.getAllManufacturers().stream().map(manufacturer->manufacturer.getManufacturerName()).toList());
+        groupNameList.add(0,"Все группы");
+        manufacturerNameList.add(0,"Все производители");
         model.addAttribute("groupNameListModel", groupNameList);
-        //ProductDTO productForGroup = new ProductDTO();
+        model.addAttribute("manufacturerNameListModel", manufacturerNameList);
 Group groupForSelect = new Group();
-       // productForGroup.setGroup(groupService.findByGroupName(group).get());
+Manufacturer manufacturerForSelect = new Manufacturer();
         model.addAttribute("groupForSelectModel", groupForSelect);
+        model.addAttribute("manufacturerForSelectModel", manufacturerForSelect);
         model.addAttribute("searchNameModel", searchName);
-        List<ProductDTO> productDTOList = productService.getAllProducts(page, productPerPage, group, searchName).stream().map(product ->
-                productService.convertToProductDTO(product)).toList();
+        List<ProductDTO> productDTOList;
+        if(searchName==null||searchName.equals("")){
+          productDTOList = productService.getAllProducts(page, productPerPage, group, manufacturerName, false ).stream().map(product ->
+                    productService.convertToProductDTO(product)).toList();  }
+        else {
+             productDTOList = productService.getAllProducts(page, productPerPage, group, searchName).stream().map(product ->
+                    productService.convertToProductDTO(product)).toList();
+        }
 
         productService.addFolderName(productDTOList);
        model.addAttribute("numberOfPageModel", productService.listPage(productPerPage));

@@ -11,7 +11,7 @@
 
 <p th:text="'Группа:' + ${oneProductModel.group.getGroupName()}"></p>
 <p th:text="'Название: ' + ${oneProductModel.productName}"></p>
-<p th:text="'Производитель: ' + ${oneProductModel.manufacturer.getName()}"></p>
+<p th:text="'Производитель: ' + ${oneProductModel.manufacturer.getManufacturerName()}"></p>
 <p th:text="'Описание товара:' + ${oneProductModel.description}"></p>
 <p th:text="'Цена: ' + ${oneProductModel.price}"></p>
 <div style="color: green" th:if="${oneProductModel.getQuantity()}>0" th:text="'Есть на складе'"></div>
