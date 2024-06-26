@@ -52,7 +52,8 @@ public class ProductController {
             Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page
             ,@RequestParam(value = "groupName", defaultValue = "Все группы", required = false ) String group,
             @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
-            @RequestParam(value = "manufacturerName", defaultValue = "Все производители", required = false) String manufacturerName
+            @RequestParam(value = "manufacturerName", defaultValue = "Все производители", required = false) String manufacturerName,
+            @RequestParam(value = "sort", defaultValue = "", required = false) String sort
 
     ) {
 
@@ -64,18 +65,33 @@ public class ProductController {
         manufacturerNameList.add(0,"Все производители");
         model.addAttribute("groupNameListModel", groupNameList);
         model.addAttribute("manufacturerNameListModel", manufacturerNameList);
-Group groupForSelect = new Group();
-Manufacturer manufacturerForSelect = new Manufacturer();
+        Group groupForSelect = new Group();
+        Manufacturer manufacturerForSelect = new Manufacturer();
         model.addAttribute("groupForSelectModel", groupForSelect);
         model.addAttribute("manufacturerForSelectModel", manufacturerForSelect);
         model.addAttribute("searchNameModel", searchName);
         List<ProductDTO> productDTOList;
+        List<String> sortLostList = new ArrayList<>();
+        sortLostList.add("Цена по возрастанию");
+        sortLostList.add("Цена по убыванию");
+        sortLostList.add("Название(А-Я)");
+        sortLostList.add("Название(Я-А)");
+        model.addAttribute("sortLostListModel", sortLostList);
+//        model.addAttribute("sortModel", sort);
+
+
         if(searchName==null||searchName.equals("")){
-          productDTOList = productService.getAllProducts(page, productPerPage, group, manufacturerName, false ).stream().map(product ->
-                    productService.convertToProductDTO(product)).toList();  }
+            List <Product> sortedProductList =productService.sortedProduct(productService.getAllProducts(page, productPerPage, group, manufacturerName,
+                            false ), sort);
+            productDTOList = sortedProductList.stream().map(product -> productService.convertToProductDTO(product)).toList();
+//          productDTOList = productService.sortedProduct(productService.getAllProducts(page, productPerPage, group, manufacturerName, false ).stream().map(product ->
+//                    productService.convertToProductDTO(product)).toList();
+}
         else {
-             productDTOList = productService.getAllProducts(page, productPerPage, group, searchName).stream().map(product ->
-                    productService.convertToProductDTO(product)).toList();
+//             productDTOList = productService.getAllProducts(page, productPerPage, group, searchName).stream().map(product ->
+//                    productService.convertToProductDTO(product)).toList();
+            productDTOList = productService.searchProducts(page, productPerPage, searchName).stream().map
+                    (product -> productService.convertToProductDTO(product)).toList();
         }
 
         productService.addFolderName(productDTOList);

@@ -17,14 +17,20 @@
 </form>
 
 <form th:method="GET" th:action="@{/product}">
-    <select th:object="${groupForSelectModel}" th:field="*{groupName}">
+    <label for="groupId">Группа товаров</label>
+    <select th:object="${groupForSelectModel}" th:field="*{groupName}" id="groupId" style="margin-bottom: 10px;">
         <option th:each="group:${groupNameListModel}" th:value="${group}" th:text="${group}"></option>
     </select>
 
-    <select th:object="${manufacturerForSelectModel}" th:field="*{manufacturerName}">
+    <label for="manufacturerId">Производитель товара</label>
+    <select th:object="${manufacturerForSelectModel}" th:field="*{manufacturerName}" id="manufacturerId">
         <option th:each="manufacturer:${manufacturerNameListModel}" th:value="${manufacturer}" th:text="${manufacturer}"></option>
     </select>
 
+    <label for="sortId">Сортировка</label>
+    <select name="sort" id="sortId">
+        <option th:each="sort:${sortLostListModel}" th:value="${sort}" th:text="${sort}"></option>
+    </select>
     <input type="submit" value="Выбрать ">
 </form>
 

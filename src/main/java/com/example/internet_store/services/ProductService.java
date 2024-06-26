@@ -13,10 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,54 +43,65 @@ public class ProductService {
        return productRepositories.findAll();
     }
 
-
-    public List<Product> getAllProducts(int page, int productPerPage, String groupName, String searchName) {
-        if (groupName==null||groupName.equals("Все группы")){
-            if (searchName==null||searchName.equals("")){
-
-        if (productPerPage>=1&&page>=1){
+    public List<Product> searchProducts(int page, int productPerPage, String keyword) {
+        if (productPerPage>=1&&page>=1) {
             int pageMinusOne = page - 1;
-        return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
-        else return productRepositories.findAll();}
 
-        else {
-                if (productPerPage>=1&&page>=1) {
-                    int pageMinusOne = page - 1;
-
-                    Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
-                    Page<Product> pageList = productRepositories.findProductByProductNameStartingWith(searchName, pageable);
-                System.out.println("Search name " + searchName);
-
-                 return pageList.getContent();}
-        return productRepositories.findAll();}}
-        else {
-            Group group = groupService.findByGroupName(groupName).get();
-            if (searchName==null||searchName.equals("")){
-
-            if (productPerPage>=1&&page>=1) {
-                int pageMinusOne = page - 1;
-               // Group group = groupService.findByGroupName(groupName).get();
-                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
-                Page<Product> pageList = productRepositories.findByGroup(group, pageable);
-                return pageList.getContent();
-
-            }
-            else return productRepositories.findByGroup(group);
-
-        }
-        else {
-                if (productPerPage>=1&&page>=1) {
-                int pageMinusOne = page - 1;
-
-                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
-                Page<Product> pageList = productRepositories.findProductByProductNameStartingWithAndGroup(searchName, group, pageable);
-                System.out.println("Search name " + searchName);
-                return pageList.getContent();
-            }
-else return         productRepositories.findProductByProductNameStartingWithAndGroup(searchName,group );
-        }
-        }
+            Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+            return productRepositories.findProductByProductNameStartingWith(keyword, pageable).getContent();
     }
+            else return productRepositories.findProductByProductNameStartingWith(keyword);
+    }
+
+
+//
+//    public List<Product> getAllProducts(int page, int productPerPage, String groupName, String searchName) {
+//        if (groupName==null||groupName.equals("Все группы")){
+//            if (searchName==null||searchName.equals("")){
+//
+//        if (productPerPage>=1&&page>=1){
+//            int pageMinusOne = page - 1;
+//        return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
+//        else return productRepositories.findAll();}
+//
+//        else {
+//                if (productPerPage>=1&&page>=1) {
+//                    int pageMinusOne = page - 1;
+//
+//                    Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+//                    Page<Product> pageList = productRepositories.findProductByProductNameStartingWith(searchName, pageable);
+//                System.out.println("Search name " + searchName);
+//
+//                 return pageList.getContent();}
+//        return productRepositories.findAll();}}
+//        else {
+//            Group group = groupService.findByGroupName(groupName).get();
+//            if (searchName==null||searchName.equals("")){
+//
+//            if (productPerPage>=1&&page>=1) {
+//                int pageMinusOne = page - 1;
+//
+//                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+//                Page<Product> pageList = productRepositories.findByGroup(group, pageable);
+//                return pageList.getContent();
+//
+//            }
+//            else return productRepositories.findByGroup(group);
+//
+//        }
+//        else {
+//                if (productPerPage>=1&&page>=1) {
+//                int pageMinusOne = page - 1;
+//
+//                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+//                Page<Product> pageList = productRepositories.findProductByProductNameStartingWithAndGroup(searchName, group, pageable);
+//                System.out.println("Search name " + searchName);
+//                return pageList.getContent();
+//            }
+//else return         productRepositories.findProductByProductNameStartingWithAndGroup(searchName,group );
+//        }
+//        }
+//    }
 
 
 
@@ -103,7 +111,6 @@ else return         productRepositories.findProductByProductNameStartingWithAndG
                 int pageMinusOne = page - 1;
                 return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
             else return productRepositories.findAll();}
-
 
         else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители"))){
             Group group = groupService.findByGroupName(groupName).get();
@@ -135,16 +142,7 @@ else return         productRepositories.findProductByProductNameStartingWithAndG
                 return productRepositories.findProductByGroupAndManufacturer(group, manufacturer);
             }
 
-
         }
-
-
-
-
-
-
-
-
 
         else {
             Group group = groupService.findByGroupName(groupName).get();
@@ -157,6 +155,23 @@ else return         productRepositories.findProductByProductNameStartingWithAndG
         }
     }
 
+    public List<Product> sortedProduct(List<Product> productList, String sorted) {
+        List<Product> newProductList = new ArrayList<>(productList);
+        if (sorted.equals("Цена по возрастанию")){
+            newProductList.sort(Comparator.comparingDouble(Product::getPrice));
+        }
+        if (sorted.equals("Цена по убыванию")) {
+            newProductList.sort(Comparator.comparingDouble(Product::getPrice).reversed());
+        }
+        if (sorted.equals("Название(А-Я)")){
+            newProductList.sort(Comparator.comparing(Product::getProductName));
+        }
+
+        if (sorted.equals("Название(Я-А)")){
+            newProductList.sort(Comparator.comparing(Product::getProductName).reversed());
+        }
+        return newProductList;
+    }
 
 
 

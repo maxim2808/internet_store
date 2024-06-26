@@ -17,7 +17,7 @@ public interface ProductRepositories extends JpaRepository<Product, Integer> {
     public Optional<Product> findByProductName(String productName);
     public List<Product> findByGroup(Group group);
     public Page<Product> findByGroup(Group group, Pageable pageable);
-   // public List<Product> findProductByProductNameStartingWith(String productName);
+   public List<Product> findProductByProductNameStartingWith(String productName);
     public Page<Product> findProductByProductNameStartingWith(String productName, Pageable pageable);
     public Page<Product> findProductByProductNameStartingWithAndGroup(String productName, Group group, Pageable pageable);
     public List<Product> findProductByProductNameStartingWithAndGroup(String productName, Group group);
