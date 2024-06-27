@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>Изображения без товара</h3>
+<div th:each="picture:${redundantPicturesModel}" >
+    <a th:href="@{/picture/view/{id}(id=${picture.getPictureId()})}" th:text="${picture.getFileName()}"></a>
+    <form th:method="DELETE" th:action="@{/picture/view/{id}(id=${picture.getPictureId()})}">
+        <input type="submit" value="Удалить">
+    </form>
+</div>
+
+
+
+</body>
+</html>

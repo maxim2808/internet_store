@@ -16,7 +16,12 @@
     </select>
     <input type="hidden" th:field="*{orderPrice}">
 <input type="text" th:field="*{stringDate}">
-    <input type="hidden" th:field="*{address}">
+    <label for="addressId">Адрес</label>
+    <input type="text" th:field="*{address}" id="addressId">
+    <br>
+    <label for="phoneId">Номер телефона</label>
+    <input type="text" th:field="*{telephoneNumber}" id="phoneId">
+    <br>
     <input type="submit" value="Изменить статус">
 </form>
 </body>

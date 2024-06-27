@@ -5,6 +5,7 @@ import com.example.internet_store.models.Picture;
 import com.example.internet_store.models.Product;
 import com.example.internet_store.repositories.PictureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class ReceivePictureService {
@@ -22,7 +24,8 @@ public class ReceivePictureService {
     final ProductService productService;
     private final DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
     private final PictureService pictureService;
-
+    @Value("${pictureFolder}")
+    String firstPartOfPath;
     @Autowired
     public ReceivePictureService(PictureRepository pictureRepository, ProductService productService, DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration, PictureService pictureService) {
         this.pictureRepository = pictureRepository;
@@ -64,7 +67,8 @@ public class ReceivePictureService {
                         sbFileName.append("-v");
                         sbFileName.append(String.valueOf(i));
                         sbFileName.append(fileExtension);
-                        uploadFile = new File(uploadDir, sbFileName.toString());
+                        fileName = sbFileName.toString();
+                        uploadFile = new File(uploadDir, fileName);
                         System.out.println("File name: " + sbFileName.toString());
 
                     }
@@ -125,6 +129,29 @@ public class ReceivePictureService {
             }
         }
 
+    }
+
+
+
+    public void deletePictureAndFile(Picture picture) {
+        String secondPartOfPath = picture.getFileName();
+        StringBuilder fileName = new StringBuilder(firstPartOfPath);
+        fileName.append(secondPartOfPath);
+        System.out.println("fullname " + fileName.toString());
+        File file = new File(fileName.toString());
+        if (file.exists()) {
+            System.out.println("EXIST!!!!!!!!!!!!!!!!!!!!!!");
+        }
+            List<Product> listProduct = picture.getMainPictureList();
+            for(Product product:listProduct){
+                product.setMainPicture(null);
+                productService.editProduct (product, product.getGroup(), product.getManufacturer(), product.getProductId());
+            }
+        System.out.println("File name" + file.getName());
+        System.out.println("file is exist " + file.exists());
+            file.delete();
+            pictureService.deletePicture(picture);
+        //System.out.println("File is exists: " + file.exists());
     }
 
 

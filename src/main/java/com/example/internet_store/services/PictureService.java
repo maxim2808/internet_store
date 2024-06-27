@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -90,6 +91,15 @@ public class PictureService {
 
 public void picSerSave(Picture picture) {
         pictureRepository.save(picture);
+}
+
+public List<Picture> findRedundantPictures() {
+        return pictureRepository.findPictureByMainPictureListEmpty();
+}
+
+@Transactional
+public void deletePicture(Picture picture) {
+        pictureRepository.delete(picture);
 }
 
 

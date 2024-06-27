@@ -16,13 +16,13 @@
 <p th:text="'Цена: ' + ${oneProductModel.price}"></p>
 <div style="color: green" th:if="${oneProductModel.getQuantity()}>0" th:text="'Есть на складе'"></div>
 <div style="color: darkorange" th:if="${oneProductModel.getQuantity()}<1" th:text="'Нет на складе(под заказ)'"></div>
-<p th:text="${addressPicModel}"></p>
+<!--<p th:text="${addressPicModel}"></p>-->
 <br>
 <p th:if="${addressPicModel!=null}">
-    <img th:src="${addressPicModel}"  alt="Фото товара" width="200" height="250"></p>
+    <img th:src="${addressPicModel}"  alt="Фото товара" width="200" height="200"></p>
 </p>
 <p th:if="${addressPicModel==null}">
-    <img src="/download/no_photo.png"  alt="Фото товара" width="200" height="250"></p>
+    <img src="/download/no_photo.png"  alt="Фото товара" width="200" height="200"></p>
 </p>
 
 <br>

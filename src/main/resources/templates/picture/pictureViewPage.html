@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Изображение</title>
+</head>
+<body>
+<p th:text="${pictureModel.getFileName()}" ></p>
+<br>
+<p th:if="${addressPicModel!=null}">
+    <img th:src="${addressPicModel}"  alt="Фото товара" width="200" height="200"></p>
+</p>
+<p th:if="${addressPicModel==null}">
+    <img src="/download/no_photo.png"  alt="Фото товара" width="200" height="200"></p>
+</p>
+<br>
+<form th:method="DELETE" th:action="@{/picture/view/{id}(id=${pictureModel.getPictureId()})}">
+<input type="submit" value="Удалить">
+</form>
+
+</body>
+</html>

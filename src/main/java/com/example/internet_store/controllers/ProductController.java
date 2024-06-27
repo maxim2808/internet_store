@@ -32,6 +32,8 @@ public class ProductController {
     private final PictureService pictureService;
     @Value("${productPerPage}")
     private String productPerPageString;
+    @Value("${pictureFolderInProject}")
+    private String pictureFolderInProject;
 
 
     @Autowired
@@ -148,8 +150,9 @@ public class ProductController {
         Product product = productService.getProductByProductUrl(productUrl).get();
 
         if(product.getMainPicture()!=null){
-        StringBuilder address = new StringBuilder("/download/");
-        address.append(product.getMainPicture().getFileName());
+       // StringBuilder address = new StringBuilder("/download/");
+            StringBuilder address = new StringBuilder(pictureFolderInProject);
+            address.append(product.getMainPicture().getFileName());
             System.out.println(address);
             model.addAttribute("addressPicModel", address.toString());
         }

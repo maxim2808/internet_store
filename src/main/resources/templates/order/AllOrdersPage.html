@@ -20,6 +20,7 @@
     <span th:text=" ' итоговая цена ' "></span>
     <span style="font-weight: bold" th:text="${order.getOrderPrice()}  + ' рублей '"> ></span>
     <span th:text="${order.getAddress()}"></span>
+    <span th:text="'номер телефона ' + ${order.telephoneNumber}"> </span>
 </div>
 </body>
 </html>
