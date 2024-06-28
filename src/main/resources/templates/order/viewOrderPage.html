@@ -19,10 +19,16 @@
     <label for="addressId">Адрес</label>
     <input type="text" th:field="*{address}" id="addressId">
     <br>
+    <br>
     <label for="phoneId">Номер телефона</label>
     <input type="text" th:field="*{telephoneNumber}" id="phoneId">
     <br>
-    <input type="submit" value="Изменить статус">
+    <br>
+    <label for="customerId">Имя заказчика</label>
+    <input type="text" th:field="*{customerName}" id="customerId">
+    <br>
+    <br>
+    <input type="submit" value="Изменить заказ">
 </form>
 </body>
 </html>

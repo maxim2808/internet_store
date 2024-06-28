@@ -7,11 +7,16 @@
 <body>
 <div th:if="${orderModel!=null}">
 <form th:method="POST" th:action="@{/order/createOrder}" th:object="${orderModel}">
+    <label for="customerId">Введите ваше имя</label>
+    <input type="text" th:field="*{customerName}" id="customerId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{customerName}"></div>
     <label for="addressId">Введи ваш адрес</label>
     <input type="text" th:field="*{address}" id="addressId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{address}"></div>
     <br>
     <label for="addressId">Введи ваш номер телефона</label>
     <input type="text" th:field="*{telephoneNumber}" id="phoneId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{telephoneNumber}"></div>
     <br>
     <input type="submit" value="Заказать">
 </form>

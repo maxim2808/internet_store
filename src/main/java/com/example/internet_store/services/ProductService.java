@@ -7,6 +7,7 @@ import com.ibm.icu.text.Transliterator;
 import jakarta.servlet.http.HttpSession;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,8 @@ public class ProductService {
     final ManufacturerService manufacturerService;
     final ModelMapper modelMapper;
     final PictureService pictureService;
+    @Value("${pictureFolderInProject}")
+    private String pictureFolderInProject;
   //  final ReceivePictureService receivePictureService;
 
 
@@ -144,6 +147,9 @@ public class ProductService {
 
         }
 
+
+
+
         else {
             Group group = groupService.findByGroupName(groupName).get();
             if (productPerPage>=1&&page>=1){
@@ -174,6 +180,10 @@ public class ProductService {
     }
 
 
+
+    public List<Product> findPopularProducts(Boolean popular) {
+      return   productRepositories.findProductByPopular(popular);
+    }
 
 
 
@@ -321,7 +331,7 @@ public class ProductService {
     public void addFolderName(List<ProductDTO> productDTOList){
         for (ProductDTO product :productDTOList) {
             if(product.getMainPicture()!=null){
-                StringBuilder address = new StringBuilder("/download/");
+                StringBuilder address = new StringBuilder(pictureFolderInProject);
                 address.append(product.getMainPicture().getFileName());
                 product.setAddressPicture(address.toString());
             }

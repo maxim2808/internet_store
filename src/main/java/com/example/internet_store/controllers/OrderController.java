@@ -8,11 +8,13 @@ import com.example.internet_store.services.OrderService;
 import com.example.internet_store.services.ProductOrderService;
 import com.example.internet_store.services.ProductService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -70,7 +72,10 @@ public class OrderController {
     }
 
     @PostMapping("/createOrder")
-    public String postCreateOrder(HttpSession session, @ModelAttribute("orderModel") OrderDTO orderDTO) {
+    public String postCreateOrder(HttpSession session, @ModelAttribute("orderModel") @Valid OrderDTO orderDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/order/createOrder";
+        }
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
         if (orderDTO!= null) {
             double totalPrice = productService.totalPrice(cart.getProducts());
@@ -96,6 +101,7 @@ public class OrderController {
         listStatus.add("Не обработан");
         listStatus.add("Выполняется");
         listStatus.add("Завершен");
+        listStatus.add("Отменен");
         model.addAttribute("listStatusModel", orderService.getStatusList());
         System.out.println("String data " + order.getStringDate());
         return "/order/viewOrderPage";
@@ -113,6 +119,7 @@ public class OrderController {
 
     }
 //
+
 
 
 

@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Admin Page</title>
 </head>
 <body>
-<h5>You are admin</h5>
+<h4>Странциа администратора</h4>
+<a th:href="@{/product}" th:text="'Продукты'"></a>
+<br>
+<a th:href="@{/manufacturer}" th:text="'Производители'"></a>
+<br>
+<a th:href="@{/group}" th:text="'Группы товаров'"></a>
+<br>
+<a th:href="@{/order}" th:text="'Заказы'"></a>
+<br>
+<a th:href="@{/picture/redundant}" th:text="'Изображения без товара'"></a>
 </body>
 </html>

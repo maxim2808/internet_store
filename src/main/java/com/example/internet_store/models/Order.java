@@ -24,6 +24,8 @@ public class Order {
     String telephoneNumber;
     @Column(name = "order_status")
     String orderStatus;
+    @Column(name = "customer_name")
+    String customerName;
     @OneToMany(mappedBy = "order")
     List<ProductOrder> productsInOrder;
     @Transient
@@ -94,5 +96,13 @@ public class Order {
 
     public void setStringDate(String stringDate) {
         this.stringDate = stringDate;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 }

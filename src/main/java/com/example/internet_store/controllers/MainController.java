@@ -1,32 +1,47 @@
 package com.example.internet_store.controllers;
 
+import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.security.PersoneDetail;
+import com.example.internet_store.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Controller
 public class MainController {
+    final ProductService productService;
+    @Value("${pictureFolderInProject}")
+    private String pictureFolderInProject;
+    @Autowired
+    public MainController(ProductService productService) {
+        this.productService = productService;
+    }
+
     @GetMapping("/main")
     public String mainMethod(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PersoneDetail){
 //            PersoneDetail personeDetail = (PersoneDetail) authentication.getPrincipal();
 //            if(personeDetail != null){
-//                System.out.println(personeDetail.getPersone().getEmail() + "!!!!!!!!! ");
 //            }
 //            if(personeDetail == null){
-//                System.out.println("null1111111111111");
 //            }
             model.addAttribute("authModel", true);
-
         }
             else {
             model.addAttribute("authModel", false);
-            System.out.println("authentication is null222222");
         }
+        List<ProductDTO> listProductDTO = productService.findPopularProducts(true).stream().map
+                (product -> productService.convertToProductDTO(product)).toList();
+            productService.addFolderName(listProductDTO);
+            model.addAttribute("popularProductsModel", listProductDTO);
+
 
         return "mainPage";
     }
@@ -36,19 +51,14 @@ public class MainController {
         return "adminPage";
     }
 
+
+
     @GetMapping("/test")
     public String testMethod(){
         return "testPage";
     }
 
-    @GetMapping("/test/test2")
-    public String testMethod2(){
-        return "/testFolder/secondTestPage";
-    }
 
 
-    @GetMapping("/test/test3")
-    public String testMethod3(){
-        return "/testFolder/thirdTestPage";
-    }
+
 }

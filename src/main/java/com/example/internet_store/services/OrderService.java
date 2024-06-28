@@ -97,11 +97,11 @@ public class OrderService {
     }
 
     public List<String> getStatusList(){
-   //     return Arrays.asList(StatusString.split(","));
         List<String> statusList = new ArrayList<>();
         statusList.add("Не обработан");
         statusList.add("Выполняется");
         statusList.add("Завершен");
+        statusList.add("Отменен");
         return statusList;
     }
 
