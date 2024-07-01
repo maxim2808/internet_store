@@ -10,6 +10,8 @@ import java.util.Date;
 
 public class PersoneDTO {
 
+
+        int personeId;
         @Email
         @NotNull
         String email;
@@ -28,6 +30,16 @@ public class PersoneDTO {
 
         @Size(min = 3, max = 20, message = "Длина имени пользователя должна быть от 3 до 20 символов")
         String username;
+    String stringDate;
+    String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getEmail() {
         return email;
@@ -75,5 +87,21 @@ public class PersoneDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getPersoneId() {
+        return personeId;
+    }
+
+    public void setPersoneId(int personeId) {
+        this.personeId = personeId;
+    }
+
+    public String getStringDate() {
+        return stringDate;
+    }
+
+    public void setStringDate(String stringDate) {
+        this.stringDate = stringDate;
     }
 }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль пользователя</title>
+</head>
+<body>
+<p th:text="'Никнейм пользователя ' + ${userModel.username}"></p>
+<p th:text="'Дата регистрации ' + ${userModel.stringRegistrationDate}"></p>
+<p th:text="'Почта пользоватеоя ' + ${userModel.getEmail()}"></p>
+<p th:text="'Номер телефона ' + ${userModel.getPhoneNumber()}"></p>
+<p th:text="'Роль: ' + ${userModel.getRole()}"></p>
+<hr>
+<div th:if="${isAdmin}">
+
+   <form th:method="PATCH" th:action="@{/user/edit/{id}(id=${userModel.getPersoneId()})}" th:object="${userModel}">
+       <select th:object="${userModel}" th:field="*{role}">
+           <option th:each="role:${listRoleModel}" th:value="${role}" th:text="${role}"></option>
+       </select>
+       <input type="hidden" th:field="*{username}">
+       <input type="hidden" th:field="*{email}">
+       <input type="hidden" th:field="*{phoneNumber}">
+       <input type="hidden" th:field="*{stringRegistrationDate}">
+       <input type="submit" value="Изменить роль">
+   </form>
+</div>
+<!--<div th:if="${!isAdmin}">-->
+<!--    <span th:text="'Вы не админ'"></span>-->
+<!--</div>-->
+
+</body>
+</html>

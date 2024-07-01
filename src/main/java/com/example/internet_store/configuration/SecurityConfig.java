@@ -28,9 +28,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .requestMatchers("/admin").hasRole("ADMIN").requestMatchers("/product","/auth/login", "/product/view/{productURL}",
-                        "/download/**", "/cart/**", "/order/createOrder", "/main", "auth/registration").permitAll().requestMatchers( "/user/profile").hasAnyRole("USER", "ADMIN").
-                anyRequest().hasRole("ADMIN").
+                .requestMatchers("/product","/auth/login", "/product/view/{productURL}",
+                        "/download/**", "/cart/**", "/order/createOrder", "/main", "auth/registration").permitAll().requestMatchers( "/user/profile").hasAnyRole("USER", "ADMIN", "SUPERADMIN").
+            anyRequest().hasAnyRole("ADMIN","SUPERADMIN").
             and().formLogin(httpSecurityFormLoginConfigurer -> {
                         httpSecurityFormLoginConfigurer.loginPage("/auth/login").
                                 loginProcessingUrl("/process_login").defaultSuccessUrl("/main", true).

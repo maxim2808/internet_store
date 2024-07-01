@@ -2,10 +2,7 @@ package com.example.internet_store.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -14,7 +11,7 @@ public class Persone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "persone_id")
-    int id;
+    int personeId;
 
     @Email
     @NotNull
@@ -42,6 +39,8 @@ public class Persone {
     @Column(name = "registration_date")
     @Temporal(TemporalType.TIMESTAMP)
     Date registrationDate;
+    @Transient
+    String stringRegistrationDate;
     @Column(name = "role")
     String role;
     @Column(name = "username")
@@ -58,12 +57,13 @@ public class Persone {
 //        this.repeatPassword = repeatPassword;
 //    }
 
-    public int getId() {
-        return id;
+
+    public int getPersoneId() {
+        return personeId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPersoneId(int personeId) {
+        this.personeId = personeId;
     }
 
     public String getEmail() {
@@ -114,5 +114,14 @@ public class Persone {
         this.username = username;
     }
 
+    public String getStringRegistrationDate() {
+        if(registrationDate != null){
+            stringRegistrationDate = registrationDate.toString();
+        }
+        return stringRegistrationDate;
+    }
 
+    public void setStringRegistrationDate(String stringRegistrationDate) {
+        this.stringRegistrationDate = stringRegistrationDate;
+    }
 }

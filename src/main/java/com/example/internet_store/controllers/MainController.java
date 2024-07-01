@@ -2,6 +2,8 @@ package com.example.internet_store.controllers;
 
 import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.security.PersoneDetail;
+import com.example.internet_store.services.PersoneDetailService;
+import com.example.internet_store.services.PersoneService;
 import com.example.internet_store.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,11 +18,15 @@ import java.util.List;
 @Controller
 public class MainController {
     final ProductService productService;
+    final PersoneService personeService;
+
     @Value("${pictureFolderInProject}")
     private String pictureFolderInProject;
     @Autowired
-    public MainController(ProductService productService) {
+    public MainController(ProductService productService, PersoneService personeService) {
         this.productService = productService;
+
+        this.personeService = personeService;
     }
 
     @GetMapping("/main")
@@ -41,6 +47,7 @@ public class MainController {
                 (product -> productService.convertToProductDTO(product)).toList();
             productService.addFolderName(listProductDTO);
             model.addAttribute("popularProductsModel", listProductDTO);
+            model.addAttribute("isAdminModel", personeService.isAdmin());
 
 
         return "mainPage";

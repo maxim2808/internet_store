@@ -17,6 +17,9 @@
 
 
 <a th:href="@{/product}" th:text="'Все продукты'">Все продукты</a>
+<div th:if="${isAdminModel}">
+<a th:href="@{/admin}" th:text="'Администрирование'"></a>
+</div>
 <h3>Популярное:</h3>
 <hr>
 <div th:each="product:${popularProductsModel}">

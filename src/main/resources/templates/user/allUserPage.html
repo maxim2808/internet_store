@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Все пользователи</title>
+</head>
+<body>
+<div th:each="persone:${listPersoneDTOModel}">
+    <a th:href="@{/user/view/{id}(id=${persone.getPersoneId()})}" th:text="${persone.getUsername()}"></a>
+</div>
+</body>
+</html>

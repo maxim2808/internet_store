@@ -34,12 +34,13 @@ public class ProductController {
     private String productPerPageString;
     @Value("${pictureFolderInProject}")
     private String pictureFolderInProject;
+    final PersoneService personeService;
 
 
     @Autowired
     public ProductController(ProductService productService, GroupService groupService, ManufacturerService manufacturerService,
                              ProductValidator productValidator,
-                             ReceivePictureService receivePictureService, DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration, PictureService pictureService) {
+                             ReceivePictureService receivePictureService, DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration, PictureService pictureService, PersoneService personeService) {
         this.productService = productService;
         this.groupService = groupService;
         this.manufacturerService = manufacturerService;
@@ -47,6 +48,7 @@ public class ProductController {
         this.receivePictureService = receivePictureService;
         this.dataSourceTransactionManagerAutoConfiguration = dataSourceTransactionManagerAutoConfiguration;
         this.pictureService = pictureService;
+        this.personeService = personeService;
     }
 
     @GetMapping("")
@@ -100,7 +102,7 @@ public class ProductController {
        model.addAttribute("numberOfPageModel", productService.listPage(productPerPage));
        model.addAttribute("productPerPageModel", productPerPage);
        model.addAttribute("productsModel", productDTOList);
-
+         model.addAttribute("isAdminModel", personeService.isAdmin());
         return "product/productPage";
     }
 
@@ -110,6 +112,7 @@ public class ProductController {
         model.addAttribute("oneGroupModel", new Group());
         model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
         model.addAttribute("oneManufacturer", new Manufacturer());
+
         return "/product/createProduct";
     }
 
