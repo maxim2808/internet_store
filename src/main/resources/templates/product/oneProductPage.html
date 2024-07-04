@@ -33,6 +33,7 @@
   <form th:method="POST" th:action="@{/cart/view/{URL}(URL=${oneProductModel.getProductURL()})}" th:object="${oneProductModel}" >
       <label for="idQuantity">Количество</label>
       <input type="text" th:field="*{quantity}" id="idQuantity">
+<!--      <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{quantity}"> </div>-->
     <input type="submit" value="Добавить в корзину">
 </form>
 

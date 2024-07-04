@@ -46,11 +46,6 @@ boolean popular;
 Date registrationDate;
     @Column(name = "product_url")
     String productURL;
-//    @ManyToMany
-//            @JoinTable(name = "product_picture", joinColumns = @JoinColumn(name ="product_id"),
-//            inverseJoinColumns = @JoinColumn(name = "picture_id"))
-//    List<Picture> pictureList;
-
 
     @OneToMany(mappedBy = "product")
     List<ProductOrder> orderList = new ArrayList<>();
@@ -166,14 +161,6 @@ Date registrationDate;
     public void setProductURL(String productURL) {
         this.productURL = productURL;
     }
-
-//    public List<Picture> getPictureList() {
-//        return pictureList;
-//    }
-//
-//    public void setPictureList(List<Picture> pictureList) {
-//        this.pictureList = pictureList;
-//    }
 
     public Picture getMainPicture() {
         return mainPicture;

@@ -61,7 +61,7 @@ public class ProductController {
 
     ) {
 
-       // group = "Мониторы";
+
         int productPerPage = Integer.parseInt(productPerPageString);
         List<String> groupNameList = new ArrayList<>(groupService.findAll().stream().map(group1 -> group1.getGroupName()).toList());
         List<String> manufacturerNameList = new ArrayList<>(manufacturerService.getAllManufacturers().stream().map(manufacturer->manufacturer.getManufacturerName()).toList());
@@ -162,7 +162,9 @@ public class ProductController {
         else {
             model.addAttribute("addressPicModel");
         }
-        model.addAttribute("oneProductModel", productService.convertToProductDTO(product));
+        ProductDTO oneProductDTO =  productService.convertToProductDTO(product);
+        oneProductDTO.setQuantity(1);
+        model.addAttribute("oneProductModel", oneProductDTO);
         return "/product/oneProductPage";
     }
 //

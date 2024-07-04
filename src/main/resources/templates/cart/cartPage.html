@@ -1,83 +1,4 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="https://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Корзина</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<p th:text="'test'">test</p>-->
 
-<!--<div th:if="${listModel==null}"><h4>Ваша корзина пуста</h4></div>-->
-<!--<div th:if="${listModel!=null}">-->
-<!--&lt;!&ndash;<div th:each="prodcut:${cartModel.getProducts()}" th:text="${prodcut.getProductName()}  + ' количество: ' + ${prodcut.getQuantity()}"></div>&ndash;&gt;-->
-
-
-
-<!--&lt;!&ndash;    <div th:each="product, intr :${listModel}"  >&ndash;&gt;-->
-
-<!--&lt;!&ndash;    <form th:method="POST " th:action="@{/product/cart}" th:object="${listModel[__${intr.index}__]}">&ndash;&gt;-->
-
-<!--&lt;!&ndash;        <label for="quantityId">Количество</label>&ndash;&gt;-->
-<!--&lt;!&ndash;          <input type="text"&ndash;&gt;-->
-<!--&lt;!&ndash;                 th:value="${listModel[__${intr.index}__].getQuantity()}"&ndash;&gt;-->
-<!--&lt;!&ndash;                 th:name="|quantity|"&ndash;&gt;-->
-<!--&lt;!&ndash;          id="quantityId">&ndash;&gt;-->
-<!--&lt;!&ndash;            <input type="submit" value="Отправить">&ndash;&gt;-->
-<!--&lt;!&ndash;  </form>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    &ndash;&gt;-->
-
-
-
-<!--    <form id="multipleForm" th:method="POST" th:action="@{/product/cart}">-->
-<!--        <div th:each="product, intr :${listModel}">-->
-<!--            <div class="product-form">-->
-<!--                <input type="hidden" th:name="|listModel[__${intr.index}__].id|" th:value="${product.getProductId()}">-->
-<!--                <label for="quantityId">Количество</label>-->
-<!--                <input type="text" th:value="${product.quantity}" th:name="|listModel[__${intr.index}__].quantity|" id="quantityId">-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <input type="submit" value="Отправить">-->
-<!--    </form>-->
-
-<!--    <script th:inline="javascript">-->
-<!--        document.getElementById('multipleForm').addEventListener('submit', function(e) {-->
-<!--            e.preventDefault(); // Отменить стандартное действие отправки формы-->
-
-<!--            var forms = document.getElementsByClassName('product-form');-->
-<!--            var formData = new FormData();-->
-
-<!--            for (var i = 0; i < forms.length; i++) {-->
-<!--                var form = forms[i];-->
-<!--                var data = new FormData(form);-->
-<!--                data.forEach(function(value, key) {-->
-<!--                    formData.append(key, value);-->
-<!--                });-->
-<!--            }-->
-
-<!--            fetch(e.target.action, {-->
-<!--                method: 'POST',-->
-<!--                body: formData-->
-<!--            }).then(function(response) {-->
-<!--                // Обработка ответа от сервера-->
-<!--            }).catch(function(error) {-->
-<!--                console.error('Ошибка:', error);-->
-<!--            });-->
-<!--        });-->
-<!--    </script>-->
-
-
-
-<!--</div>-->
-
-
-
-
-
-
-<!--</body>-->
-<!--</html>-->
 
 
 <!DOCTYPE html>
@@ -99,14 +20,28 @@
 <div th:each="product:${listModel}">
     <p th:text="${product.getProductName()} + ' количество ' +${product.getQuantity()} + ' шт  ' +  'цена за шт. ' +
     ${product.getPrice()} + 'р. итого ' + ${product.getPrice()}*${product.getQuantity()} + ' белорусских рублей '" ></p>
-    <p th:if="${!product.addressPicture.isBlank()}"><img th:src="${product.addressPicture}" alt="Фото товара" width="100" height="125"></p>
-    <p th:if="${product.addressPicture.isBlank()}"><img src="/download/no_photo.png" alt="Фото товара" width="100" height="125"></p>
+    <p th:if="${!product.addressPicture.isBlank()}"><img th:src="${product.addressPicture}" alt="Фото товара" width="100" height="100"></p>
+    <p th:if="${product.addressPicture.isBlank()}"><img src="/download/no_photo.png" alt="Фото товара" width="100" height="100"></p>
 </div>
+
+<!--    <form method="post" th:action="@{order/createOrder}" th:object="${productDTOListModel}">-->
+<!--        <div th:each="product, iter:*{productsDTO}">-->
+<!--            <label for="quantityId">количество</label>-->
+<!--            <input type="text" th:field="*{productsDTO[__${iter.index}__].quantity}" id="quantityId">-->
+<!--        </div>-->
+<!--        <input type="submit" value="Оформить заказ">-->
+<!--    </form>-->
+
+
+
 <p style="font-weight: bold" th:text="'Итого: ' + ${totalPrice} + ' белорусских рублей '" ></p>
 
 
 
     <br>
+    <form method="get" action="/cart/edit">
+    <input type="submit" value="Редактировать корзину">
+    </form>
     <hr>
     <form method="get" action="order/createOrder">
         <input type="submit" value="Оформить заказ">
@@ -115,44 +50,6 @@
     <form method="get" action="cart/clear">
         <input type="submit" value="Очистить корзину">
     </form>
-
-
-
-
-
-
-
-
-
-
-
-    <!--<div th:each="prodcut:${cartModel.getProducts()}" th:text="${prodcut.getProductName()}  + ' количество: ' + ${prodcut.getQuantity()}"></div>-->
-
-    <!--    <div th:each="product, intr :${listModel}"  >-->
-
-    <!--    <form th:method="POST " th:action="@{/product/cart}" th:object="${listModel[__${intr.index}__]}">-->
-
-    <!--        <label for="quantityId">Количество</label>-->
-    <!--          <input type="text"-->
-    <!--                 th:value="${listModel[__${intr.index}__].getQuantity()}"-->
-    <!--                 th:name="|quantity|"-->
-    <!--          id="quantityId">-->
-    <!--            <input type="submit" value="Отправить">-->
-    <!--  </form>-->
-    <!--    </div>-->
-
-    <!--    -->
-
-<!--    <form id="multipleForm" th:method="POST" th:action="@{/product/cart}">-->
-<!--        <div th:each="product, intr :${listModel}">-->
-<!--            <div class="product-form">-->
-<!--                <input type="hidden" th:name="${'|listModel[' + intr.index + '].id|'}" th:value="${product.getProductId()}">-->
-<!--                <label for="quantityId">Количество</label>-->
-<!--                <input type="text" th:value="${product.quantity}" th:name="${'|listModel[' + intr.index + '].quantity|'}" id="quantityId">-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <input type="submit" value="Отправить">-->
-<!--    </form>-->
 
 
 </div>

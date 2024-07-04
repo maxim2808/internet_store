@@ -303,25 +303,20 @@ public class ProductService {
         int count = shoppingCart.getCount();
         count++;
         shoppingCart.setCount(count);
-        System.out.println("!!!!!!!!!!!!!count: " + count);
     }
 
     public void addProductToCart(HttpSession session, String productUrl, int count) {
         ShoppingCart shoppingCart = (ShoppingCart) session.getAttribute("shoppingCart");
         if (shoppingCart == null) {
             shoppingCart= new ShoppingCart();
-            //shoppingCart.setCount(0);
             session.setAttribute("shoppingCart", shoppingCart);
 
         }
-//        for(int i=0; i<count; i++){
-//        shoppingCart.getProducts().add(getProductByProductUrl(productUrl).get());}
+
             Product product = getProductByProductUrl(productUrl).get();
             ProductDTO productDTO = convertToProductDTO(product);
             productDTO.setQuantity(count);
             shoppingCart.getProducts().add(productDTO);
-
-        System.out.println("Shopping carts:");
         for (ProductDTO pr : shoppingCart.getProducts()) {
             System.out.println(pr.getProductName() + " count: " + pr.getQuantity());
         }
@@ -349,6 +344,14 @@ public class ProductService {
         return totalPrice;
     }
 
+
+    public void deleteProductWhereCountZeroOrLess(HttpSession session){
+        if (session.getAttribute("shoppingCart") != null) {
+        ShoppingCart shoppingCart = (ShoppingCart) session.getAttribute("shoppingCart");
+        shoppingCart.getProducts().removeIf(productDTO -> productDTO.getQuantity() <= 0);
+
+    }
+    }
 
 
 }
