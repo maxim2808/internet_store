@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Все товары</title>
@@ -12,6 +12,9 @@
         text-align: right;
     }
 </style>
+<form  method="get" action="/main">
+    <input type="submit" value="На главную">
+</form>
 <form class="right" method="get" action="/cart">
     <input type="submit" value="Корзина">
 </form>

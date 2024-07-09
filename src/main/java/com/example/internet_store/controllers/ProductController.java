@@ -1,6 +1,7 @@
 package com.example.internet_store.controllers;
 
 import com.example.internet_store.dto.ProductDTO;
+import com.example.internet_store.dto.QuantityDTO;
 import com.example.internet_store.models.*;
 import com.example.internet_store.services.*;
 import com.example.internet_store.utils.ProductValidator;
@@ -12,12 +13,14 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -136,6 +139,7 @@ public class ProductController {
             System.out.println("binding result has error!!!!!!!!!!!!!!!!!!!");
             model.addAttribute("groupListModel", groupService.findAll());
             model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
+            productService.messageForQuantity(bindingResult);
             return "/product/createProduct";
         }
 
@@ -150,32 +154,78 @@ public class ProductController {
 
     @GetMapping("/view/{productURL}")
     public String oneProductPage (HttpSession session, @PathVariable("productURL") String productUrl, Model model) {
+        System.out.println("get view started");
         Product product = productService.getProductByProductUrl(productUrl).get();
 
         if(product.getMainPicture()!=null){
-       // StringBuilder address = new StringBuilder("/download/");
             StringBuilder address = new StringBuilder(pictureFolderInProject);
             address.append(product.getMainPicture().getFileName());
-            System.out.println(address);
             model.addAttribute("addressPicModel", address.toString());
         }
         else {
             model.addAttribute("addressPicModel");
         }
         ProductDTO oneProductDTO =  productService.convertToProductDTO(product);
-        oneProductDTO.setQuantity(1);
+        QuantityDTO quantityDTO = new QuantityDTO();
+        quantityDTO.setQuantity(1);
+        //oneProductDTO.setQuantity(1);
         model.addAttribute("oneProductModel", oneProductDTO);
+        model.addAttribute("quantityModel", quantityDTO);
         return "/product/oneProductPage";
     }
+
+
+
+
+    @PatchMapping("/view/{productURL}")
+    public String postViewProduct(HttpSession session, @PathVariable("productURL") String productUrl, Model model,
+                                  @ModelAttribute("quantityModel") @Valid QuantityDTO quantityDTO,
+                                  BindingResult bindingResult
+    ) {
+        System.out.println("post started");
+        if (bindingResult.hasErrors()) {
+            ProductDTO productDTO = productService.convertToProductDTO(productService.getProductByProductUrl(productUrl).get());
+            model.addAttribute("oneProductModel", productDTO);
+            System.out.println("error!!!!!!!!!!!!!!!!!");
+            if(productDTO.getMainPicture()!=null){
+                StringBuilder address = new StringBuilder(pictureFolderInProject);
+                address.append(productDTO.getMainPicture().getFileName());
+                model.addAttribute("addressPicModel", address.toString());
+
+
+            }
+            else {
+                model.addAttribute("addressPicModel");
+            }
+//            for (FieldError error: bindingResult.getFieldErrors()) {
+//                if (error.getField().equals("quantity") && error.getCode().equals("typeMismatch")) {
 //
-//    @PostMapping("/view/{productURL}")
-//
-//    public String postViewProduct(HttpSession session, @PathVariable("productURL") String productUrl, Model model, ProductDTO productDTO) {
-//        productService.addProductToCart(session, productUrl, productDTO.getQuantity());
-//       // return "redirect:/product/view/" + productUrl;
-//        return "/cart/successfullyPage";
-//
-//    }
+//                    FieldError newError = new FieldError(
+//                            error.getObjectName(),
+//                            error.getField(),
+//                            "Введите целое число для поля 'Количество'"
+//                    );
+//                    bindingResult.addError(newError);
+//                }
+            productService.messageForQuantity(bindingResult);
+
+
+            return "/product/oneProductPage";
+        }
+        if (quantityDTO.getQuantity()>0){
+            productService.addProductToCart(session, productUrl, quantityDTO.getQuantity());
+
+            // return "redirect:/product/view/" + productUrl;
+            return "/cart/successfullyPage";
+        }
+        else {
+            return "/cart/errorPage";}
+
+    }
+
+
+
+
 
 
 
@@ -209,6 +259,7 @@ public class ProductController {
         productService.setUrlForProduct(productDTO);
         productValidator.validate(productDTO, bindingResult);
         if (bindingResult.hasErrors()) {
+            productService.messageForQuantity(bindingResult);
             model.addAttribute("groupListModel", groupService.findAll());
             model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
             return "/product/editProductPage";

@@ -5,9 +5,37 @@
     <title>Title</title>
 </head>
 <body>
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .button-container .left-button {
+        align-self: flex-start;
+    }
+
+    .button-container .center-button {
+        align-self: center;
+    }
+</style>
+
+<div class="button-container">
 
 
-<!--<p><img src="/download/100-main.jpg" alt="Мое изображение" width="200" height="250"></p>-->
+    <form th:method="GET" th:action="@{/product}">
+        <input class="left-button" type="submit" value="Все продукты">
+    </form>
+    <form th:method="GET" th:action="@{/main}">
+        <input class="center-button" type="submit" value="Вернуться на главную">
+    </form>
+
+
+</div>
+
+<hr>
+
+
 
 <p th:text="'Группа:' + ${oneProductModel.group.getGroupName()}"></p>
 <p th:text="'Название: ' + ${oneProductModel.productName}"></p>
@@ -16,7 +44,7 @@
 <p th:text="'Цена: ' + ${oneProductModel.price}"></p>
 <div style="color: green" th:if="${oneProductModel.getQuantity()}>0" th:text="'Есть на складе'"></div>
 <div style="color: darkorange" th:if="${oneProductModel.getQuantity()}<1" th:text="'Нет на складе(под заказ)'"></div>
-<!--<p th:text="${addressPicModel}"></p>-->
+
 <br>
 <p th:if="${addressPicModel!=null}">
     <img th:src="${addressPicModel}"  alt="Фото товара" width="200" height="200"></p>
@@ -28,14 +56,28 @@
 <br>
 
 
-
-
-  <form th:method="POST" th:action="@{/cart/view/{URL}(URL=${oneProductModel.getProductURL()})}" th:object="${oneProductModel}" >
-      <label for="idQuantity">Количество</label>
-      <input type="text" th:field="*{quantity}" id="idQuantity">
-<!--      <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{quantity}"> </div>-->
+<form th:method="PATCH" th:action="@{/product/view/{URL}(URL=${oneProductModel.getProductURL()})}" th:object="${quantityModel}" >
+<!--    <input type="hidden" th:field="*{group}">-->
+<!--    <input type="hidden" th:field="*{manufacturer}">-->
+<!--    <input type="hidden" th:field="*{productName}">-->
+<!--    <input type="hidden" th:field="*{price}">-->
+<!--    <input type="hidden" th:field="*{addressPicture}">-->
+<!--    <input type="hidden" th:field="*{quantity}">-->
+    <label for="idQuantity">Количество</label>
+    <input type="text" th:field="*{quantity}" id="idQuantity">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{quantity}"> </div>
     <input type="submit" value="Добавить в корзину">
 </form>
+
+
+
+
+<!--<form th:method="POST" th:action="@{/product/view/{URL}(URL=${oneProductModel.getProductURL()})}" th:object="${quantityModel}" >-->
+<!--      <label for="idQuantity">Количество</label>-->
+<!--      <input type="text" th:field="*{quantity}" id="idQuantity">-->
+<!--      <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{quantity}"> </div>-->
+<!--    <input type="submit" value="Добавить в корзину">-->
+<!--</form>-->
 
 
 

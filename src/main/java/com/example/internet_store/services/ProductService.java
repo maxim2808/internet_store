@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.util.*;
 
@@ -353,5 +355,19 @@ public class ProductService {
     }
     }
 
+    public void messageForQuantity(BindingResult bindingResult) {
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            if (error.getField().equals("quantity") && error.getCode().equals("typeMismatch")) {
+
+                FieldError newError = new FieldError(
+                        error.getObjectName(),
+                        error.getField(),
+                        "Введите целое число для поля 'Количество'"
+                );
+                bindingResult.addError(newError);
+            }
+
+        }
+    }
 
 }

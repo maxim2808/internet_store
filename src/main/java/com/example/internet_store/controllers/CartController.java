@@ -2,6 +2,7 @@ package com.example.internet_store.controllers;
 
 import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.dto.ProductDTOList;
+import com.example.internet_store.dto.QuantityDTO;
 import com.example.internet_store.models.ShoppingCart;
 import com.example.internet_store.services.ProductService;
 import jakarta.servlet.http.HttpSession;
@@ -98,34 +99,25 @@ public class CartController {
 
 
 
-    @PostMapping("/view/{productURL}")
-
-    public String postViewProduct(HttpSession session, @PathVariable("productURL") String productUrl, Model model, ProductDTO productDTO
-                                  ) {
-
-//        if (session.getAttribute("shoppingCart")!=null){
-//        ShoppingCart shoppingCart =(ShoppingCart)session.getAttribute("shoppingCart");
-//        for(ProductDTO productDTO1:shoppingCart.getProducts()){
-//            System.out.println(productDTO1.getProductName() + " quantity " + productDTO1.getQuantity());
+//    @PostMapping("/view/{productURL}")
+//    public String postViewProduct(HttpSession session, @PathVariable("productURL") String productUrl, Model model,
+//         @ModelAttribute("oneProductModel") ProductDTO productDTO
+//                                  ,@ModelAttribute("quantityModel") @Valid QuantityDTO quantityDTO, BindingResult bindingResult
+//                                  ) {
+//        System.out.println("post started");
+//        if (bindingResult.hasErrors()) {
+//            return "/product/oneProductPage";
 //        }
-//        System.out.println("end one");
-//        }
-        if (productDTO.getQuantity()>0){
-        productService.addProductToCart(session, productUrl, productDTO.getQuantity());
-
-        // return "redirect:/product/view/" + productUrl;
-        return "/cart/successfullyPage";
-    }
-        else {
-//            productDTO=null;
-//            ShoppingCart shoppingCart2 =(ShoppingCart)session.getAttribute("shoppingCart");
-//            for(ProductDTO productDTO1:shoppingCart2.getProducts()){
-//                System.out.println(productDTO1.getProductName() + " quantity " + productDTO1.getQuantity());
-//            }
-//            System.out.println("end");
-            return "/cart/errorPage";}
-
-    }
+//        if (quantityDTO.getQuantity()>0){
+//        productService.addProductToCart(session, productUrl, quantityDTO.getQuantity());
+//
+//        // return "redirect:/product/view/" + productUrl;
+//        return "/cart/successfullyPage";
+//    }
+//        else {
+//            return "/cart/errorPage";}
+//
+//    }
 
     @GetMapping("/clear")
     public String clearCart(HttpSession session) {

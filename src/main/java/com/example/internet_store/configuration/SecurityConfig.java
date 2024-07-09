@@ -54,7 +54,7 @@ public class SecurityConfig {
 //                                logoutSuccessUrl("/auth/login");});
 //        return http.build();
 //    }
-//
+
 
 
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
