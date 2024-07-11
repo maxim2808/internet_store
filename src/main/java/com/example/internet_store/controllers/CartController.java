@@ -30,8 +30,6 @@ public class CartController {
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
         if (cart!=null){
             List<ProductDTO> productList = cart.getProducts();
-
-
             productService.addFolderName(productList);
             model.addAttribute("listModel", productList);
             model.addAttribute("totalPrice", productService.totalPrice(productList));
@@ -95,29 +93,6 @@ public class CartController {
         return "redirect:/cart";
     }
 
-
-
-
-
-//    @PostMapping("/view/{productURL}")
-//    public String postViewProduct(HttpSession session, @PathVariable("productURL") String productUrl, Model model,
-//         @ModelAttribute("oneProductModel") ProductDTO productDTO
-//                                  ,@ModelAttribute("quantityModel") @Valid QuantityDTO quantityDTO, BindingResult bindingResult
-//                                  ) {
-//        System.out.println("post started");
-//        if (bindingResult.hasErrors()) {
-//            return "/product/oneProductPage";
-//        }
-//        if (quantityDTO.getQuantity()>0){
-//        productService.addProductToCart(session, productUrl, quantityDTO.getQuantity());
-//
-//        // return "redirect:/product/view/" + productUrl;
-//        return "/cart/successfullyPage";
-//    }
-//        else {
-//            return "/cart/errorPage";}
-//
-//    }
 
     @GetMapping("/clear")
     public String clearCart(HttpSession session) {

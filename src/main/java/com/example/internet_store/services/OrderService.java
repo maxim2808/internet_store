@@ -2,6 +2,7 @@ package com.example.internet_store.services;
 
 import com.example.internet_store.dto.OrderDTO;
 import com.example.internet_store.models.Order;
+import com.example.internet_store.models.Persone;
 import com.example.internet_store.models.Product;
 import com.example.internet_store.models.ProductOrder;
 import com.example.internet_store.repositories.OrderRepository;
@@ -19,16 +20,18 @@ public class OrderService {
     final ProductService productService;
     final ProductOrderService productOrderService;
     final ModelMapper modelMapper;
+    final PersoneService personeService;
     @Value("${listStatus}")
     public String StatusString;
    // public  List<String> listStatus = Arrays.asList(StatusString.split(","));
 
-    public OrderService(OrderRepository orderRepository, ProductService productService, ProductOrderService productOrderService, ModelMapper modelMapper) {
+    public OrderService(OrderRepository orderRepository, ProductService productService, ProductOrderService productOrderService, ModelMapper modelMapper, PersoneService personeService) {
 
         this.orderRepository = orderRepository;
         this.productService = productService;
         this.productOrderService = productOrderService;
         this.modelMapper = modelMapper;
+        this.personeService = personeService;
     }
 
 //    public List<Order> findAllOrders() {
@@ -62,6 +65,12 @@ public class OrderService {
             order2.setProductsInOrder(new ArrayList<ProductOrder>());
             //  System.out.println("Для продукта " + product.getProductName() + " создан список заказов");
         }
+        if(personeService.getCurrentPersone().isPresent()){
+            System.out.println("user is authenticated");
+        Persone persone = personeService.getCurrentPersone().get();
+        order2.setPersone(persone);
+        }
+
         orderRepository.save(order2);
         List<ProductOrder> productOrderList = order2.getProductsInOrder();
         for (Product product : productList) {
@@ -103,6 +112,10 @@ public class OrderService {
         statusList.add("Завершен");
         statusList.add("Отменен");
         return statusList;
+    }
+
+    public List<Order> findOrdersByUser(Persone persone) {
+    return orderRepository.findByPersone(persone);
     }
 
 }

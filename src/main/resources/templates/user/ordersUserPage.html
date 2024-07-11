@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>История заказов</title>
+</head>
+<body>
+<h3>История заказов</h3>
+<div th:if="${orderListModel.size()!=0}">
+<div th:each="order:${orderListModel}">
+    <p th:text="'Дата заказа ' + ${order.getStringDate()}" ></p>
+    <div th:each="product:${order.getProductsInOrder()}">
+        <p th:text="${product.product.getProductName()} + ' цена ' + ${product.product.price} + ' белорусских рублей '"></p>
+    </div>
+    <p  style="font-weight: bold" th:text="'цена заказа ' + ${order.orderPrice}"></p>
+    <hr>
+</div>
+</div>
+<div th:if="${orderListModel.size()==0}">
+    <h4>У вас не было заказов</h4>
+</div>
+</body>
+</html>

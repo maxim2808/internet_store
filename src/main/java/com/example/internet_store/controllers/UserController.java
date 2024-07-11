@@ -4,6 +4,7 @@ import com.example.internet_store.dto.PersoneDTO;
 import com.example.internet_store.dto.PersoneViewDTO;
 import com.example.internet_store.models.Persone;
 import com.example.internet_store.security.PersoneDetail;
+import com.example.internet_store.services.OrderService;
 import com.example.internet_store.services.PersoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -19,9 +20,11 @@ import java.util.List;
 @Controller
 public class UserController {
     final PersoneService personeService;
+    final OrderService orderService;
     @Autowired
-    public UserController(PersoneService personeService) {
+    public UserController(PersoneService personeService, OrderService orderService) {
         this.personeService = personeService;
+        this.orderService = orderService;
     }
 
     @GetMapping("user/allUser")
@@ -85,8 +88,6 @@ public class UserController {
         personeService.editPersone(persone, id);
         return "redirect:/user/allUser";
 
-
-
     }
 
 
@@ -102,6 +103,18 @@ public class UserController {
     @PatchMapping("/superadmin")
     public String patchSuperAdmin(Model model) {
         return "/user/superAdminPage";
+    }
+
+    @GetMapping("/myorders")
+    public String getMyOrders(Model model) {
+        if (personeService.getCurrentPersone().isPresent()){
+            Persone persone = personeService.getCurrentPersone().get();
+            model.addAttribute("orderListModel", orderService.findOrdersByUser(persone));
+            return "/user/ordersUserPage";
+        }
+        else {
+            return "redirect:/auth/login";
+        }
     }
 
 

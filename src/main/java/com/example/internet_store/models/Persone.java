@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "persone")
@@ -46,16 +47,10 @@ public class Persone {
     @Column(name = "username")
     @Size(min = 3, max = 20, message = "Длина имени пользователя должна быть от 3 до 20 символов")
     String username;
-    // @NotEmpty
+    @OneToMany(mappedBy = "persone" )
+    List<Order> orderList;
 
 
-//    public String getRepeatPassword() {
-//        return repeatPassword;
-//    }
-//
-//    public void setRepeatPassword(String repeatPassword) {
-//        this.repeatPassword = repeatPassword;
-//    }
 
 
     public int getPersoneId() {
@@ -123,5 +118,13 @@ public class Persone {
 
     public void setStringRegistrationDate(String stringRegistrationDate) {
         this.stringRegistrationDate = stringRegistrationDate;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 }

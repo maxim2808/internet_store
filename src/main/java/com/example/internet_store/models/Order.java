@@ -30,6 +30,9 @@ public class Order {
     List<ProductOrder> productsInOrder;
     @Transient
     String stringDate;
+    @ManyToOne()
+    @JoinColumn(name = "persone_id", referencedColumnName = "persone_id")
+    Persone persone;
 
     public int getOrderId() {
         return orderId;
@@ -105,4 +108,13 @@ public class Order {
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
+
+    public Persone getPersone() {
+        return persone;
+    }
+
+    public void setPersone(Persone persone) {
+        this.persone = persone;
+    }
+
 }

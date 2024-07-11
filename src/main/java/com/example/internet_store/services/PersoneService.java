@@ -102,14 +102,7 @@ public class PersoneService {
 
     public Optional<Persone> getCurrentPersone() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-     //   if (authentication != null && authentication.isAuthenticated()) {
-
            return findPersoneByEmail(authentication.getName());
-
-//        }
-//
-//
-//        return null;
     }
 
 
