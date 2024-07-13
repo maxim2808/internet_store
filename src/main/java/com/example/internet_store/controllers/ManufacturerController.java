@@ -5,6 +5,7 @@ import com.example.internet_store.models.Manufacturer;
 import com.example.internet_store.services.ManufacturerService;
 import com.example.internet_store.utils.ManufactureValidator;
 import jakarta.validation.Valid;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,9 +17,11 @@ public class ManufacturerController {
     final ManufacturerService manufacturerService;
     final ManufactureValidator manufactureValidator;
 
+
     public ManufacturerController(ManufacturerService manufacturerService, ManufactureValidator manufactureValidator) {
         this.manufacturerService = manufacturerService;
         this.manufactureValidator = manufactureValidator;
+
     }
 
     @GetMapping("")

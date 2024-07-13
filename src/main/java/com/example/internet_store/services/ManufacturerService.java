@@ -2,9 +2,11 @@ package com.example.internet_store.services;
 
 import com.example.internet_store.dto.ManufacturerDTO;
 import com.example.internet_store.models.Manufacturer;
+import com.example.internet_store.models.mapper.ManufacturerMapper;
 import com.example.internet_store.repositories.ManufacturerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +19,13 @@ import java.util.Optional;
 public class ManufacturerService  {
     final ManufacturerRepository manufacturerRepository;
     final ModelMapper modelMapper;
+    final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ManufacturerService(ManufacturerRepository manufacturerRepository, ModelMapper modelMapper) {
+    public ManufacturerService(ManufacturerRepository manufacturerRepository, ModelMapper modelMapper, JdbcTemplate jdbcTemplate) {
         this.manufacturerRepository = manufacturerRepository;
         this.modelMapper = modelMapper;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Manufacturer> getAllManufacturers() {
@@ -62,5 +66,12 @@ public class ManufacturerService  {
         manufacturerRepository.deleteById(id);
     }
 
+    public List<Manufacturer> getAllManufacturersByGroup(int groupId) {
+
+        return jdbcTemplate.query("SELECT DISTINCT manufacturer.manufacturer_id, manufacturer.manufacturer_name, manufacturer.registration_date FROM manufacturer " +
+                "JOIN product ON product.manufacturer_id = manufacturer.manufacturer_id " +
+                "JOIN product_group ON product.group_id = product_group.group_id " +
+                "WHERE product_group.group_id = ?", new Object[]{groupId}, new ManufacturerMapper());
+    }
 
 }

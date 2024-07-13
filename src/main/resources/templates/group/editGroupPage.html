@@ -8,6 +8,11 @@
 <form th:method="PATCH" th:action="@{/group/edit/{id}(id=${groupModel.getGroupId()})}" th:object="${groupModel}" >
     <label for="nameId">Название группы</label>
     <input type="text" th:field="*{groupName}" id="nameId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{groupName}"></div>
+    <br>
+    <label for="nameId">URLгруппы</label>
+    <input type="text" th:field="*{groupURL}" id="urlId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{groupURL}"></div>
     <br>
     <input type="submit" value="Редактировать">
 </form>

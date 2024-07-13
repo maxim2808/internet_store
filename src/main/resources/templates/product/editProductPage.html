@@ -57,7 +57,7 @@
 
     <label for="labelGroupId">Группа товаров</label>
     <select th:object="${oneGroupModel}" th:field="*{groupId}" id="labelGroupId">
-        <option th:each="group:${groupListModel}" th:value="${oneGroupModel.getGroupId()}" th:text="${group.getGroupName()}"></option>
+        <option th:each="group:${groupListModel}" th:value="${group.getGroupId()}" th:text="${group.getGroupName()}"></option>
     </select>
     <br>
     <label for="labelManufacturerId">Производитель</label>

@@ -13,14 +13,12 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -77,6 +75,7 @@ public class ProductController {
         model.addAttribute("groupForSelectModel", groupForSelect);
         model.addAttribute("manufacturerForSelectModel", manufacturerForSelect);
         model.addAttribute("searchNameModel", searchName);
+        model.addAttribute("listObjectGroup", groupService.findAll().stream().map(group1 -> groupService.convertToDTO(group1)).toList());
         List<ProductDTO> productDTOList;
         List<String> sortLostList = new ArrayList<>();
         sortLostList.add("Цена по возрастанию");
@@ -128,7 +127,7 @@ public class ProductController {
 
 
         if (productDTO.getProductURL().isBlank()){
-        productDTO.setProductURL(productService.createProductUrl(productDTO.getProductName()));}
+        productDTO.setProductURL(productService.createUrl(productDTO.getProductName()));}
         else{
             productDTO.setProductURL(productService.characterReplacementForUrl(productDTO.getProductURL()));
         };
@@ -182,31 +181,19 @@ public class ProductController {
                                   @ModelAttribute("quantityModel") @Valid QuantityDTO quantityDTO,
                                   BindingResult bindingResult
     ) {
-        System.out.println("post started");
+
         if (bindingResult.hasErrors()) {
             ProductDTO productDTO = productService.convertToProductDTO(productService.getProductByProductUrl(productUrl).get());
             model.addAttribute("oneProductModel", productDTO);
-            System.out.println("error!!!!!!!!!!!!!!!!!");
             if(productDTO.getMainPicture()!=null){
                 StringBuilder address = new StringBuilder(pictureFolderInProject);
                 address.append(productDTO.getMainPicture().getFileName());
                 model.addAttribute("addressPicModel", address.toString());
 
-
             }
             else {
                 model.addAttribute("addressPicModel");
             }
-//            for (FieldError error: bindingResult.getFieldErrors()) {
-//                if (error.getField().equals("quantity") && error.getCode().equals("typeMismatch")) {
-//
-//                    FieldError newError = new FieldError(
-//                            error.getObjectName(),
-//                            error.getField(),
-//                            "Введите целое число для поля 'Количество'"
-//                    );
-//                    bindingResult.addError(newError);
-//                }
             productService.messageForQuantity(bindingResult);
 
 
@@ -253,6 +240,9 @@ public class ProductController {
                                   @ModelAttribute("oneManufacturerModel") Manufacturer manufacturer,
                                   @RequestParam("photo") MultipartFile photo,
                                   Model model) throws IOException {
+
+
+
         Product oldProduct = productService.getProductByProductUrl(productUrl).get();
         int id = oldProduct.getProductId();
         productDTO.setProductId(id);
@@ -296,25 +286,12 @@ public class ProductController {
       return "redirect:/product";
     }
 
-//    @GetMapping("/cart")
-//    public String getCourt(HttpSession session, Model model){
-//
-//        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
-//        if (cart!=null){
-//        List<ProductDTO> productList = cart.getProducts();
-//        productService.addFolderName(productList);
-//        model.addAttribute("listModel", productList);
-//        model.addAttribute("totalPrice", productService.totalPrice(productList));
-//        }
-//        return "/product/cartPage";
-//    }
-//
-//    @PostMapping("/cart")
-//    public String addCourt(@ModelAttribute("listModel") ProductDTO productDTO) {
-//                    System.out.println("Name " + productDTO.getProductName());
-//            System.out.println("Quantity "+ productDTO.getQuantity());
-//        return "redirect:/product";
-//    }
+    @GetMapping("/group/{url}")
+    public String getGroupPage(Model model) {
+        System.out.println("get products by group");
+        return "/product/productsByGroupPage";
+    }
+
 }
 
 

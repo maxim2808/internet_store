@@ -2,6 +2,7 @@ package com.example.internet_store.controllers;
 
 import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.security.PersoneDetail;
+import com.example.internet_store.services.GroupService;
 import com.example.internet_store.services.PersoneDetailService;
 import com.example.internet_store.services.PersoneService;
 import com.example.internet_store.services.ProductService;
@@ -19,14 +20,16 @@ import java.util.List;
 public class MainController {
     final ProductService productService;
     final PersoneService personeService;
+    final GroupService groupService;
 
     @Value("${pictureFolderInProject}")
     private String pictureFolderInProject;
     @Autowired
-    public MainController(ProductService productService, PersoneService personeService) {
+    public MainController(ProductService productService, PersoneService personeService, GroupService groupService) {
         this.productService = productService;
 
         this.personeService = personeService;
+        this.groupService = groupService;
     }
 
     @GetMapping("/main")

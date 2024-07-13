@@ -14,6 +14,7 @@ public class GroupDTO {
     @NotEmpty(message = "Группа не должна быть пустой")
     String groupName;
     List<Product> productList;
+    String groupURL;
 
     public int getGroupId() {
         return groupId;
@@ -37,5 +38,13 @@ public class GroupDTO {
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
+    }
+
+    public String getGroupURL() {
+        return groupURL;
+    }
+
+    public void setGroupURL(String groupURL) {
+        this.groupURL = groupURL;
     }
 }

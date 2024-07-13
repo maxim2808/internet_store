@@ -2,7 +2,10 @@ package com.example.internet_store.controllers;
 
 import com.example.internet_store.dto.GroupDTO;
 import com.example.internet_store.models.Group;
+import com.example.internet_store.models.Manufacturer;
 import com.example.internet_store.services.GroupService;
+import com.example.internet_store.services.ManufacturerService;
+import com.example.internet_store.services.ProductService;
 import com.example.internet_store.utils.GroupValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +15,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/group")
 public class GroupController {
 final GroupService groupService;
 final GroupValidator groupValidator;
+final ManufacturerService manufacturerService;
+final ProductService productService;
 
 @Autowired
-public GroupController(GroupService groupService, GroupValidator groupValidator) {
+public GroupController(GroupService groupService, GroupValidator groupValidator, ManufacturerService manufacturerService, ProductService productService) {
     this.groupService = groupService;
     this.groupValidator = groupValidator;
+    this.manufacturerService = manufacturerService;
+    this.productService = productService;
 }
 
 @GetMapping("")
@@ -37,6 +46,14 @@ public GroupController(GroupService groupService, GroupValidator groupValidator)
 
 @PostMapping("/create")
     public String createGroup(@ModelAttribute ("groupModel") @Valid GroupDTO groupDTO, BindingResult bindingResult) {
+
+    if (groupDTO.getGroupURL().isBlank()){
+        groupDTO.setGroupURL(productService.createUrl(groupDTO.getGroupName()));}
+    else{
+        groupDTO.setGroupURL(productService.characterReplacementForUrl(groupDTO.getGroupURL()));
+    };
+
+
     groupValidator.validate(groupDTO, bindingResult);
     if (bindingResult.hasErrors()) {
         return "/group/createGroupPage";
@@ -49,6 +66,10 @@ public GroupController(GroupService groupService, GroupValidator groupValidator)
 @GetMapping("/view/{id}")
     public String getViewGroup(@PathVariable("id") int id, Model model) {
     model.addAttribute("groupModel", groupService.convertToDTO(groupService.findById(id).get()));
+    List<Manufacturer>  manufacturerList = manufacturerService.getAllManufacturersByGroup(id);
+    for (Manufacturer manufacturer : manufacturerList) {
+        System.out.println(manufacturer.getManufacturerName());
+    }
     return "/group/viewGroupPage";
 }
 
@@ -63,7 +84,13 @@ public String deleteGroupError() {
 }
 
 @PatchMapping("/edit/{id}")
-    public String patchViewGroupEdit(@PathVariable("id") int id, @ModelAttribute("groupModel") GroupDTO groupDTO) {
+    public String patchViewGroupEdit(@PathVariable("id") int id, @ModelAttribute("groupModel") @Valid GroupDTO groupDTO,
+                                     BindingResult bindingResult) {
+    groupDTO.setGroupId(id);
+    groupValidator.validate(groupDTO, bindingResult);
+    if (bindingResult.hasErrors()) {
+        return "/group/editGroupPage";
+    }
     groupService.edit(groupService.convertToGroup(groupDTO), id);
     return "redirect:/group";
     }

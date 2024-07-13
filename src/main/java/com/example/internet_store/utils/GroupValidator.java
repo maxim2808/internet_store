@@ -27,7 +27,15 @@ public class GroupValidator implements Validator {
     public void validate(Object target, Errors errors) {
         GroupDTO groupDTO = (GroupDTO) target;
         if(groupService.findByGroupName(groupDTO.getGroupName()).isPresent()) {
+            if (groupDTO.getGroupId()!=groupService.findByGroupName(groupDTO.getGroupName()).get().getGroupId()) {
             errors.rejectValue("groupName", "", "Группа товаров с таким названеим уже существует");
+            }
+        }
+        if(groupService.findByURL(groupDTO.getGroupURL()).isPresent()) {
+            Group secondGroup = groupService.findByURL(groupDTO.getGroupURL()).get();
+            if (groupDTO.getGroupId()!=secondGroup.getGroupId()) {
+            errors.rejectValue("groupURL", "", "Группа товаров с таким URL уже существует");
+            }
         }
 
 

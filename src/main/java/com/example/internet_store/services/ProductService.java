@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpSession;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -243,7 +242,7 @@ public class ProductService {
         return modelMapper.map(product, ProductDTO.class);
     }
 
-    public String createProductUrl(String name){
+    public String createUrl(String name){
         Transliterator transliterator = Transliterator.getInstance(("Russian-Latin/BGN"));
         String englishName = transliterator.transliterate(name);
        String urlWord= characterReplacementForUrl(englishName);
@@ -253,9 +252,9 @@ public class ProductService {
 
     public String characterReplacementForUrl(String englishName) {
         String urlWord = englishName.toLowerCase()
-                .replaceAll("[^a-zA-Z0-9-]", "-") // Замена символов, кроме букв, цифр и дефиса на дефис
-                .replaceAll("-{2,}", "-") // Удаление повторяющихся дефисов
-                .replaceAll("^-|-$", ""); // Удаление дефисов в начале и конце строки
+                .replaceAll("[^a-zA-Z0-9-]", "-")
+                .replaceAll("-{2,}", "-")
+                .replaceAll("^-|-$", "");
         return urlWord;
     }
 
@@ -270,7 +269,7 @@ public class ProductService {
     public void setUrlForProduct(ProductDTO productDTO) {
 
         if (productDTO.getProductURL().isBlank()){
-            productDTO.setProductURL(createProductUrl(productDTO.getProductName()));}
+            productDTO.setProductURL(createUrl(productDTO.getProductName()));}
         else{
             productDTO.setProductURL(characterReplacementForUrl(productDTO.getProductURL()));
         };

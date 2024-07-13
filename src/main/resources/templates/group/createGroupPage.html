@@ -8,10 +8,13 @@
 
 
 <form th:method="POST" th:action="@{/group/create}" th:object="${groupModel}">
-    <label for="nameId"></label>
+    <label for="nameId">Название группы</label>
     <input type="text" th:field="*{groupName}" id="nameId">
     <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{groupName}"></div>
     <br>
+    <label for="urlId">URL Группы</label>
+    <input type="text" th:field="*{groupURL}" id="urlId">
+    <div style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{groupURL}"></div>
     <input type="submit" value="Создать группу">
 </form>
 </body>

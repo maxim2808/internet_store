@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ProductGroupRepository extends JpaRepository<Group, Integer> {
     public Optional<Group> findByGroupName(String groupName);
+    public Optional<Group> findByGroupURL(String groupURL);
 }

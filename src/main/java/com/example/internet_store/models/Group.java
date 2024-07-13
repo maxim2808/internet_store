@@ -24,7 +24,8 @@ public class Group {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="registration_date")
     Date registrationDate;
-    @Column(name = "product_URL")
+    @Column(name = "group_url")
+    String groupURL;
 
     public int getGroupId() {
         return groupId;
@@ -58,5 +59,11 @@ public class Group {
         this.registrationDate = registrationDate;
     }
 
+    public String getGroupURL() {
+        return groupURL;
+    }
 
+    public void setGroupURL(String groupURL) {
+        this.groupURL = groupURL;
+    }
 }

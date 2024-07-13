@@ -2,9 +2,11 @@ package com.example.internet_store.services;
 
 import com.example.internet_store.dto.GroupDTO;
 import com.example.internet_store.models.Group;
+import com.example.internet_store.models.mapper.GroupMapper;
 import com.example.internet_store.repositories.ProductGroupRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class GroupService {
     final ProductGroupRepository productGroupRepository;
     final ModelMapper modelMapper;
+    final JdbcTemplate jdbcTemplate;
     @Autowired
-    public GroupService(ProductGroupRepository productGroupRepository, ModelMapper modelMapper) {
+    public GroupService(ProductGroupRepository productGroupRepository, ModelMapper modelMapper, JdbcTemplate jdbcTemplate) {
         this.productGroupRepository = productGroupRepository;
         this.modelMapper = modelMapper;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Group> findAll() {
@@ -33,6 +37,10 @@ public class GroupService {
 
     public Optional<Group> findByGroupName(String groupName) {
         return productGroupRepository.findByGroupName(groupName);
+    }
+
+    public Optional<Group> findByURL(String url) {
+        return productGroupRepository.findByGroupURL(url);
     }
 
     @Transactional
@@ -57,6 +65,10 @@ public class GroupService {
 
     public GroupDTO convertToDTO(Group group) {
         return modelMapper.map(group, GroupDTO.class);
+    }
+
+    public List<Group> findJDBCGroup(){
+        return jdbcTemplate.query("select * from product_group", new GroupMapper());
     }
 
 //    public int countProductInGroup(GroupDTO groupDTO){

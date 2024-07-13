@@ -14,6 +14,11 @@
         <input type="submit" value="Войти в аккаунт" style="float: right;">
     </form>
 </div>
+<div th:if="${authModel}">
+    <form th:method="GET" th:action="@{/user/profile}">
+        <input type="submit" value="Мой профиль">
+    </form>
+</div>
 
 
 <a th:href="@{/product}" th:text="'Все продукты'">Все продукты</a>

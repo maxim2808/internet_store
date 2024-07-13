@@ -18,6 +18,9 @@
 <form class="right" method="get" action="/cart">
     <input type="submit" value="Корзина">
 </form>
+<div th:each="groupObject:${listObjectGroup}" >
+    <a th:href="@{/product/group/{url}(url=${groupObject.getGroupURL()})}" th:text="${groupObject.groupName}"></a>
+</div>
 
 <form th:method="GET" th:action="@{/product}">
     <label for="groupId">Группа товаров</label>

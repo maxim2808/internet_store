@@ -7,6 +7,9 @@
 <body>
 <p th:text="'Ваш номер телефона ' + ${personeModel.phoneNumber}"></p>
 <p th:text="'Ваша почта ' + ${personeModel.email}"></p>
-
+<hr>
+<form method="get" action="/myorders">
+    <input type="submit" value="История заказов">
+</form>
 </body>
 </html>

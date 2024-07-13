@@ -19,8 +19,10 @@ public class Manufacturer {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "registration_date")
     Date registration_date;
+
     @OneToMany(mappedBy = "manufacturer")
     List<Product> listProduct;
+
 
     public int getManufacurerId() {
         return manufacurerId;
@@ -54,4 +56,6 @@ public class Manufacturer {
     public void setListProduct(List<Product> listProduct) {
         this.listProduct = listProduct;
     }
+
+
 }
