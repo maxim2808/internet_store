@@ -26,5 +26,7 @@ public interface ProductRepositories extends JpaRepository<Product, Integer> {
     public List<Product> findProductByGroupAndManufacturer(Group group, Manufacturer manufacturer);
     public Page<Product> findProductByGroupAndManufacturer(Group group, Manufacturer manufacturer, Pageable pageable);
     public List<Product> findProductByPopular(boolean popular);
+    public List<Product> findProductByGroupAndManufacturerIn(Group group, List<Manufacturer> manufacturerList);
+    public Page <Product>  findProductByGroupAndManufacturerIn(Group group, List<Manufacturer> manufacturerList, Pageable pageable);
 
 }

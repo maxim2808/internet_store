@@ -1,5 +1,6 @@
 package com.example.internet_store.services;
 
+import com.example.internet_store.dto.ManufacturerDTO;
 import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.models.*;
 import com.example.internet_store.repositories.ProductRepositories;
@@ -58,56 +59,6 @@ public class ProductService {
     }
 
 
-//
-//    public List<Product> getAllProducts(int page, int productPerPage, String groupName, String searchName) {
-//        if (groupName==null||groupName.equals("Все группы")){
-//            if (searchName==null||searchName.equals("")){
-//
-//        if (productPerPage>=1&&page>=1){
-//            int pageMinusOne = page - 1;
-//        return productRepositories.findAll(PageRequest.of(pageMinusOne, productPerPage)).getContent();}
-//        else return productRepositories.findAll();}
-//
-//        else {
-//                if (productPerPage>=1&&page>=1) {
-//                    int pageMinusOne = page - 1;
-//
-//                    Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
-//                    Page<Product> pageList = productRepositories.findProductByProductNameStartingWith(searchName, pageable);
-//                System.out.println("Search name " + searchName);
-//
-//                 return pageList.getContent();}
-//        return productRepositories.findAll();}}
-//        else {
-//            Group group = groupService.findByGroupName(groupName).get();
-//            if (searchName==null||searchName.equals("")){
-//
-//            if (productPerPage>=1&&page>=1) {
-//                int pageMinusOne = page - 1;
-//
-//                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
-//                Page<Product> pageList = productRepositories.findByGroup(group, pageable);
-//                return pageList.getContent();
-//
-//            }
-//            else return productRepositories.findByGroup(group);
-//
-//        }
-//        else {
-//                if (productPerPage>=1&&page>=1) {
-//                int pageMinusOne = page - 1;
-//
-//                Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
-//                Page<Product> pageList = productRepositories.findProductByProductNameStartingWithAndGroup(searchName, group, pageable);
-//                System.out.println("Search name " + searchName);
-//                return pageList.getContent();
-//            }
-//else return         productRepositories.findProductByProductNameStartingWithAndGroup(searchName,group );
-//        }
-//        }
-//    }
-
-
 
     public List<Product> getAllProducts(int page, int productPerPage, String groupName, String manufacturerName, boolean searchName) {
         if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители"))){
@@ -149,8 +100,6 @@ public class ProductService {
         }
 
 
-
-
         else {
             Group group = groupService.findByGroupName(groupName).get();
             if (productPerPage>=1&&page>=1){
@@ -160,6 +109,16 @@ public class ProductService {
          }
             else return productRepositories.findByGroup(group);
         }
+    }
+
+
+    public List<Product> getAllProductsByGroup(int page, int productPerPage, Group group){
+        if (productPerPage>=1&&page>=1){
+            int pageMinusOne = page - 1;
+            return productRepositories.findByGroup(group, PageRequest.of(pageMinusOne, productPerPage)).getContent();}
+      //  else return productRepositories.findAll();
+        else return productRepositories.findByGroup(group);
+
     }
 
     public List<Product> sortedProduct(List<Product> productList, String sorted) {
@@ -217,17 +176,6 @@ public class ProductService {
         productRepositories.save(receivedProduct);
     }
 
-//    @Transactional
-//    public void editProduct(Product receivedProduct, Group group, Manufacturer manufacturer, List<Order> listOfOrders,
-//                            int id) {
-//        receivedProduct.setProductGroup(groupService.findById(group.getGroupId()).get());
-//        receivedProduct.setManufacturer(manufacturerService.findById(manufacturer.getManufacurerId()).get());
-//        receivedProduct.setProductId(id);
-//        receivedProduct.setOrderList(listOfOrders);
-//        productRepositories.save(receivedProduct);
-//    }
-
-
 
     
     public Optional<Product> getProductByProductUrl(String productUrl) {
@@ -276,14 +224,14 @@ public class ProductService {
 
     }
 
-    public List<Integer> listPage(int productsPerPage) {
+    public List<Integer> listPage(int productsPerPage, int size) {
         if (productsPerPage> 0) {
-            int sizeList = (int) Math.ceil((double)productRepositories.findAll().size() / productsPerPage);
+            int sizeList = (int) Math.ceil((double)size / productsPerPage);
             List<Integer> numberList = new ArrayList<>();
             for (int i = 0; i < sizeList; i++) {
                 numberList.add(i+1);
             }
-            System.out.println(numberList);
+           // System.out.println(numberList);
             return numberList;
         } else return null;
     }
@@ -367,6 +315,37 @@ public class ProductService {
             }
 
         }
+    }
+
+    public List<Product> getAlLProductByGroup(Group group){
+        return productRepositories.findByGroup(group);
+    }
+    public List<Product> getProductByGroupAndManufacturers(int page, int productPerPage, Group group, List<ManufacturerDTO> manufacturerList){
+
+        List<Manufacturer> trueList = new ArrayList<>();
+        for (ManufacturerDTO m : manufacturerList) {
+            if(m.getSelceted()==true)
+
+                trueList.add(manufacturerService.getManufacturerByName(m.getManufacturerName()).get());
+        }
+
+        if (productPerPage>=1&&page>=1){
+            int pageMinusOne = page - 1;
+            Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+            return productRepositories.findProductByGroupAndManufacturerIn(group, trueList, pageable).getContent();
+        }
+
+        else {  return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);}
+
+    }
+
+    public List<String> fillSortList(){
+        List<String> sortLostList = new ArrayList<>();
+        sortLostList.add("Цена по возрастанию");
+        sortLostList.add("Цена по убыванию");
+        sortLostList.add("Название(А-Я)");
+        sortLostList.add("Название(Я-А)");
+        return sortLostList;
     }
 
 }

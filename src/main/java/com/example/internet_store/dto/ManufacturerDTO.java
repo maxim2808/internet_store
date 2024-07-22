@@ -10,6 +10,7 @@ public class ManufacturerDTO
     int manufacurerId;
     @NotEmpty(message = "Поле не должно быть пустым")
     String manufacturerName;
+    Boolean selceted = false;
 
     public String getManufacturerName() {
         return manufacturerName;
@@ -34,5 +35,13 @@ public class ManufacturerDTO
 
     public void setListProduct(List<Product> listProduct) {
         this.listProduct = listProduct;
+    }
+
+    public Boolean getSelceted() {
+        return selceted;
+    }
+
+    public void setSelceted(Boolean selceted) {
+        this.selceted = selceted;
     }
 }

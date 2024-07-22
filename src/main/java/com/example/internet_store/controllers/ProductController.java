@@ -1,5 +1,7 @@
 package com.example.internet_store.controllers;
 
+import com.example.internet_store.dto.ManufacturerDTO;
+import com.example.internet_store.dto.ManufactuterDTOList;
 import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.dto.QuantityDTO;
 import com.example.internet_store.models.*;
@@ -77,12 +79,8 @@ public class ProductController {
         model.addAttribute("searchNameModel", searchName);
         model.addAttribute("listObjectGroup", groupService.findAll().stream().map(group1 -> groupService.convertToDTO(group1)).toList());
         List<ProductDTO> productDTOList;
-        List<String> sortLostList = new ArrayList<>();
-        sortLostList.add("Цена по возрастанию");
-        sortLostList.add("Цена по убыванию");
-        sortLostList.add("Название(А-Я)");
-        sortLostList.add("Название(Я-А)");
-        model.addAttribute("sortLostListModel", sortLostList);
+
+        model.addAttribute("sortListModel", productService.fillSortList());
 //        model.addAttribute("sortModel", sort);
 
 
@@ -101,10 +99,11 @@ public class ProductController {
         }
 
         productService.addFolderName(productDTOList);
-       model.addAttribute("numberOfPageModel", productService.listPage(productPerPage));
+       model.addAttribute("numberOfPageModel", productService.listPage(productPerPage, productService.getAllProducts().size()));
        model.addAttribute("productPerPageModel", productPerPage);
        model.addAttribute("productsModel", productDTOList);
          model.addAttribute("isAdminModel", personeService.isAdmin());
+         model.addAttribute("currentSortModel", sort);
         return "product/productPage";
     }
 
@@ -114,6 +113,7 @@ public class ProductController {
         model.addAttribute("oneGroupModel", new Group());
         model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
         model.addAttribute("oneManufacturer", new Manufacturer());
+
 
         return "/product/createProduct";
     }
@@ -287,8 +287,54 @@ public class ProductController {
     }
 
     @GetMapping("/group/{url}")
-    public String getGroupPage(Model model) {
-        System.out.println("get products by group");
+    public String getGroupPage(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
+                            @ModelAttribute("manufacturerListModel") ManufactuterDTOList manufactuterDTOList,
+                               @PathVariable("url") String groupUrl,  @RequestParam(value = "sort", defaultValue = "", required = false) String sort,
+                               Model model) {
+        int productPerPage = Integer.parseInt(productPerPageString);
+        Group group = groupService.findByURL(groupUrl).get();
+//        List<ProductDTO> productDTOList = productService.getAllProductsByGroup(page, productPerPage, group).stream().map(group1->productService.convertToProductDTO(group1)).toList();
+//        productService.addFolderName(productDTOList);
+        List<ManufacturerDTO> manufacturerList = manufacturerService.getAllManufacturersByGroup(group.getGroupId()).stream().map
+                (manufacturerService::convertToManufacturerDTO).toList();
+        if (manufactuterDTOList.getManufacturerDTOList().size()==0){
+            System.out.println("created new list");
+        manufactuterDTOList = new ManufactuterDTOList();
+        for (ManufacturerDTO manufacturerDTO : manufacturerList) {
+            manufactuterDTOList.addManufacturerDTO(manufacturerDTO);
+        }
+            List<ProductDTO> productDTOList = productService.getAllProductsByGroup(page, productPerPage, group).stream().map(group1->productService.convertToProductDTO(group1)).toList();
+            productService.addFolderName(productDTOList);
+            model.addAttribute("productsModel",               productDTOList);
+        }
+        else{
+            List<ManufacturerDTO> selectedManufacturers = new ArrayList<>();
+            for(ManufacturerDTO manufacturerDTO:manufactuterDTOList.getManufacturerDTOList()){
+                selectedManufacturers.add(manufacturerDTO);
+            }
+            List<Product> productList = productService.getProductByGroupAndManufacturers(page, productPerPage, group, selectedManufacturers);
+            for (Product product : productList) {
+                System.out.println(product.getProductName());
+            }
+            List<ProductDTO> productDTOList = productService.getProductByGroupAndManufacturers(page, productPerPage, group, selectedManufacturers).
+                    stream().map(group1->productService.convertToProductDTO(group1)).toList();
+            productService.addFolderName(productDTOList);
+            model.addAttribute("productsModel",               productDTOList);
+
+        }
+
+        List<String> sortListModel = productService.fillSortList();
+
+        //model.addAttribute("productsModel",               productDTOList);
+        model.addAttribute("numberOfPageModel", productService.listPage(productPerPage, productService.getAlLProductByGroup(group).size() ));
+        model.addAttribute("productPerPageModel", productPerPage);
+        model.addAttribute("isAdminModel", personeService.isAdmin());
+        model.addAttribute("groupURLModel", groupUrl);
+        model.addAttribute("manufacturerListModel", manufactuterDTOList);
+        model.addAttribute("sortListModel", sortListModel);
+       // productService.getAllProductsByGroup(page, productPerPage, group);
+
+
         return "/product/productsByGroupPage";
     }
 

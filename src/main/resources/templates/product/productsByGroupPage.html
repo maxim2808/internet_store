@@ -5,6 +5,70 @@
     <title>Продукты</title>
 </head>
 <body>
+<!--<div th:each="product:${productListModel}">-->
+<!--    <p th:text="${product.getProductName()}"></p>-->
+<!--</div>-->
+<form th:method="GET" th:action="@{/product/group/{url}(url=${groupURLModel})}" th:object="${manufacturerListModel}">
+    <div th:each="manufacturer, iter:*{manufacturerDTOList}">
+            <label for="nameId" th:text="${manufacturer.getManufacturerName()}"></label>
+        <input type="checkbox" th:field="*{manufacturerDTOList[__${iter.index}__].selceted}" id="nameId">
+        <input type="hidden" th:field="*{manufacturerDTOList[__${iter.index}__].manufacturerName}" >
+    </div>
+
+    <label for="sortId">Сортировка</label>
+    <select name="sort" id="sortId">
+        <option th:each="sort:${sortListModel}" th:value="${sort}" th:text="${sort}"></option>
+    </select>
+
+    <input type="submit" value="Выбрать">
+</form>
+
+
+<div th:each="product, iter:${productsModel}" style="display: flex;">
+<span th:if="${iter.index%2==0}" style="display: flex">
+    <span th:if="${!product.addressPicture.isBlank()}">
+    <img th:src="${product.addressPicture}" alt="Фото товара" style="width: 200px; height: 200px;">
+  </span>
+    <span th:if="${product.addressPicture.isBlank()}">
+    <img src="/download/no_photo.png" alt="Фото товара" style="width: 200px; height: 200px;">
+  </span>
+    <div style="display: flex; flex-direction: column;">
+        <a th:href="@{/product/view/{URL}(URL=${product.getProductURL()})}" th:text="${product.getProductName()}" style="align-self: flex-start;"></a>
+        <p th:text="${product.getPrice()} + ' белорусских рублей'"></p>
+        <p th:text="'Описание: ' + ${product.getDescription()}"></p>
+        <p th:text="'Производитель: ' + ${product.getManufacturer().getManufacturerName()}"></p>
+
+
+    </div>
+
+    <span th:if="${productsModel.size()>(iter.index+1)}" style="display: flex">
+    <span th:if="${!productsModel[iter.index+1].addressPicture.isBlank()}">
+    <img th:src="${productsModel[iter.index+1].addressPicture}" alt="Фото товара" style="width: 200px; height: 200px;">
+  </span>
+    <span th:if="${productsModel[iter.index+1].addressPicture.isBlank()}">
+    <img src="/download/no_photo.png" alt="Фото товара" style="width: 200px; height: 200px;">
+  </span>
+    <div style="display: flex; flex-direction: column;">
+        <a th:href="@{/product/view/{URL}(URL=${productsModel[iter.index+1].getProductURL()})}" th:text="${productsModel[iter.index+1].getProductName()}" style="align-self: flex-start;"></a>
+        <p th:text="${productsModel[iter.index+1].getPrice()} + ' белорусских рублей'"></p>
+        <p th:text="'Описание: ' + ${productsModel[iter.index+1].getDescription()}"></p>
+        <p th:text="'Производитель: ' + ${productsModel[iter.index+1].getManufacturer().getManufacturerName()}"></p>
+
+
+    </div>
+        </span>
+</span>
+
+</div>
+
+<span th:each="page:${numberOfPageModel}"><a th:href="@{/product/group/{url}(page=${page},productPerPage=${productPerPageModel}, url=${groupURLModel})}" th:text="${page}"></a> </span>
+<hr>
+<div th:if="${isAdminModel}">
+    <form method="get" action="/product/create">
+        <input type="submit" value="Добавить новый товар">
+    </form>
+</div>
+
 
 </body>
 </html>
