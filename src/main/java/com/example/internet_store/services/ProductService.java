@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -135,6 +136,25 @@ public class ProductService {
 
         if (sorted.equals("Название(Я-А)")){
             newProductList.sort(Comparator.comparing(Product::getProductName).reversed());
+        }
+        return newProductList;
+    }
+
+
+    public List<ProductDTO> sortedProductDTO(List<ProductDTO> productList, String sorted) {
+        List<ProductDTO> newProductList = new ArrayList<>(productList);
+        if (sorted.equals("Цена по возрастанию")){
+            newProductList.sort(Comparator.comparingDouble(ProductDTO::getPrice));
+        }
+        if (sorted.equals("Цена по убыванию")) {
+            newProductList.sort(Comparator.comparingDouble(ProductDTO::getPrice).reversed());
+        }
+        if (sorted.equals("Название(А-Я)")){
+            newProductList.sort(Comparator.comparing(ProductDTO::getProductName));
+        }
+
+        if (sorted.equals("Название(Я-А)")){
+            newProductList.sort(Comparator.comparing(ProductDTO::getProductName).reversed());
         }
         return newProductList;
     }
@@ -320,23 +340,35 @@ public class ProductService {
     public List<Product> getAlLProductByGroup(Group group){
         return productRepositories.findByGroup(group);
     }
-    public List<Product> getProductByGroupAndManufacturers(int page, int productPerPage, Group group, List<ManufacturerDTO> manufacturerList){
+    public List<Product> getProductByGroupAndManufacturers(
+            //int page, int productPerPage,
+                                                           Group group, List<ManufacturerDTO> manufacturerList){
 
         List<Manufacturer> trueList = new ArrayList<>();
         for (ManufacturerDTO m : manufacturerList) {
+         //  System.out.println(m.getManufacurerId() + " " + m.getManufacturerName()+ " " + m.getSelceted() );
             if(m.getSelceted()==true)
 
                 trueList.add(manufacturerService.getManufacturerByName(m.getManufacturerName()).get());
         }
+        if (trueList.size() == 0) {
+            for (ManufacturerDTO m : manufacturerList) {
+                trueList.add(manufacturerService.getManufacturerByName(m.getManufacturerName()).get());
+               // System.out.println(m.getManufacurerId() + " " + m.getManufacturerName()+ " " + m.getSelceted() );
+            }
 
-        if (productPerPage>=1&&page>=1){
-            int pageMinusOne = page - 1;
-            Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
-            return productRepositories.findProductByGroupAndManufacturerIn(group, trueList, pageable).getContent();
         }
 
-        else {  return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);}
-
+//        if (productPerPage>=1&&page>=1){
+//            int pageMinusOne = page - 1;
+//            Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
+//            return productRepositories.findProductByGroupAndManufacturerIn(group, trueList, pageable).getContent();
+//        }
+//
+//        else {
+//            return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);
+//        }
+        return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);
     }
 
     public List<String> fillSortList(){
@@ -346,6 +378,57 @@ public class ProductService {
         sortLostList.add("Название(А-Я)");
         sortLostList.add("Название(Я-А)");
         return sortLostList;
+    }
+
+
+    public List <Product> sortAllList(int page, int productPerPage, Group group, String sorted, List<ManufacturerDTO> manufacturerList){
+        Sort sort;
+        if (sorted.equals("Цена по возрастанию")){
+            System.out.println("first coindence");
+            sort = Sort.by(Sort.Direction.ASC, "price");
+        }
+       else if (sorted.equals("Цена по убыванию")) {
+            System.out.println("second coindence");
+            sort = Sort.by(Sort.Direction.DESC, "price");
+        }
+//        if (sorted.equals("Название(А-Я)")){
+//            sort = Sort.by(Sort.Direction.ASC, "productName");
+//        }
+
+        else if (sorted.equals("Название(Я-А)")){
+            System.out.println("third coindence");
+            sort = Sort.by(Sort.Direction.DESC, "productName");
+        }
+        else{
+            System.out.println("else coindence");
+            sort = Sort.by(Sort.Direction.ASC, "productName");}
+
+        List<Manufacturer> trueList = new ArrayList<>();
+        for (ManufacturerDTO m : manufacturerList) {
+            // System.out.println(m.getManufacurerId() + " " + m.getManufacturerName()+ " " + m.getSelceted() );
+            if(m.getSelceted()==true)
+
+                trueList.add(manufacturerService.getManufacturerByName(m.getManufacturerName()).get());
+        }
+        if (trueList.size() == 0) {
+            for (ManufacturerDTO m : manufacturerList) {
+                trueList.add(manufacturerService.getManufacturerByName(m.getManufacturerName()).get());
+
+            }
+        }
+
+        if (productPerPage>=1&&page>=1){
+
+            int pageMinusOne = page - 1;
+    Pageable pageable = PageRequest.of(pageMinusOne, productPerPage, sort);
+   // return productRepositories.findByGroup(group, pageable).getContent();
+            return productRepositories.findProductByGroupAndManufacturerIn(group, trueList, pageable).getContent();
+
+
+        }
+        else {return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);}
+
+
     }
 
 }
