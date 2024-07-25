@@ -297,18 +297,19 @@ public class ProductController {
     public String getGroupPage(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
                             @ModelAttribute("manufacturerListModel") ManufactuterDTOList manufactuterDTOList,
                                @PathVariable("url") String groupUrl,  @RequestParam(value = "sort", defaultValue = "", required = false) String sort,
-                               Model model
-            //,@RequestParam(value = "manufacturerListModel", defaultValue = "", required = false) ManufactuterDTOList manufactuterDTOList2
+                               Model model,
+            @RequestParam(value = "slist", defaultValue = "", required = false) String stringList
 
 
 
                                ) {
 
-//        for(ManufacturerDTO manufacturerDTO:manufactuterDTOList2.getManufacturerDTOList()){
-//            System.out.println(manufacturerDTO.getManufacturerName() + " " + manufacturerDTO.getSelceted());
-//
-//
-//        }
+        System.out.println("stringlist null ");
+        System.out.println("stringlist is empty " + stringList.isEmpty());
+        List<ManufacturerDTO> test = productService.parseStringToListManufacturers(stringList);
+        for (ManufacturerDTO manufacturerDTO : test) {
+            System.out.println(manufacturerDTO.getManufacturerName() + " " + manufacturerDTO.getSelceted());
+        }
 
         int productPerPage = Integer.parseInt(productPerPageString);
         Group group = groupService.findByURL(groupUrl).get();
@@ -348,18 +349,21 @@ public class ProductController {
                 .map(manufacturerDTO -> "manufacturers=" + manufacturerDTO.getManufacturerName() + "&selected=" + manufacturerDTO.getSelceted())
                 .collect(Collectors.joining(","));
 
-        Pattern pattern = Pattern.compile("manufacturers=(([^&]+))&selected=(([^,]+))");
-    Matcher matcher = pattern.matcher(manufacturersParam);
-    List<ManufacturerDTO> manufacturerDTOList = new ArrayList<>();
-    while (matcher.find()) {
-        ManufacturerDTO manucafrurer = new ManufacturerDTO();
-        manucafrurer.setManufacturerName(matcher.group(1));
-        manucafrurer.setSelceted(Boolean.valueOf(matcher.group(3)));
-        System.out.println("name " + manucafrurer.getManufacturerName());
-        System.out.println("selceted " + manucafrurer.getSelceted());
-    }
-    model.addAttribute("stringManufacturerModel", manufacturerDTOList);
-
+//        Pattern pattern = Pattern.compile("manufacturers=(([^&]+))&selected=(([^,]+))");
+//    Matcher matcher = pattern.matcher(manufacturersParam);
+//    List<ManufacturerDTO> manufacturerDTOList = new ArrayList<>();
+//    while (matcher.find()) {
+//        ManufacturerDTO manucafrurer = new ManufacturerDTO();
+//        manucafrurer.setManufacturerName(matcher.group(1));
+//
+//        manucafrurer.setSelceted(Boolean.valueOf(matcher.group(3)));
+//        manufacturerDTOList.add(manucafrurer);
+//    }
+    model.addAttribute("stringManufacturerModel", manufacturersParam);
+//        System.out.println("end method");
+//for(ManufacturerDTO manufacturerDTO : manufacturerDTOList) {
+//    System.out.println(manufacturerDTO.getManufacturerName() + " " + manufacturerDTO.getSelceted());
+//}
 
 
 

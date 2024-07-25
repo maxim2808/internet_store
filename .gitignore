@@ -32,3 +32,16 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/application.properties
+/src/main/java/com/example/internet_store/controllers/TestContoller.java
+/src/main/java/com/example/internet_store/dto/TestBool.java
+/src/main/java/com/example/internet_store/dto/TestBoleanList.java
+/src/main/java/com/example/internet_store/models/TestPersone.java
+/src/main/java/com/example/internet_store/models/TestObject.java
+/src/main/java/com/example/internet_store/models/TestProduct.java
+/src/main/java/com/example/internet_store/repositories/TestPersoneRepository.java
+/src/main/java/com/example/internet_store/repositories/TestProductRepository.java
+/src/main/java/com/example/internet_store/services/TestPersoneService.java
+/src/main/java/com/example/internet_store/services/TestProductService.java
+/src/main/resources/templates/product/testPage2.html
+/src/main/resources/templates/doubleRowPage.html
+/src/main/resources/templates/test4Page.html

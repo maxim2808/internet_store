@@ -18,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional(readOnly = true)
@@ -428,6 +430,21 @@ public class ProductService {
         }
         else {return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);}
 
+
+    }
+
+    public List<ManufacturerDTO> parseStringToListManufacturers(String stringManufacturers){
+                Pattern pattern = Pattern.compile("manufacturers=(([^&]+))&selected=(([^,]+))");
+    Matcher matcher = pattern.matcher(stringManufacturers);
+    List<ManufacturerDTO> manufacturerDTOList = new ArrayList<>();
+    while (matcher.find()) {
+        ManufacturerDTO manucafrurer = new ManufacturerDTO();
+        manucafrurer.setManufacturerName(matcher.group(1));
+
+        manucafrurer.setSelceted(Boolean.valueOf(matcher.group(3)));
+        manufacturerDTOList.add(manucafrurer);
+    }
+    return manufacturerDTOList;
 
     }
 

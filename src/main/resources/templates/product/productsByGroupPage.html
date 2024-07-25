@@ -20,6 +20,7 @@
         <option th:each="sort:${sortListModel}" th:value="${sort}" th:text="${sort}"></option>
     </select>
 
+
     <input type="submit" value="Выбрать">
 </form>
 
@@ -62,7 +63,7 @@
 </div>
 
 <span th:each="page:${numberOfPageModel}"><a th:href="@{/product/group/{url}(page=${page},productPerPage=${productPerPageModel},
-url=${groupURLModel}, sort=${sortModel})}" th:text="${page}"></a> </span>
+url=${groupURLModel}, sort=${sortModel}, slist=${stringManufacturerModel})}" th:text="${page}"></a> </span>
 <hr>
 <div th:if="${isAdminModel}">
     <form method="get" action="/product/create">
