@@ -298,24 +298,14 @@ public class ProductController {
                             @ModelAttribute("manufacturerListModel") ManufactuterDTOList manufactuterDTOList,
                                @PathVariable("url") String groupUrl,  @RequestParam(value = "sort", defaultValue = "", required = false) String sort,
                                Model model,
-            @RequestParam(value = "slist", defaultValue = "", required = false) String stringList
+            @RequestParam(value = "slist", defaultValue = "", required = false) String stringList   ) {
 
 
-
-                               ) {
-
-        System.out.println("stringlist null ");
-        System.out.println("stringlist is empty " + stringList.isEmpty());
-        List<ManufacturerDTO> test = productService.parseStringToListManufacturers(stringList);
-        for (ManufacturerDTO manufacturerDTO : test) {
-            System.out.println(manufacturerDTO.getManufacturerName() + " " + manufacturerDTO.getSelceted());
-        }
-
+        List<ManufacturerDTO> parsedList = productService.parseStringToListManufacturers(stringList);
         int productPerPage = Integer.parseInt(productPerPageString);
         Group group = groupService.findByURL(groupUrl).get();
         List<ManufacturerDTO> manufacturerList = manufacturerService.getAllManufacturersByGroup(group.getGroupId()).stream().map
                 (manufacturerService::convertToManufacturerDTO).toList();
-
         List<ProductDTO> productDTOList;
         if (manufactuterDTOList.getManufacturerDTOList().size()==0) {
             manufactuterDTOList = new ManufactuterDTOList();
@@ -323,14 +313,19 @@ public class ProductController {
                 manufactuterDTOList.addManufacturerDTO(manufacturerDTO);
             }
         }
-//            productDTOList = productService.getProductByGroupAndManufacturers(page, productPerPage, group, manufactuterDTOList.getManufacturerDTOList()).
-//                    stream().map(group1->productService.convertToProductDTO(group1)).toList();
-
-        productDTOList = productService.sortAllList(page, productPerPage, group,sort, manufacturerList).stream().map(product -> productService.convertToProductDTO(product)).toList();
-        System.out.println("size list " + productDTOList.size());
-
+        if(groupService.isTrueGroup(parsedList)==true) {
+            manufactuterDTOList = new ManufactuterDTOList();
+            for (ManufacturerDTO manufacturerDTO : parsedList) {
+                manufactuterDTOList.addManufacturerDTO(manufacturerDTO);
+            }
+        }
+        productDTOList = productService.sortAllList(page, productPerPage, group,sort, manufactuterDTOList.getManufacturerDTOList()).stream().map(product -> productService.convertToProductDTO(product)).toList();
         productService.addFolderName(productDTOList);
         List<String> sortListModel = productService.fillSortList();
+
+        String manufacturersParam = manufactuterDTOList.getManufacturerDTOList().stream()
+                .map(manufacturerDTO -> "manufacturers=" + manufacturerDTO.getManufacturerName() + "&selected=" + manufacturerDTO.getSelceted())
+                .collect(Collectors.joining(","));
         model.addAttribute("productsModel", productService.sortedProductDTO(productDTOList, sort));
        // model.addAttribute("numberOfPageModel", productService.listPage(productPerPage, productService.getAlLProductByGroup(group).size() ));
         model.addAttribute("numberOfPageModel", productService.listPage(productPerPage, productService.getProductByGroupAndManufacturers(group, manufactuterDTOList.getManufacturerDTOList()).size()));
@@ -340,33 +335,7 @@ public class ProductController {
         model.addAttribute("manufacturerListModel", manufactuterDTOList);
         model.addAttribute("sortListModel", sortListModel);
         model.addAttribute("sortModel", sort);
-
-//        String manufacturersParam = manufactuterDTOList.getManufacturerDTOList().stream()
-//                .map(manufacturerDTO -> "manufacturers=" + manufacturerDTO.getManufacturerName()+manufacturerDTO.getSelceted())
-//                .collect(Collectors.joining("&"));
-//
-        String manufacturersParam = manufactuterDTOList.getManufacturerDTOList().stream()
-                .map(manufacturerDTO -> "manufacturers=" + manufacturerDTO.getManufacturerName() + "&selected=" + manufacturerDTO.getSelceted())
-                .collect(Collectors.joining(","));
-
-//        Pattern pattern = Pattern.compile("manufacturers=(([^&]+))&selected=(([^,]+))");
-//    Matcher matcher = pattern.matcher(manufacturersParam);
-//    List<ManufacturerDTO> manufacturerDTOList = new ArrayList<>();
-//    while (matcher.find()) {
-//        ManufacturerDTO manucafrurer = new ManufacturerDTO();
-//        manucafrurer.setManufacturerName(matcher.group(1));
-//
-//        manucafrurer.setSelceted(Boolean.valueOf(matcher.group(3)));
-//        manufacturerDTOList.add(manucafrurer);
-//    }
-    model.addAttribute("stringManufacturerModel", manufacturersParam);
-//        System.out.println("end method");
-//for(ManufacturerDTO manufacturerDTO : manufacturerDTOList) {
-//    System.out.println(manufacturerDTO.getManufacturerName() + " " + manufacturerDTO.getSelceted());
-//}
-
-
-
+        model.addAttribute("stringManufacturerModel", manufacturersParam);
         return "/product/productsByGroupPage";
     }
 

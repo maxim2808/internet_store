@@ -1,6 +1,7 @@
 package com.example.internet_store.services;
 
 import com.example.internet_store.dto.GroupDTO;
+import com.example.internet_store.dto.ManufacturerDTO;
 import com.example.internet_store.models.Group;
 import com.example.internet_store.models.mapper.GroupMapper;
 import com.example.internet_store.repositories.ProductGroupRepository;
@@ -70,6 +71,24 @@ public class GroupService {
     public List<Group> findJDBCGroup(){
         return jdbcTemplate.query("select * from product_group", new GroupMapper());
     }
+
+    public boolean isTrueGroup(List<ManufacturerDTO> manufacturerList){
+        int count = 0;
+        for(ManufacturerDTO manufacturerDTO : manufacturerList){
+            if(manufacturerDTO.getSelceted()==true){
+                count++;
+            }
+        }
+        if(count>0){
+            return true;
+        }
+        return false;
+
+    }
+
+
+
+
 
 //    public int countProductInGroup(GroupDTO groupDTO){
 //       return groupDTO.getProductList().size();
