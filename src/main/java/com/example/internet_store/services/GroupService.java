@@ -11,9 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -84,6 +82,18 @@ public class GroupService {
         }
         return false;
 
+    }
+
+    public Set<String> getGroupsName(String name){
+        Set<String> setNames = new LinkedHashSet<>();
+        if(name!=null&&!name.isBlank()&&!name.equals("Все группы")){
+            setNames.add(name);
+        }
+        setNames.add("Все группы");
+        for(Group group : findAll()){
+            setNames.add(group.getGroupName());
+        }
+        return setNames;
     }
 
 

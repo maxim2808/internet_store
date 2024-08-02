@@ -1,6 +1,7 @@
 package com.example.internet_store.controllers;
 
 import com.example.internet_store.dto.OrderDTO;
+import com.example.internet_store.dto.ProductDTO;
 import com.example.internet_store.models.Order;
 import com.example.internet_store.models.ProductOrder;
 import com.example.internet_store.models.ShoppingCart;
@@ -118,8 +119,6 @@ public class OrderController {
     return "redirect:/order";
 
     }
-//
-
 
 
 

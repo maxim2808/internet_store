@@ -60,7 +60,9 @@ public class ProductService {
     }
             else return productRepositories.findProductByProductNameStartingWith(keyword);
     }
-
+public int getSearchProductsSize(String keyword) {
+        return productRepositories.findProductByProductNameStartingWith(keyword).size();
+}
 
 
     public List<Product> getAllProducts(int page, int productPerPage, String groupName, String manufacturerName, boolean searchName) {
@@ -373,37 +375,100 @@ public class ProductService {
         return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);
     }
 
-    public List<String> fillSortList(){
-        List<String> sortLostList = new ArrayList<>();
-        sortLostList.add("Цена по возрастанию");
-        sortLostList.add("Цена по убыванию");
-        sortLostList.add("Название(А-Я)");
-        sortLostList.add("Название(Я-А)");
-        return sortLostList;
+    public Set <String> fillSortList(String sort){
+        Set <String> sortList = new LinkedHashSet<>();
+        if (sort!=null&&!sort.isEmpty()){sortList.add(sort);}
+        sortList.add("Название(А-Я)");
+        sortList.add("Название(Я-А)");
+        sortList.add("Цена по возрастанию");
+        sortList.add("Цена по убыванию");
+
+        return sortList;
     }
 
 
-    public List <Product> sortAllList(int page, int productPerPage, Group group, String sorted, List<ManufacturerDTO> manufacturerList){
+
+    public Sort getSort(String sorted){
         Sort sort;
         if (sorted.equals("Цена по возрастанию")){
-            System.out.println("first coindence");
             sort = Sort.by(Sort.Direction.ASC, "price");
         }
-       else if (sorted.equals("Цена по убыванию")) {
-            System.out.println("second coindence");
+        else if (sorted.equals("Цена по убыванию")) {
             sort = Sort.by(Sort.Direction.DESC, "price");
         }
-//        if (sorted.equals("Название(А-Я)")){
-//            sort = Sort.by(Sort.Direction.ASC, "productName");
-//        }
-
         else if (sorted.equals("Название(Я-А)")){
-            System.out.println("third coindence");
             sort = Sort.by(Sort.Direction.DESC, "productName");
         }
         else{
-            System.out.println("else coindence");
             sort = Sort.by(Sort.Direction.ASC, "productName");}
+        return sort;
+
+
+    }
+
+    public List <Product> getSortedListProducts(int page, int productPerPage, String sorted,  String groupName, String manufacturerName, boolean searchName){
+    Sort sort = getSort(sorted);
+        if (productPerPage>=1&&page>=1){
+
+            int pageMinusOne = page - 1;
+            Pageable pageable = PageRequest.of(pageMinusOne, productPerPage, sort);
+
+        if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители")))
+       return productRepositories.findAll(pageable).getContent();
+        else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители")))
+            //System.out.println("group name " +groupName + " equels " + groupName.equals("Все группы"));
+        {           Group group = groupService.findByGroupName(groupName).get();
+               return productRepositories.findByGroup(group, pageable).getContent();
+        }
+        else if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName!=null||!manufacturerName.equals("Все производители"))){
+            Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerName).get();
+            return productRepositories.findByManufacturer(manufacturer, pageable).getContent();
+            }
+        else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName!=null||!manufacturerName.equals("Все производители")))
+        {
+            Group group = groupService.findByGroupName(groupName).get();
+            Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerName).get();
+            return productRepositories.findProductByGroupAndManufacturer(group, manufacturer, pageable).getContent();
+        }
+
+        }
+
+        return productRepositories.findAll();
+
+    }
+
+    public int getCountProducts( String groupName, String manufacturerName){
+
+
+            if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители")))
+                return productRepositories.findAll().size();
+            else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители")))
+            //System.out.println("group name " +groupName + " equels " + groupName.equals("Все группы"));
+            {           Group group = groupService.findByGroupName(groupName).get();
+                return productRepositories.findByGroup(group).size();
+            }
+            else if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName!=null||!manufacturerName.equals("Все производители"))){
+                Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerName).get();
+                return productRepositories.findByManufacturer(manufacturer).size();
+            }
+            else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName!=null||!manufacturerName.equals("Все производители")))
+            {
+                Group group = groupService.findByGroupName(groupName).get();
+                Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerName).get();
+                return productRepositories.findProductByGroupAndManufacturer(group, manufacturer).size();
+            }
+
+
+
+        return productRepositories.findAll().size();
+
+    }
+
+
+
+
+    public List <Product> getSortedListProductsByManufacturer(int page, int productPerPage, Group group, String sorted, List<ManufacturerDTO> manufacturerList){
+        Sort sort = getSort(sorted);
 
         List<Manufacturer> trueList = new ArrayList<>();
         for (ManufacturerDTO m : manufacturerList) {
@@ -423,7 +488,6 @@ public class ProductService {
 
             int pageMinusOne = page - 1;
     Pageable pageable = PageRequest.of(pageMinusOne, productPerPage, sort);
-   // return productRepositories.findByGroup(group, pageable).getContent();
             return productRepositories.findProductByGroupAndManufacturerIn(group, trueList, pageable).getContent();
 
 

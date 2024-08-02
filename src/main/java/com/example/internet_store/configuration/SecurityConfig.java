@@ -25,36 +25,36 @@ public class SecurityConfig {
 
 
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .requestMatchers("/product","/auth/login", "/product/view/{productURL}",
-//                        "/download/**", "/cart/**", "/order/createOrder", "/main", "auth/registration", "/myorders").permitAll().requestMatchers( "/user/profile").hasAnyRole("USER", "ADMIN", "SUPERADMIN").
-//            anyRequest().hasAnyRole("ADMIN","SUPERADMIN").
-//            and().formLogin(httpSecurityFormLoginConfigurer -> {
-//                        httpSecurityFormLoginConfigurer.loginPage("/auth/login").
-//                                loginProcessingUrl("/process_login").defaultSuccessUrl("/main", true).
-//                                failureUrl("/auth/login?error");}).logout
-//                        (httpSecurityLogoutConfigurer -> {httpSecurityLogoutConfigurer.logoutUrl("/logout").
-//                        logoutSuccessUrl("/auth/login");});
-//        return http.build();
-//    }
-//
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .requestMatchers("/admin").hasRole("ADMIN").requestMatchers( "/user/profile").hasAnyRole("USER", "ADMIN").anyRequest().permitAll().
-                and().formLogin(httpSecurityFormLoginConfigurer -> {
-                    httpSecurityFormLoginConfigurer.loginPage("/auth/login").
-                            loginProcessingUrl("/process_login").defaultSuccessUrl("/main", true).
-                            failureUrl("/auth/login?error");}).logout
+                .requestMatchers("/product","/auth/login", "/product/view/{productURL}",
+                        "/download/**", "/cart/**", "/order/createOrder", "/main", "auth/registration", "/myorders").permitAll().requestMatchers( "/user/profile").hasAnyRole("USER", "ADMIN", "SUPERADMIN").
+            anyRequest().hasAnyRole("ADMIN","SUPERADMIN").
+            and().formLogin(httpSecurityFormLoginConfigurer -> {
+                        httpSecurityFormLoginConfigurer.loginPage("/auth/login").
+                                loginProcessingUrl("/process_login").defaultSuccessUrl("/main", true).
+                                failureUrl("/auth/login?error");}).logout
                         (httpSecurityLogoutConfigurer -> {httpSecurityLogoutConfigurer.logoutUrl("/logout").
-                                logoutSuccessUrl("/auth/login");});
+                        logoutSuccessUrl("/auth/login");});
         return http.build();
     }
 
+
+
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http.authorizeRequests()
+//                .requestMatchers("/admin").hasRole("ADMIN").requestMatchers( "/user/profile").hasAnyRole("USER", "ADMIN").anyRequest().permitAll().
+//                and().formLogin(httpSecurityFormLoginConfigurer -> {
+//                    httpSecurityFormLoginConfigurer.loginPage("/auth/login").
+//                            loginProcessingUrl("/process_login").defaultSuccessUrl("/main", true).
+//                            failureUrl("/auth/login?error");}).logout
+//                        (httpSecurityLogoutConfigurer -> {httpSecurityLogoutConfigurer.logoutUrl("/logout").
+//                                logoutSuccessUrl("/auth/login");});
+//        return http.build();
+//    }
+//
 
 
     public void configure(AuthenticationManagerBuilder auth) throws Exception {

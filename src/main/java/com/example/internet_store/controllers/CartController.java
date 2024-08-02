@@ -25,7 +25,7 @@ public class CartController {
     }
 
     @GetMapping("")
-    public String getCourt(HttpSession session, Model model){
+    public String getCart(HttpSession session, Model model){
 
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
         if (cart!=null){
@@ -40,7 +40,7 @@ public class CartController {
 
 
     @PostMapping("")
-    public String addCourt(@ModelAttribute("listModel") ProductDTO productDTO) {
+    public String addCart(@ModelAttribute("listModel") ProductDTO productDTO) {
         System.out.println("Name " + productDTO.getProductName());
         System.out.println("Quantity "+ productDTO.getQuantity());
         return "redirect:/product";

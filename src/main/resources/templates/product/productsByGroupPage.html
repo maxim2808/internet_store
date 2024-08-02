@@ -5,9 +5,38 @@
     <title>Продукты</title>
 </head>
 <body>
-<!--<div th:each="product:${productListModel}">-->
-<!--    <p th:text="${product.getProductName()}"></p>-->
-<!--</div>-->
+
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+</style>
+
+<div class="button-container">
+
+    <form method="get" action="/product">
+        <input type="submit" value="Все продукты">
+    </form>
+
+
+    <form method="get" action="/main">
+        <input type="submit" value="На главную">
+    </form>
+
+</div>
+
+
+
+
+<!--<form method="get" action="/main">-->
+<!--    <input type="submit" value="На главную">-->
+<!--</form>-->
+<!--<form method="get" action="/product">-->
+<!--    <input type="submit" value="Все продукты">-->
+<!--</form>-->
+
 <form th:method="GET" th:action="@{/product/group/{url}(url=${groupURLModel})}" th:object="${manufacturerListModel}">
     <div th:each="manufacturer, iter:*{manufacturerDTOList}">
             <label for="nameId" th:text="${manufacturer.getManufacturerName()}"></label>

@@ -10,9 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -72,6 +70,20 @@ public class ManufacturerService  {
                 "JOIN product ON product.manufacturer_id = manufacturer.manufacturer_id " +
                 "JOIN product_group ON product.group_id = product_group.group_id " +
                 "WHERE product_group.group_id = ?", new Object[]{groupId}, new ManufacturerMapper());
+    }
+
+
+    public Set<String> getAllManufacturerNames(String name) {
+
+        Set<String> manufacturerNames = new LinkedHashSet<>();
+        if (name != null&&!name.isBlank()&&!name.equals("Все производители")) {
+        manufacturerNames.add(name);
+        }
+        manufacturerNames.add("Все производители");
+    for(Manufacturer manufacturer : manufacturerRepository.findAll()){
+        manufacturerNames.add(manufacturer.getManufacturerName());
+    }
+        return manufacturerNames;
     }
 
 }

@@ -5,9 +5,42 @@
     <title>Все заказы</title>
 </head>
 <body>
+
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+</style>
+
+<div class="button-container">
+
+
+    <form method="get" action="/main">
+        <input type="submit" value="На главную">
+    </form>
+
+    <form method="get" action="/admin">
+        <input type="submit" value="Администрирование">
+    </form>
+
+
+
+</div>
+
+
 <h3 th:text="'Статус: ' + ${statusModel.getOrderStatus()}"></h3>
 <form method="get" th:action="@{/order}">
 <!--<form method="get" th:action="@{/order{status}(status=${statusModel.getOrderStatus()})}">-->
+
+
+
+
+
+
+
+
     <select th:object="${statusModel}" th:field="*{orderStatus}">
         <option th:each="status:${listStatusModel}" th:value="${status}" th:text="${status}"></option>
     </select>
@@ -16,7 +49,22 @@
 <div th:each="order:${orderModel}">
 <a th:href="@{/order/view/{id}(id=${order.getOrderId()})}"  th:text="${order.getOrderId()}"></a>
     <span th:text="${order.stringDate} + ' '"> </span>
+    <span th:if="${order.getOrderStatus().equals('Не обработан')}">
     <span  style="color: red" th:text="${order.getOrderStatus()}"></span>
+    </span>
+    <span th:if="${order.getOrderStatus().equals('Завершен')}">
+    <span  style="color: green" th:text="${order.getOrderStatus()}"></span>
+    </span>
+    <span th:if="${order.getOrderStatus().equals('Выполняется')}">
+    <span  style="color: goldenrod" th:text="${order.getOrderStatus()}"></span>
+    </span>
+
+    <span th:if="${(!order.getOrderStatus().equals('Не обработан'))&&(!order.getOrderStatus().equals('Завершен'))
+    &&(!order.getOrderStatus().equals('Выполняется'))}">
+    <span  th:text="${order.getOrderStatus()}"></span>
+    </span>
+
+
     <span th:text=" ' итоговая цена ' "></span>
     <span style="font-weight: bold" th:text="${order.getOrderPrice()}  + ' рублей '"> ></span>
     <span th:text="${order.getAddress()}"></span>

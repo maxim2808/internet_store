@@ -25,6 +25,7 @@
 <form th:method="GET" th:action="@{/product}">
     <label for="groupId">Группа товаров</label>
     <select th:object="${groupForSelectModel}" th:field="*{groupName}" id="groupId" style="margin-bottom: 10px;">
+<!--        <select name="group" id="groupId" style="margin-bottom: 10px;">-->
         <option th:each="group:${groupNameListModel}" th:value="${group}" th:text="${group}"></option>
     </select>
 
@@ -87,55 +88,9 @@
 
 </div>
 
-
-
-<!--<div th:each="product:${productsModel}">-->
-<!--    <span th:if="${!product.addressPicture.isBlank()}"><img th:src="${product.addressPicture}" alt="Фото товара" width="200" height="200"></span>-->
-<!--    <span th:if="${product.addressPicture.isBlank()}"><img src="/download/no_photo.png" alt="Фото товара" width="200" height="200"></span>-->
-<!--    <a th:href="@{/product/view/{URL}(URL=${product.getProductURL()})}" th:text="${product.getProductName()} + ' цена ' + ${product.getFinalPrice()}"  ></a>-->
-
-<!--</div>-->
-
-
-
-
-<!--<div th:each="product, iter:${productsModel}">-->
-<!--    <span th:if="${iter.index%2==0}">-->
-<!--         <a th:href="@{/product/view/{URL}(URL=${product.getProductURL()})}" th:text="${product.getProductName()} + ' цена ' + ${product.getFinalPrice()}"  ></a>-->
-<!--        <span th:if="${productsModel.size()}>(${iter.index}+1)">-->
-<!--              <a th:href="@{/product/view/{URL}(URL=${productsModel[iter.index+1].getProductURL()})}"-->
-<!--                 th:text="${productsModel[iter.index+1].getProductName()} + ' цена ' + ${productsModel[iter.index+1].getFinalPrice()}"  ></a></span>-->
-<!--    <br>-->
-
-
-
-<!--        <span th:if="${!product.addressPicture.isBlank()}"> <img th:src="${product.addressPicture}" alt="Фото товара" width="100" height="100"></span>-->
-<!--        <span th:if="${product.addressPicture.isBlank()}"><img src="/download/no_photo.png" alt="Фото товара" width="100" height="100"> </span>-->
-<!--         <span th:if="${productsModel.size()}>(${iter.index}+1)">-->
-<!--              <span th:if="${!productsModel[iter.index+1].addressPicture.isBlank()}"> <img th:src="${productsModel[iter.index+1].addressPicture}" alt="Фото товара" width="100" height="100"></span>-->
-<!--        <span th:if="${productsModel[iter.index+1].addressPicture.isBlank()}"><img src="/download/no_photo.png" alt="Фото товара" width="100" height="100"> </span>-->
-<!--         </span>-->
-<!--        </span>-->
-<!--    </span>-->
-
-<!--</div>-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <hr>
-<span th:each="page:${numberOfPageModel}"><a th:href="@{/product(page=${page},productPerPage=${productPerPageModel},sort=${currentSortModel})}" th:text="${page}"></a> </span>
+<span th:each="page:${numberOfPageModel}"><a th:href="@{/product(page=${page},productPerPage=${productPerPageModel},sort=${currentSortModel},
+ groupName=${currentGroup}, manufacturerName=${currentManufacturer}, searchName=${searchNameModel})}" th:text="${page}"></a> </span>
 <hr>
 <div th:if="${isAdminModel}">
 <form method="get" action="/product/create">
@@ -144,9 +99,7 @@
 </div>
 
 
-<!--    <form method="get" action="/product/create">-->
-<!--        <input type="submit" value="Добавить новый товар">-->
-<!--    </form>-->
+
 
 </body>
 </html>

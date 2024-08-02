@@ -5,6 +5,25 @@
     <title>Просмотр заказа</title>
 </head>
 <body>
+<div class="button-container">
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+    </style>
+
+    <form method="get" action="/main">
+        <input type="submit" value="На главную">
+    </form>
+
+    <form method="get" action="/admin">
+        <input type="submit" value="Администрирование">
+    </form>
+
+</div>
+
 <div th:each="PO:${listProductOrderModel}">
     <p th:text="${PO.getProduct().productName} + ' количетсво ' + ${PO.getProduct().getQuantity()} + ' шт.'" ></p>
 </div>
@@ -27,8 +46,7 @@
     <label for="customerId">Имя заказчика</label>
     <input type="text" th:field="*{customerName}" id="customerId">
     <br>
-    <br>
-    <input type="submit" value="Изменить заказ">
+    <input type="submit" value="Обновить">
 </form>
 </body>
 </html>
