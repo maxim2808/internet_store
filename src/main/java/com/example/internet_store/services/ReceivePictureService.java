@@ -52,7 +52,7 @@ public class ReceivePictureService {
               //  String fileName = Integer.toString(id) + "-main.jpg";
                 System.out.println(fileName);
                File uploadFile = new File(uploadDir, fileName);
-                System.out.println("!!!!!!!!Файл существует " + uploadFile.exists());
+              //  System.out.println("!!!!!!!!Файл существует " + uploadFile.exists());
                 if (uploadFile.exists()){
                     String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
                     String fileExtension = fileName.substring(fileName.lastIndexOf('.'));
@@ -61,7 +61,7 @@ public class ReceivePictureService {
 
                     int i = 0;
                     while (uploadFile.exists()){
-                        System.out.println("while is started");
+                      //  System.out.println("while is started");
                         i++;
                         StringBuilder sbFileName = new StringBuilder(nameWithoutExtension);
                         sbFileName.append("-v");

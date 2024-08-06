@@ -1,12 +1,12 @@
 spring.application.name=internet_store
 
-spring.datasource.driver-
-spring.datasource.username=
-spring.datasource.password=
-spring.datasource.url=
+spring.datasource.driver-class-name=          //необходимо ввести драйвер для вашей базы данных
+spring.datasource.username=                   //логин для подключения к базе данных
+spring.datasource.password=                   //пароль для подключения к базе данных
+spring.datasource.url=                        //url базы данных
 
-spring.jpa.properties.hibernate.dialect=
-spring.jpa.properties.hibernate.show_sql=false
+spring.jpa.properties.hibernate.dialect=              //диалект для работы с вашей базой данных
+spring.jpa.properties.hibernate.show_sql=false        //отображения hibernate запросов в консоли, введи true если вы хотите чтобы они отображались
 
 
 spring.mvc.hiddenmethod.filter.enabled=true
@@ -15,7 +15,7 @@ spring.mvc.hiddenmethod.filter.enabled=true
 
 productPerPage=10                               //количество продуктов на одной странице
 listStatus=not processed,in progress,finished   //статус обработки заказов
-pictureFolder =                                 //полный путь к папке с изображениям
-pictureFolderInProject=                         //путь к папке с изображениями начиная с папки проекта
+pictureFolder =                                 //полный путь к папке с изображениям(для разделения папок нужно использовать двойной слеш \\)
+pictureFolderInProject=\\download\\             //путь к папке с изображениями начиная с папки проекта
 
 

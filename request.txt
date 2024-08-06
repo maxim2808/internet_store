@@ -1,0 +1,78 @@
+CREATE TABLE IF NOT EXISTS product_group (
+                                             group_id SERIAL PRIMARY KEY,
+                                             group_name VARCHAR UNIQUE NOT NULL,
+                                             group_url varchar unique
+);
+alter table product_group add column registration_date timestamp;
+
+
+CREATE TABLE IF NOT EXISTS persone (
+                                       persone_id SERIAL PRIMARY KEY,
+                                       email VARCHAR(254) UNIQUE,
+                                       password VARCHAR,
+                                       phone_number VARCHAR(15),
+                                       registration_date TIMESTAMP,
+                                       role VARCHAR,
+                                       username VARCHAR(20) UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS picture (
+                                       picture_id SERIAL PRIMARY KEY,
+                                       file_name VARCHAR NOT NULL
+);
+CREATE TABLE IF NOT EXISTS manufacturer (
+                                            manufacturer_id SERIAL PRIMARY KEY,
+                                            manufacturer_name VARCHAR(80) NOT NULL,
+                                            registration_date TIMESTAMP
+);
+-- Создание таблицы product
+CREATE TABLE IF NOT EXISTS product (
+                                       product_id SERIAL PRIMARY KEY,
+                                       product_name VARCHAR NOT NULL UNIQUE,
+                                       price NUMERIC(20,2) NOT NULL,
+                                       quantity INT,
+                                       description VARCHAR,
+                                       group_id INT REFERENCES product_group(group_id),
+                                       manufacturer_id INT REFERENCES manufacturer(manufacturer_id),
+                                       discount NUMERIC(5,2),
+                                       rating NUMERIC(3,2) CHECK (rating >= 0 AND rating <= 5),
+                                       popular BOOLEAN,
+                                       registration_date TIMESTAMP,
+                                       image BYTEA,
+                                       product_URL VARCHAR UNIQUE,
+                                       main_picture INT REFERENCES picture(picture_id)
+);
+
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS product_picture (
+                                               product_id INT REFERENCES product(product_id),
+                                               picture_id INT REFERENCES picture(picture_id)
+);
+
+
+
+
+CREATE TABLE IF NOT EXISTS orders (
+                                      order_id SERIAL PRIMARY KEY,
+                                      order_date TIMESTAMP,
+                                      order_price NUMERIC,
+                                      address VARCHAR,
+                                      telephone_number VARCHAR,
+                                      order_status VARCHAR,
+                                      customer_name VARCHAR,
+                                      persone_id INT REFERENCES persone(persone_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS product_order (
+                                             order_id INT REFERENCES orders(order_id),
+                                             product_id INT REFERENCES product(product_id),
+                                             id SERIAL PRIMARY KEY,
+                                             quantity int, price numeric(20, 2)
+
+);
