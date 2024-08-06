@@ -46,7 +46,7 @@ public class PictureController {
 
         StringBuilder address = new StringBuilder(pictureFolderInProject);
         address.append(picture.getFileName());
-        System.out.println(address);
+      //  System.out.println(address);
         model.addAttribute("addressPicModel", address.toString());
         return "/picture/pictureViewPage";
     }
@@ -54,10 +54,10 @@ public class PictureController {
 
     @DeleteMapping("/view/{id}")
     public String deletePicture(@PathVariable("id") int id, @ModelAttribute ("pictureModel") Picture picture) {
-        System.out.println("Start Delete picture");
+     //   System.out.println("Start Delete picture");
       //  pictureService.deletePicture(picture);
         Picture picture1 = pictureService.getPictureById(id);
-        System.out.println("Before delete " + picture1.getPictureId() + " id " + picture1.getFileName());
+     //   System.out.println("Before delete " + picture1.getPictureId() + " id " + picture1.getFileName());
        receivePictureService.deletePictureAndFile(picture1);
         return "redirect:/picture/redundant";
 

@@ -44,13 +44,13 @@ public class ReceivePictureService {
     @Transactional
     public void receiveImage(MultipartFile image, int id) {
         if (!image.isEmpty()) {
-            System.out.println("receive ");
+           // System.out.println("receive ");
             try {
 //                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\static\\download";
                 String uploadDir = firstPartOfPath;
                 String fileName = image.getOriginalFilename();
               //  String fileName = Integer.toString(id) + "-main.jpg";
-                System.out.println(fileName);
+             //   System.out.println(fileName);
                File uploadFile = new File(uploadDir, fileName);
               //  System.out.println("!!!!!!!!Файл существует " + uploadFile.exists());
                 if (uploadFile.exists()){
