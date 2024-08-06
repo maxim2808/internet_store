@@ -82,11 +82,13 @@
 
 
 <hr>
+<div th:if="${isAdminModel}">
 <form th:method="GET" th:action="@{/product/edit/{URL}(URL=${oneProductModel.getProductURL()})}">
     <input type="submit" value="Редактировать товар">
 </form>
 <hr>
 <form th:method="DELETE" th:action="@{/product/delete/{URL}(URL=${oneProductModel.getProductURL()})}">
 <input type="submit" value="Удалить товар"> </form>
+</div>
 </body>
 </html>

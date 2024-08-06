@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
+<form th:method="GET" th:action="@{/main}">
+    <input class="center-button" type="submit" value="Вернуться на главную">
+</form>
+<br>
 <form method="post" action="/process_login">
     <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
     <label for="usernameId">email</label>

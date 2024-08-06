@@ -27,15 +27,9 @@
 
 </div>
 
+<br>
+<br>
 
-
-
-<!--<form method="get" action="/main">-->
-<!--    <input type="submit" value="На главную">-->
-<!--</form>-->
-<!--<form method="get" action="/product">-->
-<!--    <input type="submit" value="Все продукты">-->
-<!--</form>-->
 
 <form th:method="GET" th:action="@{/product/group/{url}(url=${groupURLModel})}" th:object="${manufacturerListModel}">
     <div th:each="manufacturer, iter:*{manufacturerDTOList}">

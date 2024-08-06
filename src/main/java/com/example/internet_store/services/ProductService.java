@@ -290,9 +290,9 @@ public int getSearchProductsSize(String keyword) {
             ProductDTO productDTO = convertToProductDTO(product);
             productDTO.setQuantity(count);
             shoppingCart.getProducts().add(productDTO);
-        for (ProductDTO pr : shoppingCart.getProducts()) {
-            System.out.println(pr.getProductName() + " count: " + pr.getQuantity());
-        }
+//        for (ProductDTO pr : shoppingCart.getProducts()) {
+//            System.out.println(pr.getProductName() + " count: " + pr.getQuantity());
+//        }
     }
 
 
@@ -358,20 +358,11 @@ public int getSearchProductsSize(String keyword) {
         if (trueList.size() == 0) {
             for (ManufacturerDTO m : manufacturerList) {
                 trueList.add(manufacturerService.getManufacturerByName(m.getManufacturerName()).get());
-               // System.out.println(m.getManufacurerId() + " " + m.getManufacturerName()+ " " + m.getSelceted() );
             }
 
         }
 
-//        if (productPerPage>=1&&page>=1){
-//            int pageMinusOne = page - 1;
-//            Pageable pageable = PageRequest.of(pageMinusOne, productPerPage);
-//            return productRepositories.findProductByGroupAndManufacturerIn(group, trueList, pageable).getContent();
-//        }
-//
-//        else {
-//            return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);
-//        }
+
         return productRepositories.findProductByGroupAndManufacturerIn(group, trueList);
     }
 
@@ -416,7 +407,6 @@ public int getSearchProductsSize(String keyword) {
         if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители")))
        return productRepositories.findAll(pageable).getContent();
         else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители")))
-            //System.out.println("group name " +groupName + " equels " + groupName.equals("Все группы"));
         {           Group group = groupService.findByGroupName(groupName).get();
                return productRepositories.findByGroup(group, pageable).getContent();
         }
@@ -443,7 +433,6 @@ public int getSearchProductsSize(String keyword) {
             if ((groupName==null||groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители")))
                 return productRepositories.findAll().size();
             else if ((groupName!=null||!groupName.equals("Все группы"))&&(manufacturerName==null||manufacturerName.equals("Все производители")))
-            //System.out.println("group name " +groupName + " equels " + groupName.equals("Все группы"));
             {           Group group = groupService.findByGroupName(groupName).get();
                 return productRepositories.findByGroup(group).size();
             }

@@ -69,7 +69,6 @@ public class ProductController {
 
     ) {
 
-       // System.out.println("manufacturer name " + manufacturerName );
         int productPerPage = Integer.parseInt(productPerPageString);
        // List<String> groupNameList = new ArrayList<>(groupService.findAll().stream().map(group1 -> group1.getGroupName()).toList());
       //  List<String> manufacturerNameList = new ArrayList<>(manufacturerService.getAllManufacturers().stream().map(manufacturer->manufacturer.getManufacturerName()).toList());
@@ -142,7 +141,6 @@ public class ProductController {
 
         productValidator.validate(productDTO, bindingResult);
         if (bindingResult.hasErrors()) {
-            System.out.println("binding result has error!!!!!!!!!!!!!!!!!!!");
             model.addAttribute("groupListModel", groupService.findAll());
             model.addAttribute("manufacturerListModel", manufacturerService.getAllManufacturers());
             productService.messageForQuantity(bindingResult);
@@ -160,7 +158,6 @@ public class ProductController {
 
     @GetMapping("/view/{productURL}")
     public String oneProductPage (HttpSession session, @PathVariable("productURL") String productUrl, Model model) {
-        System.out.println("get view started");
         Product product = productService.getProductByProductUrl(productUrl).get();
 
         if(product.getMainPicture()!=null){
@@ -175,6 +172,7 @@ public class ProductController {
         QuantityDTO quantityDTO = new QuantityDTO();
         quantityDTO.setQuantity(1);
         //oneProductDTO.setQuantity(1);
+        model.addAttribute("isAdminModel", personeService.isAdmin());
         model.addAttribute("oneProductModel", oneProductDTO);
         model.addAttribute("quantityModel", quantityDTO);
         return "/product/oneProductPage";
@@ -268,7 +266,6 @@ public class ProductController {
             productService.editProduct(product, group, manufacturer, id );
         }
        else {receivePictureService.receiveImage(photo, product.getProductId());}
-        System.out.println("save are finish");
         return "redirect:/product";
     }
 
@@ -282,7 +279,6 @@ public class ProductController {
     public String handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex, Model model) {
         String errorMessage = "Превышен максимальный размер загружаемого файла.";
         model.addAttribute("errorMessage", errorMessage);
-        // Вернуть представление, которое отображает сообщение об ошибке
         return "errorPage";
     }
 
@@ -299,9 +295,6 @@ public class ProductController {
                                @PathVariable("url") String groupUrl,  @RequestParam(value = "sort", defaultValue = "", required = false) String sort,
                                Model model,
             @RequestParam(value = "slist", defaultValue = "", required = false) String stringList   ) {
-
-
-        System.out.println("curent sort " + sort);
 
         List<ManufacturerDTO> parsedList = productService.parseStringToListManufacturers(stringList);
         int productPerPage = Integer.parseInt(productPerPageString);

@@ -43,7 +43,7 @@ public class OrderController {
 
     @GetMapping("")
     public String getOrder(Model model, @RequestParam(value = "orderStatus", defaultValue = "Все статусы", required = false) String status) {
-        System.out.println("controller status " + status);
+    //    System.out.println("controller status " + status);
         List<String> statusList = orderService.getStatusList();
         statusList.add("Все статусы");
         OrderDTO orderDTO = new OrderDTO();
@@ -63,11 +63,6 @@ public class OrderController {
             OrderDTO orderDTO = new OrderDTO();
             model.addAttribute("orderModel", orderDTO);
         }
-//        else {
-//            model.addAttribute("orderModel", null);
-//        }
-
-
         return "/order/createOrder";
 
     }
@@ -104,7 +99,6 @@ public class OrderController {
         listStatus.add("Завершен");
         listStatus.add("Отменен");
         model.addAttribute("listStatusModel", orderService.getStatusList());
-        System.out.println("String data " + order.getStringDate());
         return "/order/viewOrderPage";
     }
 
@@ -112,7 +106,6 @@ public class OrderController {
     @PatchMapping("/view/{id}")
     public String patchView(@PathVariable("id") int id, @ModelAttribute("orderModer") OrderDTO orderDTO,
                             @ModelAttribute("registrationDate") Date registrationDate){
-        System.out.println("patch order started");
         Order order = orderService.convertToOrder(orderDTO);
         order.setRegistrationDate(registrationDate);
     orderService.editStatus(order, id);

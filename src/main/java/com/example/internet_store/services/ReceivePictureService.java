@@ -46,8 +46,8 @@ public class ReceivePictureService {
         if (!image.isEmpty()) {
             System.out.println("receive ");
             try {
-                // Сохранение загруженного файла на компьютере
-                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\static\\download"; // Замените на путь к папке, куда вы хотите сохранить файл
+//                String uploadDir = "C:\\Users\\max\\IdeaProjects\\internet_store\\static\\download";
+                String uploadDir = firstPartOfPath;
                 String fileName = image.getOriginalFilename();
               //  String fileName = Integer.toString(id) + "-main.jpg";
                 System.out.println(fileName);
@@ -56,8 +56,8 @@ public class ReceivePictureService {
                 if (uploadFile.exists()){
                     String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
                     String fileExtension = fileName.substring(fileName.lastIndexOf('.'));
-                    System.out.println("nameWithoutExtension " + nameWithoutExtension);
-                    System.out.println("fileExtension " + fileExtension);
+                  //  System.out.println("nameWithoutExtension " + nameWithoutExtension);
+                  //  System.out.println("fileExtension " + fileExtension);
 
                     int i = 0;
                     while (uploadFile.exists()){
@@ -69,10 +69,10 @@ public class ReceivePictureService {
                         sbFileName.append(fileExtension);
                         fileName = sbFileName.toString();
                         uploadFile = new File(uploadDir, fileName);
-                        System.out.println("File name: " + sbFileName.toString());
+                      //  System.out.println("File name: " + sbFileName.toString());
 
                     }
-                    System.out.println("Такой файл уже существует");
+                  //  System.out.println("Такой файл уже существует");
 
                 }
 
@@ -96,7 +96,7 @@ public class ReceivePictureService {
             }
         }
         else {
-            System.out.println("Нет фото");
+          //  System.out.println("Нет фото");
         }
     }
 
@@ -137,18 +137,18 @@ public class ReceivePictureService {
         String secondPartOfPath = picture.getFileName();
         StringBuilder fileName = new StringBuilder(firstPartOfPath);
         fileName.append(secondPartOfPath);
-        System.out.println("fullname " + fileName.toString());
+      //  System.out.println("fullname " + fileName.toString());
         File file = new File(fileName.toString());
         if (file.exists()) {
-            System.out.println("EXIST!!!!!!!!!!!!!!!!!!!!!!");
+           // System.out.println("EXIST!!!!!!!!!!!!!!!!!!!!!!");
         }
             List<Product> listProduct = picture.getMainPictureList();
             for(Product product:listProduct){
                 product.setMainPicture(null);
                 productService.editProduct (product, product.getGroup(), product.getManufacturer(), product.getProductId());
             }
-        System.out.println("File name" + file.getName());
-        System.out.println("file is exist " + file.exists());
+      //  System.out.println("File name" + file.getName());
+      //  System.out.println("file is exist " + file.exists());
             file.delete();
             pictureService.deletePicture(picture);
         //System.out.println("File is exists: " + file.exists());

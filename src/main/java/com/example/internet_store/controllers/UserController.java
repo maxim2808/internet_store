@@ -91,20 +91,6 @@ public class UserController {
     }
 
 
-
-
-
-
-    @GetMapping("/superadmin")
-    public String getSuperAdmin(Model model) {
-        return "/user/superAdminPage";
-    }
-
-    @PatchMapping("/superadmin")
-    public String patchSuperAdmin(Model model) {
-        return "/user/superAdminPage";
-    }
-
     @GetMapping("/myorders")
     public String getMyOrders(Model model) {
         if (personeService.getCurrentPersone().isPresent()){

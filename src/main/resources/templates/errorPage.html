@@ -5,6 +5,9 @@
     <title>Error page</title>
 </head>
 <body>
+<form th:method="GET" th:action="@{/main}">
+    <input class="center-button" type="submit" value="Вернуться на главную">
+</form>
 <h1>Ошибка</h1>
 <p  th:text="${errorMessage}"></p>
 </body>

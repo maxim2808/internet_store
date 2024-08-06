@@ -40,11 +40,11 @@ public class OrderService {
 
     public List<Order> findAllOrders(String status) {
         if(status==null||status.equals("Все статусы")){
-            System.out.println("Load all status");
+          //  System.out.println("Load all status");
             return orderRepository.findAll();
         }
         else{
-            System.out.println("load this status " + status);
+           // System.out.println("load this status " + status);
             return orderRepository.findByOrderStatus(status);
         }
     }
@@ -66,7 +66,7 @@ public class OrderService {
             //  System.out.println("Для продукта " + product.getProductName() + " создан список заказов");
         }
         if(personeService.getCurrentPersone().isPresent()){
-            System.out.println("user is authenticated");
+           // System.out.println("user is authenticated");
         Persone persone = personeService.getCurrentPersone().get();
         order2.setPersone(persone);
         }

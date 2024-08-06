@@ -67,9 +67,7 @@ public GroupController(GroupService groupService, GroupValidator groupValidator,
     public String getViewGroup(@PathVariable("id") int id, Model model) {
     model.addAttribute("groupModel", groupService.convertToDTO(groupService.findById(id).get()));
     List<Manufacturer>  manufacturerList = manufacturerService.getAllManufacturersByGroup(id);
-    for (Manufacturer manufacturer : manufacturerList) {
-        System.out.println(manufacturer.getManufacturerName());
-    }
+
     return "/group/viewGroupPage";
 }
 

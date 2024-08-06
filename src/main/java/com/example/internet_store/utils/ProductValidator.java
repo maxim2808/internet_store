@@ -47,10 +47,5 @@ public class ProductValidator implements Validator {
         if (productDTO.getProductURL().isBlank()) {
             errors.rejectValue("productURL", "", "Поле не должно быть пустым");
         }
-
-
-
-
-
     }
 }

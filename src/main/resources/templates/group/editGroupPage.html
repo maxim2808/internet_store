@@ -5,6 +5,31 @@
     <title>Редактировать группу</title>
 </head>
 <body>
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .button-container .left-button {
+        align-self: flex-start;
+    }
+
+    .button-container .center-button {
+        align-self: center;
+    }
+</style>
+
+<div class="button-container">
+
+    <form th:method="GET" th:action="@{/main}">
+        <input class="center-button" type="submit" value="Вернуться на главную">
+    </form>
+    <form th:method="GET" th:action="@{/admin}">
+        <input class="left-button" type="submit" value="Администрирование">
+    </form>
+
+</div>
 <form th:method="PATCH" th:action="@{/group/edit/{id}(id=${groupModel.getGroupId()})}" th:object="${groupModel}" >
     <label for="nameId">Название группы</label>
     <input type="text" th:field="*{groupName}" id="nameId">

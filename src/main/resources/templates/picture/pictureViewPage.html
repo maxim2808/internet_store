@@ -5,6 +5,31 @@
     <title>Изображение</title>
 </head>
 <body>
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .button-container .left-button {
+        align-self: flex-start;
+    }
+
+    .button-container .center-button {
+        align-self: center;
+    }
+</style>
+
+<div class="button-container">
+
+    <form th:method="GET" th:action="@{/main}">
+        <input class="center-button" type="submit" value="Вернуться на главную">
+    </form>
+    <form th:method="GET" th:action="@{/admin}">
+        <input class="left-button" type="submit" value="Администрирование">
+    </form>
+
+</div>
 <p th:text="${pictureModel.getFileName()}" ></p>
 <br>
 <p th:if="${addressPicModel!=null}">

@@ -5,9 +5,34 @@
     <title>Редактировать проивзодителя</title>
 </head>
 <body>
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .button-container .left-button {
+        align-self: flex-start;
+    }
+
+    .button-container .center-button {
+        align-self: center;
+    }
+</style>
+
+<div class="button-container">
+
+    <form th:method="GET" th:action="@{/main}">
+        <input class="center-button" type="submit" value="Вернуться на главную">
+    </form>
+    <form th:method="GET" th:action="@{/admin}">
+        <input class="left-button" type="submit" value="Администрирование">
+    </form>
+
+</div>
 <form th:method="PATCH" th:action="@{/manufacturer/edit/{id}(id=${manufacturerModel.getManufacurerId()})}" th:object="${manufacturerModel}" >
     <label for="nameId">Название производителя</label>
-    <input type="text" th:field="*{name}" id="nameId">
+    <input type="text" th:field="*{manufacturerName}" id="nameId">
     <br>
     <input type="submit" value="Редактировать">
 </form>

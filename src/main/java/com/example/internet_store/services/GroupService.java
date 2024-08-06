@@ -98,15 +98,4 @@ public class GroupService {
 
 
 
-
-
-//    public int countProductInGroup(GroupDTO groupDTO){
-//       return groupDTO.getProductList().size();
-//    }
-
-
-
-
-
-
 }
